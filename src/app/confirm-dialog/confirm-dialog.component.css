@@ -1,0 +1,32 @@
+.dialog-title {
+    color: #008000; /* Green color for the title */
+    font-weight: bold;
+  }
+  
+  .dialog-content {
+    font-size: 16px;
+    color: #555; /* A darker shade for the text to contrast with the green */
+  }
+  
+  .dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .dialog-button {
+    color: white;
+  }
+  
+  .dialog-button.cancel {
+    background-color: #ff5722; /* Orange for the cancel button */
+    margin-right: 8px;
+  }
+  
+  .dialog-button.confirm {
+    background-color: #4caf50; /* Green for the confirm button */
+  }
+  
+  .dialog-button:hover {
+    opacity: 0.8; /* Slightly dim the buttons on hover */
+  }
+  

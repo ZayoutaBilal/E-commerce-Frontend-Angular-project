@@ -1,0 +1,31 @@
+/* Common styles for both buttons */
+.nav-item .nav-link {
+    padding: 8px 16px; /* Ensures equal padding */
+    font-size: 16px;   /* Sets font size */
+    display: inline-block;
+    text-align: center;
+}
+
+/* Sign In button with green border and white background */
+.custom-signin-btn {
+    border: 2px solid #198754; /* Green border */
+    background-color: #fff;    /* White background */
+    color: #000 !important;    /* Black text */
+}
+
+.custom-signin-btn:hover {
+    background-color: #198754 !important; /* Green background on hover */
+    color: #fff !important;               /* White text on hover */
+}
+
+/* Sign Up button with green background */
+.custom-signup-btn {
+    background-color: #198754; /* Green background */
+    color: #fff !important;    /* White text */
+    border: 2px solid #198754; /* Adds border to match "Sign In" */
+}
+
+.custom-signup-btn:hover {
+    background-color: #145a32 !important; /* Darker green on hover */
+    color: #fff !important;
+}

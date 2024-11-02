@@ -1,0 +1,10 @@
+.dialog-title {
+    color: #008000; /* Green color for the title */
+    font-weight: bold;
+  }
+  
+  .dialog-content {
+    font-size: 16px;
+    color: #555; /* A darker shade for the text to contrast with the green */
+  }
+  
