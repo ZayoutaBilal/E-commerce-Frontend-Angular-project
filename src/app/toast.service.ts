@@ -8,6 +8,7 @@ export class ToastService {
   constructor(private toast: Toast) {}
 
   showSuccessAlert(template: TemplateRef<any>): void {
+    console.log("template success");
     this.toast.show({ template, classname: 'bg-success text-light', delay: 10000 });
   }
 

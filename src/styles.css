@@ -204,10 +204,7 @@ body {
   padding: 10px; /* Add padding around the body */
 }
 
-.component-container {
-  margin-top: 70px; /* Space above each component */
-  margin-bottom: 70px; /* Space below each component */
-}
+
 
 .swal2-container {
   z-index: 9999; /* or higher */

@@ -1,12 +1,14 @@
-<h2 mat-dialog-title class="dialog-title">{{data.title}}</h2>
+<h2 mat-dialog-title class="dialog-title">{{ data.title }}</h2>
 <mat-dialog-content class="dialog-content">
-  <p>{{data.content}}</p>
-  <mat-form-field appearance="fill">
-    <mat-label>{{data.placeholder}}</mat-label>
-    <input matInput [(ngModel)]="data.value">
-  </mat-form-field>
+  <p>{{ data.content }}</p>
+  <ng-container *ngFor="let field of data.fields">
+    <mat-form-field appearance="fill">
+      <mat-label>{{ field.label }}</mat-label>
+      <input matInput [(ngModel)]="field.value" [placeholder]="field.placeholder">
+    </mat-form-field>
+  </ng-container>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button (click)="onNoClick()">Cancel</button>
-  <button mat-button color="primary" [mat-dialog-close]="data.value">Ok</button>
+  <button mat-button color="primary" [mat-dialog-close]="data.fields">Ok</button>
 </mat-dialog-actions>

@@ -239,4 +239,30 @@ input {
 	text-decoration: underline; /* Underline on hover */
   }
   
+  input:focus {
+	border-color: #007bff;
+	outline: none;
+  }
 
+  
+.scrollable-inputs {
+    max-height: 250px; 
+    overflow-y: auto; 
+    width: 100%; 
+    padding-right: 10px; 
+}
+
+
+.scrollable-inputs::-webkit-scrollbar {
+    width: 8px;
+}
+
+.scrollable-inputs::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.scrollable-inputs::-webkit-scrollbar-thumb {
+    background-color: #59ab6e;
+    border-radius: 20px;
+    border: 3px solid #f1f1f1;
+}

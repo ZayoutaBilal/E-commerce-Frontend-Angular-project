@@ -45,20 +45,24 @@
                     <li class="nav-item">
                         <a class="nav-link" routerLink="/contact" routerLinkActive="active" ariaCurrentWhenActive="page">Contact</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link btn custom-signin-btn me-2" routerLink="/signin" routerLinkActive="active" ariaCurrentWhenActive="page">Sign In</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link btn custom-signup-btn text-white" routerLink="/signup" routerLinkActive="active" ariaCurrentWhenActive="page">Sign Up</a>
-                    </li>
-                    
+                    <div *ngIf="!isLoggedIn">
+                        <div class="nav d-flex align-items-center">
+                            <li class="nav-item">
+                                <a class="nav-link btn custom-signin-btn me-2" routerLink="/signin" routerLinkActive="active" ariaCurrentWhenActive="page">Sign In</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link btn custom-signup-btn text-white" routerLink="/signup" >Sign Up</a>
+                            </li>
+                        </div>          
+                    </div>
                     
                         
                 </ul>
             </div>
+        
             <div class="navbar align-self-center d-flex">
-                <a class="nav-icon d-none d-lg-inline" href="#" data-bs-toggle="modal" data-bs-target="#templatemo_search">
-                    <i class="fa fa-fw fa-search text-dark mr-2"></i>
+                <a class="nav-icon d-none d-lg-inline mr-3" href="" data-bs-toggle="modal" data-bs-target="#templatemo_search">
+                    <i class="fa fa-fw fa-search text-dark "></i>
                 </a>
 
                 <!-- Modal -->
@@ -78,17 +82,31 @@
                     </div>
                 </div>
                 <!-- End of Modal -->
-
-                <a class="nav-icon position-relative text-decoration-none" href="#">
-                    <i class="fa fa-fw fa-cart-arrow-down text-dark mr-1"></i>
-                    <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">7</span>
-                </a>
-                <a class="nav-icon position-relative text-decoration-none" href="#">
-                    <i class="fa fa-fw fa-user text-dark mr-3"></i>
-                    <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">+99</span>
-                </a>
+                <div *ngIf="isLoggedIn">
+                    <a class="nav-icon position-relative text-decoration-none mr-3" href="">
+                        <i class="fa fa-fw fa-cart-arrow-down text-dark"></i>
+                        <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">7</span>
+                    </a>
+                    <a class="nav-icon position-relative text-decoration-none" (click)="toggleMenu()">
+                        <i class="fa fa-fw fa-user text-dark mr-1"></i>
+                    </a>
+                    <div *ngIf="menuOpen" class="dropdown-menu">
+                        <div class="dropdown-item non-clickable">
+                            <i class="fa fa-fw fa-sm text-dark"></i> Welcome, User
+                        </div>                        
+                        <a class="dropdown-item" routerLink="/profile">
+                            <i class="fa fa-fw fa-sm fa-user-circle text-dark"></i> Account
+                        </a>
+                        <div class="dropdown-item" (click)="logOut()">
+                            <i class="fa fa-fw fa-sm fa-sign-out-alt text-dark"></i> Logout
+                        </div>
+                    </div>
+                    
+                    
+                </div>
             </div>
         </div>
     </div>
+    
 </nav>
 <!-- Close Header -->

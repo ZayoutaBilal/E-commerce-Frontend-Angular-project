@@ -3,24 +3,28 @@ import { Component, TemplateRef,ViewChild, AfterViewInit} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastService } from '../toast.service';
 import { ConfirmDialogAnimations } from '../confirm-dialog/confirm-dialog.component';
-import { AlertDialogComponent } from '../alert-dialog/alert-dialog.component';
-
+//import { AlertDialogComponent } from '../alert-dialog/alert-dialog.component';
+import { Toast } from '../alert-dialog/toast';
+import { TemplateService } from '../template.service';
 @Component({
   selector: 'app-about',
   templateUrl: './about.component.html',
   styleUrls: ['./about.component.css']
+  
   
 })
 export class AboutComponent{
   // @ViewChild('standardTpl', { static: true }) standardTpl!: TemplateRef<any>;
   // @ViewChild('dangerTpl', { static: true }) dangerTpl!: TemplateRef<any>;
   // @ViewChild('successTpl', { static: true }) successTpl!: TemplateRef<any>;
-  // @ViewChild('warningTpl', { static: true }) warningTpl!: TemplateRef<any>;
+   //@ViewChild('warningTpl', { static: true }) warningTpl!: TemplateRef<any>;
 
   // @ViewChild(AlertDialogComponent) alertDialog!: AlertDialogComponent;
   constructor(private dialog: MatDialog,
-      private alertDialogComponent: AlertDialogComponent,
-      private toastService : ToastService 
+     // private alertDialogComponent: AlertDialogComponent,
+      private toastService : ToastService ,
+      private toast : Toast,
+      private templateService: TemplateService
      ) {}
   
 
@@ -42,13 +46,18 @@ export class AboutComponent{
   }
 
   openAlertWarning(): void {
-    // this.toastService.show({
-    //   template: this.warningTpl,
-    //   classname: 'bg-warning text-dark', // Optional: style the toast
-    //   delay: 5000, // Optional: set the delay in milliseconds
-    // });
+    const warningTpl=this.templateService.warningTpl;
+    console.log(warningTpl);
+    if(warningTpl){
+    this.toast.show({
+      template: warningTpl,
+      classname: 'bg-warning text-dark', // Optional: style the toast
+      delay: 5000, // Optional: set the delay in milliseconds
+    });
+  }
+    //this.toastService.showWarningAlert(this.alertDialogComponent.getWarningTemplate());
 
-    this.toastService.showWarningAlert(this.alertDialogComponent.getWarningTemplate());
+    
 
   }
 
@@ -58,8 +67,8 @@ export class AboutComponent{
     //   classname: 'bg-success text-white', // Optional: style the toast
     //   delay: 5000, // Optional: set the delay in milliseconds
     // });
-    this.toastService.showSuccessAlert(this.alertDialogComponent.getSuccessTemplate());
-
+    //this.toastService.showSuccessAlert(this.alertDialogComponent.getSuccessTemplate());
+   // this.alertDialogComponent.showSuccessAlert();
   }
 
   openAlertError(): void {
@@ -68,7 +77,7 @@ export class AboutComponent{
     //   classname: 'bg-danger text-white', // Optional: style the toast
     //   delay: 5000, // Optional: set the delay in milliseconds
     // });
-    this.toastService.showDangerAlert(this.alertDialogComponent.getDangerTemplate());
+    //this.toastService.showDangerAlert(this.alertDialogComponent.getDangerTemplate());
 
   }
 
@@ -79,6 +88,6 @@ export class AboutComponent{
     //   delay: 5000, // Optional: set the delay in milliseconds
     // });
 
-    this.toastService.showStandardAlert(this.alertDialogComponent.getStandardTemplate());
+   // this.toastService.showStandardAlert(this.alertDialogComponent.getStandardTemplate());
   }
 }

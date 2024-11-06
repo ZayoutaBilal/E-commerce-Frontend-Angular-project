@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule ,APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -14,7 +14,18 @@ import { MatButtonModule } from '@angular/material/button'; // Import MatButtonM
 import { MatDialogActions,MatDialogContent,MatDialogTitle ,MatDialogClose, MatDialogModule} from '@angular/material/dialog';
 import { AboutComponent } from './about/about.component';
 import { NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
-import { AlertDialogComponent } from './alert-dialog/alert-dialog.component';
+import { CookieService } from 'ngx-cookie-service';
+//import { AlertDialogComponent } from './alert-dialog/alert-dialog.component';
+import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
+import { ProfileComponent } from './components/profile/profile.component';
+import { LoadingComponent } from './components/loading/loading.component';
+import { AuthService } from './services/auth.service';
+import { ToastrModule } from 'ngx-toastr';
+
+
+
 
 @NgModule({
   declarations: [
@@ -23,8 +34,12 @@ import { AlertDialogComponent } from './alert-dialog/alert-dialog.component';
     FooterComponent,
     ContactComponent,
     SignComponent,
-    AboutComponent
-    //DialogContentComponent
+    AboutComponent,
+    ProfileComponent,
+    LoadingComponent,
+    
+    
+   
     
     
   ],
@@ -33,17 +48,31 @@ import { AlertDialogComponent } from './alert-dialog/alert-dialog.component';
     AppRoutingModule,
     NgbModule ,
     BrowserAnimationsModule,
-    MatToolbarModule,        // Add the Material Toolbar module
-    MatButtonModule,          // Add the Material Button module if using buttons
+    MatToolbarModule,
+    MatButtonModule,
     MatDialogModule,
     ToastsContainer ,
-    AlertDialogComponent
-    // NgbToastModule
-    // MatDialogActions,
-    // MatDialogContent,
-    // MatDialogTitle
+    FormsModule,
+    HttpClientModule,
+    ToastrModule.forRoot({
+      timeOut: 4000,
+      positionClass: 'toast-top-center',
+      preventDuplicates: false,
+      maxOpened: 5, 
+      autoDismiss: false,
+      closeButton: true,
+      progressBar: true ,
+      tapToDismiss : true,
+      extendedTimeOut : 2000,
+    }),
+    
+    
   ],
-  providers: [AlertDialogComponent],
+ 
+
+  providers: [
+    
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
