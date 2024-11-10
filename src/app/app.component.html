@@ -1,12 +1,8 @@
-
 <app-loading *ngIf="isLoading"></app-loading>
 <ng-container *ngIf="!isLoading">
-    <app-header></app-header>
-    <app-toasts></app-toasts>
-    <div class="component-container">
-        <router-outlet></router-outlet>
-    </div>
-    <app-footer></app-footer>
+  <app-header></app-header>
+  <div class="component-container">
+    <router-outlet></router-outlet>
+  </div>
+  <app-footer></app-footer>
 </ng-container>
-
-

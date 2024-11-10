@@ -1,8 +1,8 @@
 
-import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject ,Inject} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule,MAT_DIALOG_DATA,MatDialog,MatDialogRef,MatDialogContent,MatDialogTitle,MatDialogClose,MatDialogActions} from '@angular/material/dialog';
-
+import { Observable } from 'rxjs';
 export interface DialogData {
   title: string;
   content: string;
@@ -18,12 +18,13 @@ export interface DialogData {
 export class ConfirmDialogComponent {
   readonly dialog = inject(MatDialog);
 
-  openDialog(data: DialogData): void {
-    this.dialog.open(ConfirmDialogAnimations, {
-      enterAnimationDuration: '1000ms',
-      exitAnimationDuration: '1000ms',
+  openDialog(data: DialogData): Observable<boolean> {
+    const dialogRef = this.dialog.open(ConfirmDialogAnimations, {
+      enterAnimationDuration: '500ms',
+      exitAnimationDuration: '100ms',
       data,
     });
+    return dialogRef.afterClosed();
   }
   
   
@@ -37,9 +38,14 @@ export class ConfirmDialogComponent {
   imports: [MatButtonModule,MatDialogModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
+
+
 export class ConfirmDialogAnimations {
-  readonly dialogRef = inject(MatDialogRef<ConfirmDialogAnimations>);
-  readonly data = inject<DialogData>(MAT_DIALOG_DATA);
+  constructor(
+    public dialogRef: MatDialogRef<ConfirmDialogAnimations>,
+    @Inject(MAT_DIALOG_DATA) public data: DialogData
+  ) {}
+
   onCancel(): void {
     this.dialogRef.close(false);
   }

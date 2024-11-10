@@ -12,6 +12,8 @@ import { AuthService } from '../services/auth.service';
 import { NotificationService } from '../services/notification.service';
 import { response } from 'express';
 import { HttpResponse } from '@angular/common/http';
+import { error } from 'console';
+import { ProfileComponent } from '../components/profile/profile.component';
 @Component({
   selector: 'app-sign',
   templateUrl: './sign.component.html',
@@ -40,11 +42,12 @@ export class SignComponent implements AfterViewInit {
     private cookieService: CookieService,
     private notificationService : NotificationService,
     @Inject(PLATFORM_ID) private platformId: Object,
-    private authService: AuthService
+    private authService: AuthService,
+    private profileComponent : ProfileComponent
     
   ) { }
   
-  openDialog(): void {
+  forgetPassword(): void {
     const dialogRef = this.dialog.open(PopupDialogComponent, {
       data: {
         title: 'Forget password',
@@ -80,16 +83,16 @@ export class SignComponent implements AfterViewInit {
                       next:(response) => {
                         this.notificationService.showSuccess("Forget password",response.body ?? undefined);
 
-                      },error(error){
-                        //this.notificationService.showError("Forget password",error.error ?? undefined);
+                      },error:(error) => {
+                        this.notificationService.showError("Forget password",error.error ?? undefined);
                       }
                     })
                   }
                 });
           },
-          error(error){
+          error:(error) => {
             if(error.status === 404){
-              //this.notificationService.showError("Forget password",error.error ?? undefined);
+              this.notificationService.showError("Forget password",error.error ?? undefined);
             }
               console.log(error.error);
           }
@@ -132,7 +135,8 @@ export class SignComponent implements AfterViewInit {
           console.log("Valid login :",userDetails);
           console.log("Token :",userDetails.token);
           this.authService.logIn(userDetails.token);
-          this.notificationService.showSuccess("Login","Login was successfully");
+          this.notificationService.showSuccess(`Welcome back ${userDetails.username}`);
+          
         }
       },
       error: (error) => {
@@ -160,10 +164,12 @@ export class SignComponent implements AfterViewInit {
   register () {
     if (!this.emailRegister || !this.emailRegister.match(this.emailRegex)) {
         this.notificationService.showWarning("Sign up","Email is not valid");
+        return ;
     }
 
     if (this.passwordRegister != this.passwordConfirmRegister) {
       this.notificationService.showWarning("Sign up","Passwords do not match");
+      return ;
     }
 
     this.userService.register(
@@ -171,10 +177,7 @@ export class SignComponent implements AfterViewInit {
          this.firstNameRegister, this.lastNameRegister, this.phoneRegister, this.cityRegister)
          .subscribe({
           next: (response) => {
-            console.log("response :",response);
-            const statusCode = response.status;
-            if (statusCode === 200){
-            console.log("response ok:",true);
+            this.notificationService.showSuccess("Login",response.body ?? undefined);
             const dialogRef = this.dialog.open(PopupDialogComponent, {
               data: {
                 title: 'Confirme email',
@@ -188,13 +191,55 @@ export class SignComponent implements AfterViewInit {
         
             dialogRef.afterClosed().subscribe(result => {
               console.log('The dialog was closed', result[0].value);
+              this.userService.confirmEmail(this.emailRegister,result[0].value).subscribe({
+                next:(response) => {
+                  this.notificationService.showSuccess("Sign up",response.body ?? undefined);
+                  this.userService.login(this.usernameRegister, this.passwordRegister).subscribe({
+                    next:(response) => {
+                      if(response.body)
+                        this.authService.logIn(response.body.token);
+                    }
+                  });
+                },error:(error) => {
+                  switch(error.status){
+                    case 400 :
+                    case 404 : {
+                      this.notificationService.showWarning("Sign up",error.error);
+                      break;
+                    }
+                    case 0 :
+                    case 503 : {
+                      this.notificationService.showError("Login","Service Unavailable");
+                      break;
+                    }
+                    case 500 : {
+                      this.notificationService.showError("Login","An internal server error occurred. Please try again later.");
+                      break;
+                    }
+                  }
+                }
+              });
               
             });
-          }
+          
           },
-          error: (error: ErrorEvent) => {
-            console.error(error);
-            console.log("Message Error :",error);
+          error: (error) => {
+            switch(error.status){
+              case 400 :
+              case 404 : {
+                this.notificationService.showWarning("Sign up",error.error);
+                break;
+              }
+              case 0 :
+              case 503 : {
+                this.notificationService.showError("Login","Service Unavailable");
+                break;
+              }
+              case 500 : {
+                this.notificationService.showError("Login","An internal server error occurred. Please try again later.");
+                break;
+              }
+            }
           }
         });
   }

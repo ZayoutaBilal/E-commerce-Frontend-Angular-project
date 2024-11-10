@@ -1,6 +1,8 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { Observable ,BehaviorSubject } from 'rxjs';
+import { CartService } from '../services/cart.service';
+import { response } from 'express';
 
 @Component({
   selector: 'app-header',
@@ -11,8 +13,11 @@ export class HeaderComponent implements OnInit {
 
   isLoggedIn: boolean = false;
   menuOpen : boolean = false;
+  cartItemsLength : number = 0;
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService,
+    private cartService : CartService,
+  ) {
      
   }
 
@@ -22,6 +27,7 @@ export class HeaderComponent implements OnInit {
     this.authService.isLoggedIn().subscribe((status) => {
       this.isLoggedIn = status;
     });
+    this.cartService.getCartItemsLength().subscribe((response) => this.cartItemsLength=response.body ?? 0);
 
     
   }
@@ -34,6 +40,7 @@ export class HeaderComponent implements OnInit {
     this.authService.logOut();
     this.menuOpen = false;
     this.isLoggedIn = false;
+    
     
   }
 

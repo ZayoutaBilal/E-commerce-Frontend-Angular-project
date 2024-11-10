@@ -1,68 +1,75 @@
-import { Injectable } from '@angular/core';
+import { Injectable , Inject, PLATFORM_ID} from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 import { UserService } from './user.service';
+import { isPlatformBrowser } from '@angular/common';
+import { StorageService } from './storage.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private loggedIn = new BehaviorSubject<boolean>(false);
+ 
+  
 
   constructor(
     private router: Router,
-    private cookieService: CookieService,
-    private userService: UserService
+    private userService: UserService,
+    private storage : StorageService    
   ) {
-    this.init();
+    
+    this.check();
   }
 
-  init(): void {
+  check(): void {
     
-      const token = this.cookieService.get('token');
-      if (token) {
-        this.userService.checkToken(token).subscribe({
+      const token = this.storage.getItem('token');
+      if (token !== null && token !== '') {
+        this.userService.checkToken(token as string).subscribe({
           next: () => {
             this.loggedIn.next(true);
-            this.router.navigate(['/']);
+           this.router.navigate(['/']);
             
           },
           error: () => {
             this.loggedIn.next(false);
             
+            
           }
         });
       } else {
         this.loggedIn.next(false);
+       
         
       }
     
   }
 
   logIn(token: string) {
-    this.cookieService.set('token', token, {
-      secure: true,
-      sameSite: 'Strict'
-    });
+    this.storage.setItem('token',token);
     this.loggedIn.next(true);
-    this.router.navigate(['/']);
+    window.location.reload();
   }
 
   logOut() {
-    this.cookieService.deleteAll();
+    
+    this.storage.removeItem('token');
     this.loggedIn.next(false);
-    this.router.navigate(['/']);
+    this.router.navigateByUrl('/');
+    
   }
 
   isLoggedIn() {
     return this.loggedIn.asObservable();
     
   }
+  
 
-  getToken(): string {
-    return this.cookieService.get('token');
-  }
+ 
+
+  
 
   
 }

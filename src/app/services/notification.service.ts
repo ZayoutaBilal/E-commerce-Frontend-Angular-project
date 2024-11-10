@@ -25,6 +25,23 @@ export class NotificationService {
   show(title?:string, message:string = "") {
     this.toastr.show(message,title);
   }
+
+
+  public handleSaveError(error: any) {
+    switch (error.status) {
+      case 400:
+      case 404:
+        this.showWarning("Account", error.error);
+        break;
+      case 0:
+      case 503:
+        this.showError("Account", "Service Unavailable");
+        break;
+      case 500:
+        this.showError("Account", "An internal server error occurred. Please try again later.");
+        break;
+    }
+  }
   
   constructor(private toastr: ToastrService) { }
 }

@@ -8,6 +8,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { LoadingComponent } from './components/loading/loading.component';
 import { authGuard } from './guards/auth.guard';
 import { HomeComponent } from './components/home/home.component';
+import { CartComponent } from './components/cart/cart.component';
 const routes: Routes = [
   
 
@@ -18,6 +19,7 @@ const routes: Routes = [
   { path: 'signin', component: SignComponent },
   { path: 'loading', component: LoadingComponent },
   { path: "profile", component: ProfileComponent, canActivate: [authGuard] },
+  { path: "cart", component: CartComponent, canActivate: [authGuard] },
   { path: '**', redirectTo: '', pathMatch: 'full' }
 ];
 
