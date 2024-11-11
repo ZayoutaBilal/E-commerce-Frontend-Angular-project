@@ -4,7 +4,7 @@ import { UserInfosModule } from '../../models/user-infos/user-infos.module';
 import { NotificationService } from 'src/app/services/notification.service';
 import { ConfirmDialogComponent } from 'src/app/confirm-dialog/confirm-dialog.component';
 import { AuthService } from 'src/app/services/auth.service';
-import { Router, NavigationEnd } from '@angular/router';
+
 import { Subscription } from 'rxjs';
 
 @Component({

@@ -30,8 +30,30 @@ export class CartService {
   getCartItemsLength(): Observable<HttpResponse<number>> {
     return this.http.get<number>('http://localhost:8080/customer/cart/get-cart-length', {
       headers: this.headersWithToken,
-      observe: 'response'
+      observe: 'response',
+      responseType: 'text' as 'json'
     });
   }
+
+  removeItemFromCartItem(id: number): Observable<HttpResponse<string>> {
+    return this.http.delete<string>('http://localhost:8080/customer/cart/delete-item-from-cart', {
+        headers: this.headersWithToken,
+        observe: 'response',
+        responseType: 'text' as 'json',
+        params: { itemId: id }
+    });
+  }
+
+  updateItemQuantity(itemId : number,newQuantity: number): Observable<HttpResponse<string>> {
+    let body = {
+      itemId,newQuantity
+    };
+    return this.http.put<string>('http://localhost:8080/customer/cart/update-item-quantity', body,{
+        headers: this.headersWithToken,
+        observe: 'response',
+        responseType: 'text' as 'json'
+    });
+  }
+
   
 }

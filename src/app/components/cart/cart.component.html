@@ -28,7 +28,7 @@
                   <p>Color: {{item.color}}</p>
                   <p>Size: {{item.size}}</p>
                   <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm me-1 mb-2" data-mdb-tooltip-init
-                    title="Remove item">
+                    title="Remove item" (click)="removeItem(item.itemId)">
                     <i class="fas fa-trash"></i>
                   </button>
                   <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-danger btn-sm mb-2" data-mdb-tooltip-init
@@ -42,20 +42,24 @@
                   <!-- Quantity -->
                   <div class="d-flex mb-4" style="max-width: 300px">
                     <button data-mdb-button-init data-mdb-ripple-init class="btn btn-primary px-3 me-2"
-                      onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+                      (click)="decrementQuantity(item)">
                       <i class="fas fa-minus"></i>
                     </button>
-  
+                  
                     <div data-mdb-input-init class="form-outline">
-                      <input id="form1" min="0" name="quantity" value="{{item.quantity}}" type="number" class="form-control" />
+                      <input id="form1" min="0" name="quantity" [(ngModel)]="item.newQuantity" 
+                        (ngModelChange)="onQuantityChange($event, item)" (input)="validateQuantity(item)"
+                         type="number" class="form-control" />
                       <label class="form-label" for="form1">Quantity</label>
                     </div>
-  
+                  
                     <button data-mdb-button-init data-mdb-ripple-init class="btn btn-primary px-3 ms-2"
-                      onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+                      (click)="incrementQuantity(item)">
                       <i class="fas fa-plus"></i>
                     </button>
                   </div>
+                  
+                  
                   <!-- Quantity -->
   
                   <!-- Price -->

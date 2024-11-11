@@ -130,5 +130,12 @@ export class UserService {
     });
   }
 
+  sendMessage(message : string, email : string, name : string) : Observable<HttpResponse<string>>{
+    let body = {
+      message,email,name
+    };
+    return this.http.post<string>('http://localhost:8080/user/message/send-message',body, {  headers : this.headers, observe: 'response', responseType: 'text' as 'json' });
+  }
+
 
 }
