@@ -19,6 +19,7 @@ import { LoadingComponent } from './components/loading/loading.component';
 import { ToastrModule } from 'ngx-toastr';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { CartComponent } from './components/cart/cart.component';
+import { ShopComponent } from './components/shop/shop.component';
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import { CartComponent } from './components/cart/cart.component';
     AboutComponent,
     ProfileComponent,
     LoadingComponent, 
-    CartComponent
+    CartComponent,
+    ShopComponent
   ],
   imports: [
     BrowserModule,

@@ -9,15 +9,17 @@ import { LoadingComponent } from './components/loading/loading.component';
 import { authGuard } from './guards/auth.guard';
 import { HomeComponent } from './components/home/home.component';
 import { CartComponent } from './components/cart/cart.component';
+import { ShopComponent } from './components/shop/shop.component';
 const routes: Routes = [
   
 
   { path: '', component: HomeComponent },
+  { path: 'loading', component: LoadingComponent },
   { path: 'contact', component: ContactComponent },
+  { path: 'shop', component: ShopComponent },
   { path: 'about', component: AboutComponent },
   { path: 'signup', component: SignComponent },
   { path: 'signin', component: SignComponent },
-  { path: 'loading', component: LoadingComponent },
   { path: "profile", component: ProfileComponent, canActivate: [authGuard] },
   { path: "cart", component: CartComponent, canActivate: [authGuard] },
   { path: '**', redirectTo: '', pathMatch: 'full' }
