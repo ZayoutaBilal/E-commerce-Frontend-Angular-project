@@ -3,42 +3,35 @@
     <div class="row">
 
         <!-- Categories Sidebar -->
-        <div class="col-lg-3">
-            <h1 class="h2 pb-4">Categories</h1>
-            <ul class="list-unstyled templatemo-accordion">
-                <li class="pb-3">
-                    <a class="collapsed d-flex justify-content-between h3 text-decoration-none" href="#">
-                        Gender
-                        <i class="fa fa-fw fa-chevron-circle-down mt-1"></i>
+                
+            <div class="col-lg-3">
+                <h1 class="h2 pb-4">Categories</h1>
+                <ul class="list-unstyled templatemo-accordion">
+                <li *ngFor="let category of categories" class="pb-3">
+                    <a 
+                    (click)="toggleCategory(category.name)" 
+                    class="d-flex justify-content-between h3 text-decoration-none" 
+                    href="javascript:void(0)">
+                    {{ category.name }}
+                    <i 
+                        [ngClass]="{
+                        'fa-chevron-circle-down': expandedCategory !== category.name,
+                        'fa-chevron-circle-up': expandedCategory === category.name
+                        }" 
+                        class="fa fa-fw mt-1">
+                    </i>
                     </a>
-                    <ul class="collapse show list-unstyled pl-3">
-                        <li><a class="text-decoration-none" href="#">Men</a></li>
-                        <li><a class="text-decoration-none" href="#">Women</a></li>
+                    <ul 
+                    [ngClass]="{'show': expandedCategory === category.name}"
+                    class="list-unstyled">
+                    <li *ngFor="let subcategory of category.subcategories">
+                        <a class="text-decoration-none" href="#">{{ subcategory }}</a>
+                    </li>
                     </ul>
                 </li>
-                <li class="pb-3">
-                    <a class="collapsed d-flex justify-content-between h3 text-decoration-none" href="#">
-                        Sale
-                        <i class="fa fa-fw fa-chevron-circle-down mt-1"></i>
-                    </a>
-                    <ul id="collapseTwo" class="collapse list-unstyled pl-3">
-                        <li><a class="text-decoration-none" href="#">Sport</a></li>
-                        <li><a class="text-decoration-none" href="#">Luxury</a></li>
-                    </ul>
-                </li>
-                <li class="pb-3">
-                    <a class="collapsed d-flex justify-content-between h3 text-decoration-none" href="#">
-                        Product
-                        <i class="fa fa-fw fa-chevron-circle-down mt-1"></i>
-                    </a>
-                    <ul id="collapseThree" class="collapse list-unstyled pl-3">
-                        <li><a class="text-decoration-none" href="#">Bag</a></li>
-                        <li><a class="text-decoration-none" href="#">Sweater</a></li>
-                        <li><a class="text-decoration-none" href="#">Sunglasses</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
+                </ul>
+            </div>
+
         <!-- End Categories Sidebar -->
 
         <!-- Products Section -->
@@ -47,13 +40,7 @@
                 <div class="col-md-6">
                     <ul class="list-inline shop-top-menu pb-3 pt-1">
                         <li class="list-inline-item">
-                            <a class="h3 text-dark text-decoration-none mr-3" href="#">All</a>
-                        </li>
-                        <li class="list-inline-item">
-                            <a class="h3 text-dark text-decoration-none mr-3" href="#">Men's</a>
-                        </li>
-                        <li class="list-inline-item">
-                            <a class="h3 text-dark text-decoration-none" href="#">Women's</a>
+                            <p class="h3 text-dark text-decoration-none mr-3" >{{path}}</p>
                         </li>
                     </ul>
                 </div>
@@ -108,18 +95,23 @@
                 </div>
             </div>
 
-            <!-- Pagination Controls -->
-            <div class="row">
-                <ul class="pagination pagination-lg justify-content-end">
-                    <li class="page-item" [class.disabled]="!hasPreviousPage()">
-                        <a class="page-link" href="#" (click)="previousPage()">Previous</a>
-                    </li>
-                    <li class="page-item" [class.disabled]="!hasNextPage()">
-                        <a class="page-link" href="#" (click)="nextPage()">Next</a>
-                    </li>
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                  <li class="page-item" [class.disabled]="!hasPreviousPage()">
+                    <a class="page-link"  (click)="previousPage()">Previous</a>
+                  </li>
+                  
+                  <li *ngFor="let page of visiblePages" class="page-item" [class.active]="page === currentPage">
+                    <a class="page-link"  (click)="goToPage(page)">{{ page + 1 }}</a>
+                  </li>
+                  
+                  <li class="page-item" [class.disabled]="!hasNextPage()">
+                    <a class="page-link"  (click)="nextPage()">Next</a>
+                  </li>
                 </ul>
-            </div>
-        </div>
+              </nav>
+              
+              
         <!-- End Products Section -->
 
     </div>

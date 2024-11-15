@@ -5,3 +5,114 @@
 }
 
 
+.page-item {
+    margin: 0 5px; 
+  }
+  
+
+  .page-link {
+    color: green; 
+    border-radius: 4px; 
+    padding: 10px 15px; 
+    transition: background-color 0.3s, color 0.3s; 
+  }
+  
+
+  .page-item:hover .page-link {
+    background-color: #e0f7fa; 
+    color: #004d40; 
+  }
+  
+ 
+  .page-item.active .page-link {
+    background-color: green;
+    color: white;
+    border-color: green;
+  }
+  
+ 
+  .page-item.disabled .page-link {
+    color: rgb(78, 75, 75); 
+    pointer-events: none;
+  }
+
+  .page-item.disabled:hover .page-link {
+    background-color: transparent; 
+    color: #ddd; 
+    cursor: not-allowed; 
+  }
+  
+  
+  .page-link:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); 
+  }
+  
+  .page-link:hover, .page-link:focus {
+    cursor: pointer; 
+  }
+
+
+
+
+
+.templatemo-accordion ul {
+  margin-left: 20px;
+  padding-left: 10px;
+  border-left: 2px solid #ddd;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+  max-height: 0;
+  opacity: 0;
+  transform: scaleY(0);
+  transform-origin: top;
+}
+
+
+.templatemo-accordion ul.show {
+  max-height: 500px;
+  opacity: 1;
+  transform: scaleY(1);
+  transition: max-height 0.3s ease-in, opacity 0.3s ease-in, transform 0.3s ease-in;
+}
+
+
+.templatemo-accordion ul li a {
+  color: #555;
+  font-size: 0.9rem;
+  text-decoration: none;
+  display: block;
+  padding: 5px 0;
+  transition: color 0.2s;
+}
+
+.templatemo-accordion ul li a:hover {
+  color: #008000;
+}
+
+
+.templatemo-accordion > li > a {
+  color: #333;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+  position: relative;
+}
+
+
+.templatemo-accordion > li > a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0;
+  height: 2px;
+  background-color: #008000;
+  transition: width 0.3s ease;
+}
+
+
+.templatemo-accordion > li > a:hover::after {
+  width: 100%;
+}
+
