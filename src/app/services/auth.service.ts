@@ -63,7 +63,6 @@ export class AuthService {
 
   isLoggedIn() {
     return this.loggedIn.asObservable();
-    
   }
   
 

@@ -18,6 +18,10 @@
   }
   
 
+  .list-inline-item :hover {
+    cursor: pointer; 
+  }
+
   .page-item:hover .page-link {
     background-color: #e0f7fa; 
     color: #004d40; 
@@ -88,6 +92,7 @@
 
 .templatemo-accordion ul li a:hover {
   color: #008000;
+  cursor: pointer;
 }
 
 

@@ -3,6 +3,7 @@ import { CartService } from '../../services/cart.service';
 import { ProductCart } from 'src/app/models/product-cart/product-cart.module';
 import { NotificationService } from 'src/app/services/notification.service';
 import { ConfirmDialogComponent } from 'src/app/confirm-dialog/confirm-dialog.component';
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-cart',
@@ -17,16 +18,17 @@ export class CartComponent implements OnInit {
   constructor(private cartService: CartService,
     private notificationService : NotificationService,
     private confirmDialogComponent: ConfirmDialogComponent,
+    private storage : StorageService
   ) {}
 
   ngOnInit(): void {
     this.cartService.getCartItems().subscribe(items => {
-      // Map the response to ProductCart array with imageUrl (Base64 string)
       this.cartItems = items.map(item => ({
         ...item,
         newQuantity : item.quantity
        // imageUrl: 'data:image/jpeg;base64,' + this.arrayBufferToBase64(item.image)
       }));
+      this.storage.setCartLength(this.cartItems.length);
       this.calculateTotal();
     });
   }
@@ -40,9 +42,6 @@ export class CartComponent implements OnInit {
     return btoa(String.fromCharCode(...buffer));
   }
 
-  // updateQuantity(item: ProductCart, quantity: number): void {
-    
-  // }
 
   removeItem(itemId : number){
     this.confirmDialogComponent.openDialog({

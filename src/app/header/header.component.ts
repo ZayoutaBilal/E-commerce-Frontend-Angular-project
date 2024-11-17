@@ -3,6 +3,7 @@ import { AuthService } from '../services/auth.service';
 import { Observable ,BehaviorSubject } from 'rxjs';
 import { CartService } from '../services/cart.service';
 import { response } from 'express';
+import { StorageService } from '../services/storage.service';
 
 @Component({
   selector: 'app-header',
@@ -13,10 +14,11 @@ export class HeaderComponent implements OnInit {
 
   isLoggedIn: boolean = false;
   menuOpen : boolean = false;
-  cartItemsLength : number = 0;
+  cartItemsLength = 0;
 
   constructor(private authService: AuthService,
     private cartService : CartService,
+    private storage : StorageService
   ) {
      
   }
@@ -27,8 +29,10 @@ export class HeaderComponent implements OnInit {
     this.authService.isLoggedIn().subscribe((status) => {
       this.isLoggedIn = status;
     });
-    this.cartService.getCartItemsLength().subscribe((response) => this.cartItemsLength=response.body ?? 0);
-
+    
+    this.storage.cartLength$.subscribe(length => {
+      this.cartItemsLength = length;
+    });
     
   }
 

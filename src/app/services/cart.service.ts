@@ -3,6 +3,7 @@ import { ProductCart } from '../models/product-cart/product-cart.module';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { StorageService } from './storage.service';
+import { ProductToCartModule } from '../models/product-to-cart/product-to-cart.module';
 
 @Injectable({
   providedIn: 'root'
@@ -53,6 +54,14 @@ export class CartService {
         observe: 'response',
         responseType: 'text' as 'json'
     });
+  }
+
+  addProductToCart(product : ProductToCartModule) : Observable<HttpResponse<string>>{
+    return this.http.post<string>('http://localhost:8080/customer/cart/add-item-to-cart', product,{
+      headers: this.headersWithToken,
+      observe: 'response',
+      responseType: 'text' as 'json'
+  });
   }
 
   

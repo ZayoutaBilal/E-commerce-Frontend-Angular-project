@@ -12,7 +12,9 @@ import { CategoryService } from 'src/app/services/category.service';
 export class ShopComponent {
   products: { content: ProductOverview[]; totalPages: number; totalElements: number; } | null = null;
   currentPage: number = 0;
-  path : string = "Shop";
+  path : string = '';
+  categoryChosen : string ='';
+  origin : string ='';
   visiblePages: number[] = [];
   expandedCategory: string | null = null;
   categories: Category[] = [];
@@ -33,17 +35,45 @@ export class ShopComponent {
     this.expandedCategory = this.expandedCategory === categoryName ? null : categoryName;
   }
 
-  loadProducts(page: number): void {
-    this.productService.getAllForCustomer(page).subscribe({
-      next: (data) => {
-        this.products = data;
-        this.currentPage = page;
-        this.updateVisiblePages();
-      },
-      error: (err) => {
-        console.error('Failed to load products', err);
-      }
-    });
+  loadProducts(page: number, categoryName? : string,origin? : string): void {
+    if(categoryName && origin){
+      this.productService.getProductByCategpry(categoryName,origin,page).subscribe({
+        next: (data) => {
+          this.products = data;
+          this.currentPage = page;
+          this.updateVisiblePages();
+        },
+        error: (err) => {
+          console.error('Failed to load products', err);
+        }
+      });
+    }else{
+      this.productService.getAllForCustomer(page).subscribe({
+        next: (data) => {
+          this.products = data;
+          this.currentPage = page;
+          this.updateVisiblePages();
+        },
+        error: (err) => {
+          console.error('Failed to load products', err);
+        }
+      });
+    }
+  }
+
+  getProductsByCategory(categoryName : string,origin : string) : void {
+    this.categoryChosen=categoryName;
+    this.origin=origin;
+    this.path=["/",origin,"/",categoryName].join(' ');
+    this.loadProducts(0,categoryName,origin);
+
+  }
+
+  returnToShop() : void {
+    this.categoryChosen='';
+    this.origin='';
+    this.path=''
+    this.loadProducts(0);
   }
 
   updateVisiblePages(): void {
@@ -65,19 +95,19 @@ export class ShopComponent {
 
   nextPage(): void {
     if (this.hasNextPage()) {
-      this.loadProducts(this.currentPage + 1);
+      this.loadProducts(this.currentPage + 1,this.categoryChosen,this.origin);
     }
   }
 
   previousPage(): void {
     if (this.hasPreviousPage()) {
-      this.loadProducts(this.currentPage - 1);
+      this.loadProducts(this.currentPage - 1,this.categoryChosen,this.origin);
     }
   }
 
   goToPage(page: number): void {
     if (page !== this.currentPage) {
-      this.loadProducts(page);
+      this.loadProducts(page,this.categoryChosen,this.origin);
     }
   }
 

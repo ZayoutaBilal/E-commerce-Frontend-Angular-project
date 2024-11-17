@@ -15,4 +15,9 @@ export class CategoryService {
     return this.http.get<Category[]>('http://localhost:8080/user/categories/get-categories',{headers : this.headers});
   }
 
+
+
+
+
+
 }

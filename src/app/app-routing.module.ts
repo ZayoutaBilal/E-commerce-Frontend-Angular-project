@@ -10,11 +10,13 @@ import { authGuard } from './guards/auth.guard';
 import { HomeComponent } from './components/home/home.component';
 import { CartComponent } from './components/cart/cart.component';
 import { ShopComponent } from './components/shop/shop.component';
+import { ProductDetailsComponent } from './components/product-details/product-details.component';
 const routes: Routes = [
   
 
   { path: '', component: HomeComponent },
   { path: 'loading', component: LoadingComponent },
+  { path: 'product-details/:productId', component: ProductDetailsComponent },
   { path: 'contact', component: ContactComponent },
   { path: 'shop', component: ShopComponent },
   { path: 'about', component: AboutComponent },

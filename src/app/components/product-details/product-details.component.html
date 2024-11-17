@@ -1,0 +1,214 @@
+<div *ngIf="productDetails">
+<div class="container-fluid pb-5">
+    <div class="row px-xl-5">
+        <div class="col-lg-5 mb-30">
+            <div
+              id="product-carousel"
+              class="carousel slide carousel-fade"
+              data-bs-ride="carousel"
+              data-bs-interval="3000"  
+            >
+              <div class="carousel-inner bg-light" style="position: relative; height: 400px;">
+                <div
+                  *ngFor="let image of productDetails?.productImages; let i = index"
+                  [class.active]="i === 0"
+                  class="carousel-item"
+                  style="position: absolute; width: 100%; height: 100%; transition: opacity 1s ease-in-out;"
+                >
+                  <img
+                    [src]="'data:image/jpeg;base64,' + image"
+                    class="w-100 h-100"
+                    alt="Product Image"
+                    loading="lazy"
+                    style="object-fit: cover;"
+                  />
+                </div>
+              </div>
+              <a class="carousel-control-prev" href="#product-carousel" data-bs-slide="prev">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
+                    <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0m3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"/>
+                  </svg>
+              </a>
+              <a class="carousel-control-next" href="#product-carousel" data-bs-slide="next">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-arrow-right-circle-fill" viewBox="0 0 16 16">
+                    <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0M4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z"/>
+                  </svg>
+              </a>
+              
+              
+              
+            </div>
+          </div>
+      <!-- Product Details -->
+      <div class="col-lg-7 h-auto mb-30">
+        <div class="h-100 p-30">
+          <h3>{{ productDetails.productName }}</h3>
+          <div class="d-flex mb-3">
+            <div class="text-primary mr-2">
+                <i *ngFor="let star of [].constructor(5); let i = index" 
+                class="fa fa-star" 
+                [ngClass]="{'text-warning': i < productDetails.productStars, 'text-muted': i >= productDetails.productStars}">
+             </i>
+            </div>
+            <small class="pt-1">({{productDetails.productTotalRatings}} Reviews)</small>
+          </div>
+          <h3 class="font-weight-semi-bold mb-4">${{ productDetails.productPrice }}</h3>
+          <p class="mb-4">{{ productDetails.productDescription }}</p>
+  
+          <!-- Sizes -->
+          <div class="d-flex mb-3">
+            <strong class="text-dark mr-3">Sizes:</strong>
+            <div *ngFor="let combination of productDetails.colorSizeQuantityCombinations" class="custom-control custom-radio custom-control-inline">
+              <input
+                type="radio"
+                class="custom-control-input"
+                [id]="'size-' + combination.size"
+                name="size"
+                [value]="combination.size"
+                (change)="selectSize(combination.size)"
+              />
+              <label
+                class="custom-control-label"
+                [for]="'size-' + combination.size"
+              >
+                {{ combination.size }}
+              </label>
+            </div>
+          </div>
+
+          <!-- Colors -->
+          
+          <div class="d-flex mb-3" *ngIf="selectedSize">
+            <strong class="text-dark mr-3">Colors:</strong>
+            <div *ngFor="let color of getColorsForSelectedSize() | keyvalue" class="custom-control custom-radio custom-control-inline">
+              <input
+                type="radio"
+                class="custom-control-input"
+                [id]="'color-' + color.key"
+                name="color"
+                [value]="color.key"
+                (change)="selectColor(color.key)"
+              />
+              <label
+                class="custom-control-label"
+                [for]="'color-' + color.key"
+              >
+                {{ color.key }}
+              </label>
+            </div>
+          </div>
+          
+  
+          <!-- Quantity -->
+          <div class="d-flex align-items-center mb-4 pt-2">
+            <div class="input-group quantity mr-3" style="width: 150px;">
+              <div class="input-group-btn">
+                <button class="btn btn-primary btn-minus" (click)="decrementQuantity()">
+                  <i class="fa fa-minus"></i>
+                </button>
+              </div>
+              <input
+                type="text"
+                class="form-control border-0 text-center"
+                value="1"
+              />
+              <div class="input-group-btn">
+                <button class="btn btn-primary btn-plus" (click)="incrementQuantity()">
+                  <i class="fa fa-plus"></i>
+                </button>
+              </div>
+            </div>
+            <button class="btn btn-primary px-3" (click)="addItemToCart(productDetails.productId)">
+              <i class="fa fa-shopping-cart mr-1"></i> Add To Cart
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Tabs -->
+    <div class="row px-xl-5">
+      <div class="col">
+        <div class="p-30">
+          <div class="nav nav-tabs mb-4">
+            <a
+              class="nav-item nav-link active"
+              [ngClass]="{ active: activeTab === 'description' }"
+              (click)="setActiveTab('description')"
+            >
+              Description
+            </a>
+            <a
+              class="nav-item nav-link"
+              [ngClass]="{ active: activeTab === 'reviews' }"
+              (click)="setActiveTab('reviews')"
+            >
+              Reviews (0)
+            </a>
+          </div>
+  
+          <div class="tab-content">
+            <div
+              *ngIf="activeTab === 'description'"
+              class="tab-pane fade show active"
+              id="tab-pane-1"
+            >
+              <h4 class="mb-3">Product Description</h4>
+              <p>{{ productDetails.productDescription }}</p>
+            </div>
+  
+            <div
+              *ngIf="activeTab === 'reviews'"
+              class="tab-pane fade show active"
+              id="tab-pane-3"
+            >
+              <div class="row">
+                <div class="col-md-6">
+                  <h4 class="mb-4">No reviews yet</h4>
+                </div>
+                <div class="col-md-6">
+                  <h4 class="mb-4">Leave a review</h4>
+                  <form>
+                    <div class="form-group">
+                      <label for="message">Your Review *</label>
+                      <textarea
+                        id="message"
+                        cols="30"
+                        rows="5"
+                        class="form-control"
+                      ></textarea>
+                    </div>
+                    <div class="form-group">
+                      <label for="name">Your Name *</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="name"
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="email">Your Email *</label>
+                      <input
+                        type="email"
+                        class="form-control"
+                        id="email"
+                      />
+                    </div>
+                    <div class="form-group mb-0">
+                      <input
+                        type="submit"
+                        value="Leave Your Review"
+                        class="btn btn-primary px-3"
+                      />
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  

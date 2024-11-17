@@ -20,6 +20,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { CartComponent } from './components/cart/cart.component';
 import { ShopComponent } from './components/shop/shop.component';
+import { ProductDetailsComponent } from './components/product-details/product-details.component';
 
 
 @NgModule({
@@ -33,7 +34,8 @@ import { ShopComponent } from './components/shop/shop.component';
     ProfileComponent,
     LoadingComponent, 
     CartComponent,
-    ShopComponent
+    ShopComponent,
+    ProductDetailsComponent
   ],
   imports: [
     BrowserModule,
@@ -63,7 +65,7 @@ import { ShopComponent } from './components/shop/shop.component';
 
   providers: [
     ConfirmDialogComponent,
-    ProfileComponent
+    ProfileComponent,
   ],
   bootstrap: [AppComponent]
 })
