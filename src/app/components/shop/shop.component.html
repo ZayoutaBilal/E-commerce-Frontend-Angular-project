@@ -59,9 +59,18 @@
                             <img *ngIf="product.image" [src]="'data:image/jpeg;base64,' + product.image" class="card-img rounded-0 img-fluid product-image" alt="{{ product.name }}">
                             <div class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
                                 <ul class="list-unstyled">
-                                    <li><a class="btn btn-success text-white" ><i class="far fa-heart"></i></a></li>
+                                    <li *ngIf="isLoggedIn"><a class="btn btn-success text-white" data-bs-toggle="modal" data-bs-target="#ratingModal" (click)="setProductIdRating(product.id)"><i class="far fa-heart"></i></a></li>
                                     <li><a class="btn btn-success text-white mt-2" [routerLink]="['/product-details',product.id]"><i class="far fa-eye"></i></a></li>
-                                    <li><a class="btn btn-success text-white mt-2" ><i class="fas fa-cart-plus"></i></a></li>
+                                    <li *ngIf="isLoggedIn">
+                                      <a 
+                                        class="btn btn-success text-white mt-2" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#quickAddModal" 
+                                        (click)="prepareQuickAdd(product)">
+                                        <i class="fas fa-cart-plus"></i>
+                                      </a>
+                                    </li>
+                                    
                                 </ul>
                             </div>
                         </div>
@@ -91,6 +100,8 @@
                 </div>
             </div>
 
+
+
             <nav aria-label="Page navigation">
                 <ul class="pagination justify-content-center">
                   <li class="page-item" [class.disabled]="!hasPreviousPage()">
@@ -112,4 +123,152 @@
 
     </div>
 </div>
+
+
+
+
+<div class="modal fade" id="ratingModal" tabindex="-1" aria-labelledby="ratingModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ratingModalLabel">Rate this Product</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <!-- Rating Section -->
+        <div class="d-flex justify-content-center mb-3">
+          <i 
+            class="fa-star fa-sm text-warning clickable me-2" 
+            [class.fas]="rating >= 1" 
+            [class.far]="rating < 1"
+            (click)="setRating(1)">
+          </i>
+          <i 
+            class="fa-star fa-sm text-warning clickable me-2" 
+            [class.fas]="rating >= 2" 
+            [class.far]="rating < 2"
+            (click)="setRating(2)">
+          </i>
+          <i 
+            class="fa-star fa-sm text-warning clickable me-2" 
+            [class.fas]="rating >= 3" 
+            [class.far]="rating < 3"
+            (click)="setRating(3)">
+          </i>
+          <i 
+            class="fa-star fa-sm text-warning clickable me-2" 
+            [class.fas]="rating >= 4" 
+            [class.far]="rating < 4"
+            (click)="setRating(4)">
+          </i>
+          <i 
+            class="fa-star fa-sm text-warning clickable" 
+            [class.fas]="rating >= 5" 
+            [class.far]="rating < 5"
+            (click)="setRating(5)">
+          </i>
+        </div>
+        <!-- Comment Section -->
+        <div>
+          <textarea class="form-control" id="commentTextArea" rows="4" placeholder="Write your comment here..." [(ngModel)]="comment"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" data-bs-dismiss="modal" (click)="giveFeedback()">Submit</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<div class="modal fade" id="quickAddModal" tabindex="-1" aria-labelledby="quickAddModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="quickAddModalLabel">Add Product to Cart</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <!-- Product Image with Fixed Size -->
+        <img 
+          *ngIf="selectedProduct?.image" 
+          [src]="'data:image/jpeg;base64,' + selectedProduct.image" 
+          class="img-fluid mb-3 rounded" 
+          alt="{{ selectedProduct?.name }}" 
+          style="width: 150px; height: 150px; object-fit: cover;"
+        >
+
+        <!-- Product Name -->
+        <p><strong>{{ selectedProduct?.name }}</strong></p>
+
+        <!-- Sizes Selection -->
+        <div class="d-flex mb-3">
+          <strong class="text-dark mr-3">Sizes:</strong>
+          <div *ngFor="let combination of colorSizeQuantityCombinations" class="custom-control custom-radio custom-control-inline">
+            <input
+              type="radio"
+              class="custom-control-input"
+              [id]="'size-' + combination.size"
+              name="size"
+              [value]="combination.size"
+              (change)="selectSize(combination.size)"
+            />
+            <label
+              class="custom-control-label"
+              [for]="'size-' + combination.size"
+            >
+              {{ combination.size }}
+            </label>
+          </div>
+        </div>
+        
+
+        <!-- Colors Selection -->
+        <div class="d-flex mb-3" *ngIf="selectedSize">
+          <strong class="text-dark mr-3">Colors:</strong>
+          <div *ngFor="let color of getColorsForSelectedSize() | keyvalue" class="custom-control custom-radio custom-control-inline">
+            <input
+              type="radio"
+              class="custom-control-input"
+              [id]="'color-' + color.key"
+              name="color"
+              [value]="color.key"
+              (change)="selectColor(color.key)"
+            />
+            <label
+              class="custom-control-label"
+              [for]="'color-' + color.key"
+            >
+              {{ color.key }}
+            </label>
+          </div>
+        </div>
+        
+      </div>
+      <div class="modal-footer">
+        <button 
+          type="button" 
+          class="btn btn-success" 
+          data-bs-dismiss="modal" 
+          [disabled]="!selectedSize || !selectedColor"
+          (click)="addToCart()"
+        >
+          Add to Cart
+        </button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
 <!-- End Content -->
+
+
+

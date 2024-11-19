@@ -1,9 +1,9 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../../services/auth.service';
 import { Observable ,BehaviorSubject } from 'rxjs';
-import { CartService } from '../services/cart.service';
+import { CartService } from '../../services/cart.service';
 import { response } from 'express';
-import { StorageService } from '../services/storage.service';
+import { StorageService } from '../../services/storage.service';
 
 @Component({
   selector: 'app-header',

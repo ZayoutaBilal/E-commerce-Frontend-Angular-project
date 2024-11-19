@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 
 export interface ProductCart {
   itemId: number;
+  productId: number;
   name: string;
   price: number;
   oldPrice?: number;

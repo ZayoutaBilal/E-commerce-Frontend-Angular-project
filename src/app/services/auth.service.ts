@@ -5,6 +5,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { UserService } from './user.service';
 import { isPlatformBrowser } from '@angular/common';
 import { StorageService } from './storage.service';
+import { NotificationService } from './notification.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,8 @@ export class AuthService {
   constructor(
     private router: Router,
     private userService: UserService,
-    private storage : StorageService    
+    private storage : StorageService,
+    private notificationService : NotificationService,
   ) {
     
     this.check();
@@ -31,12 +33,11 @@ export class AuthService {
           next: () => {
             this.loggedIn.next(true);
            this.router.navigate(['/']);
+           setTimeout( () => {this.notificationService.showInfo(`Welcome back`);},2000);
             
           },
           error: () => {
             this.loggedIn.next(false);
-            
-            
           }
         });
       } else {
@@ -51,6 +52,8 @@ export class AuthService {
     this.storage.setItem('token',token);
     this.loggedIn.next(true);
     window.location.reload();
+    
+    
   }
 
   logOut() {

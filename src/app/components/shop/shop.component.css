@@ -121,3 +121,31 @@
   width: 100%;
 }
 
+.clickable {
+  cursor: pointer;
+}
+
+.d-flex {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap; 
+}
+
+.custom-control-inline {
+  margin-right: 1rem; 
+}
+
+.custom-control {
+  display: flex;
+  align-items: center;
+}
+
+.custom-control-input {
+  margin-right: 5px;
+}
+.text-dark {
+  color: black;
+  margin-right: 1rem; 
+}
+
+

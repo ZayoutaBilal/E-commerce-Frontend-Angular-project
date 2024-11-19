@@ -3,6 +3,13 @@ import { ProductService } from 'src/app/services/product.service';
 import { ProductOverview } from 'src/app/models/product-overview/product-overview.module';
 import { Category } from 'src/app/models/category/category.module';
 import { CategoryService } from 'src/app/services/category.service';
+import { NotificationService } from 'src/app/services/notification.service';
+import { Router }  from '@angular/router';
+import { Modal } from 'bootstrap';
+import { AuthService } from 'src/app/services/auth.service';
+import { CartService } from 'src/app/services/cart.service';
+import { ProductToCartModule } from 'src/app/models/product-to-cart/product-to-cart.module';
+import { ColorSizeQuantityCombination } from 'src/app/models/product-details/product-details.module';
 
 @Component({
   selector: 'app-shop',
@@ -10,6 +17,9 @@ import { CategoryService } from 'src/app/services/category.service';
   styleUrls: ['./shop.component.css']
 })
 export class ShopComponent {
+  
+  isLoggedIn: boolean = false;
+  
   products: { content: ProductOverview[]; totalPages: number; totalElements: number; } | null = null;
   currentPage: number = 0;
   path : string = '';
@@ -18,13 +28,39 @@ export class ShopComponent {
   visiblePages: number[] = [];
   expandedCategory: string | null = null;
   categories: Category[] = [];
+
+  rating: number = 0;
+  comment : string = '';
+  productIdRating : number = 0;
+  
+  selectedProduct: any = null;
+  colorSizeQuantityCombinations: ColorSizeQuantityCombination[] = [];
+  selectedSize: string | null = null;
+  selectedColor: string | null = null;
   
 
+  setRating(star: number): void {
+    this.rating = star;
+  }
+
+  setProductIdRating(id : number):void{
+    this.productIdRating=id;
+  }
+
   constructor(private productService: ProductService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private notificationService : NotificationService,
+    private router : Router,
+    private authService : AuthService,
+    private cartService : CartService,
+    
+    
   ) {}
 
   ngOnInit(): void {
+    this.authService.isLoggedIn().subscribe((status) => {
+      this.isLoggedIn = status;
+    });
     this.categoryService.getCategories().subscribe((data) => {
       this.categories = data;
     });
@@ -35,6 +71,9 @@ export class ShopComponent {
     this.expandedCategory = this.expandedCategory === categoryName ? null : categoryName;
   }
 
+  
+
+
   loadProducts(page: number, categoryName? : string,origin? : string): void {
     if(categoryName && origin){
       this.productService.getProductByCategpry(categoryName,origin,page).subscribe({
@@ -43,8 +82,8 @@ export class ShopComponent {
           this.currentPage = page;
           this.updateVisiblePages();
         },
-        error: (err) => {
-          console.error('Failed to load products', err);
+        error: (error) => {
+          this.notificationService.handleSaveError(error);
         }
       });
     }else{
@@ -54,8 +93,8 @@ export class ShopComponent {
           this.currentPage = page;
           this.updateVisiblePages();
         },
-        error: (err) => {
-          console.error('Failed to load products', err);
+        error: (error) => {
+         this.notificationService.handleSaveError(error);
         }
       });
     }
@@ -118,4 +157,97 @@ export class ShopComponent {
   hasPreviousPage(): boolean {
     return this.currentPage > 0;
   }
+
+
+  giveFeedback(): void {
+    if (this.rating === 0  && this.comment==='') {
+      this.notificationService.showWarning('Feedback','Please provide a rating or comment or both before submitting.')
+      return;
+    }
+
+    const feedbackData = {
+      productId: this.productIdRating,
+      ratingValue: this.rating === 0 ? null : this.rating,
+      comment: this.comment
+    };
+
+    console.log(feedbackData);
+
+    this.productService.submitFeedback(feedbackData).subscribe({
+      next : (response) => {
+        this.notificationService.showSuccess('Feedback',response.body ?? undefined);
+      },error : (error) => {
+        this.notificationService.handleSaveError(error);
+      }
+    });
+    this.clearFeedback();
+  }
+
+  clearFeedback(): void {
+    this.rating = 0;
+    this.comment = '';
+  }
+
+
+    
+
+  prepareQuickAdd(product: any): void {
+    this.selectedProduct=product;
+    this.colorSizeQuantityCombinations = [];
+    this.selectedSize = null;
+    this.selectedColor = null;
+
+    this.productService.getProductColorSizeQuantityCombination(this.selectedProduct.id).subscribe({
+        next:(combinations: ColorSizeQuantityCombination[]) => {
+        this.colorSizeQuantityCombinations = combinations;
+      },
+      error:(error) => {
+        this.notificationService.showError('Failed to fetch color-size-quantity combinations:', error);
+      }
+    }
+    );
+  }
+
+  addToCart(): void {
+
+    if (!this.selectedSize || !this.selectedColor) {
+      this.notificationService.showWarning(undefined,'Please select a size and color.');
+      return;
+    }
+
+    const prod = new ProductToCartModule(this.selectedProduct.id, 1, this.selectedColor, this.selectedSize);
+    this.cartService.addProductToCart(prod).subscribe(
+      {next:(response) => {
+        this.notificationService.showSuccess("Cart",response.body ?? undefined);
+      },
+      error:(error) => {
+        this.notificationService.handleSaveError(error);
+      }}
+    );
+    
+  }
+
+  selectSize(size: string): void {
+    this.selectedSize = size;
+    this.selectedColor = null;
+  }
+  
+  selectColor(color: string): void {
+    this.selectedColor = color;
+  }
+  
+
+  getColorsForSelectedSize(): { [color: string]: number } {
+    if (!this.selectedSize) return {};
+  
+    const selectedCombination = this.colorSizeQuantityCombinations
+      .find((combination: ColorSizeQuantityCombination) => combination.size === this.selectedSize);
+  
+    return selectedCombination ? selectedCombination.colorQuantityMap : {};
+  }
+  
+
+
+
+
 }

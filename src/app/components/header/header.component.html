@@ -84,13 +84,10 @@
                 <!-- End of Modal -->
                 <div *ngIf="isLoggedIn">
                     <a class="nav-icon position-relative text-decoration-none mr-3" routerLink="/cart">
-                        <i class="fa fa-fw fa-cart-arrow-down text-dark"></i>
-                        <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">
-                            <div *ngIf="cartItemsLength !== 0">
-                                {{ cartItemsLength }}
-                              </div>
-                              
-                        </span>
+                      <i class="fa fa-fw fa-cart-arrow-down text-dark"></i>
+                      <span *ngIf="cartItemsLength > 0" class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">
+                        {{ cartItemsLength }}
+                      </span>
                     </a>
                     <a class="nav-icon position-relative text-decoration-none" (click)="toggleMenu()">
                         <i class="fa fa-fw fa-user text-dark mr-1"></i>

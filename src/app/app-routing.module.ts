@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ContactComponent } from './contact/contact.component';
+import { ContactComponent } from './components/contact/contact.component';
 import { AppComponent } from './app.component';
-import { SignComponent } from './sign/sign.component';
-import { AboutComponent } from './about/about.component';
+import { SignComponent } from './components/sign/sign.component';
+import { AboutComponent } from './components/about/about.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { LoadingComponent } from './components/loading/loading.component';
 import { authGuard } from './guards/auth.guard';

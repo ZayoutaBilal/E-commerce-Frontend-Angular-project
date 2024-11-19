@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { CartService } from '../../services/cart.service';
 import { ProductCart } from 'src/app/models/product-cart/product-cart.module';
 import { NotificationService } from 'src/app/services/notification.service';
-import { ConfirmDialogComponent } from 'src/app/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from 'src/app/components/confirm-dialog/confirm-dialog.component';
 import { StorageService } from 'src/app/services/storage.service';
+import { ProductService } from 'src/app/services/product.service';
 
 @Component({
   selector: 'app-cart',
@@ -12,10 +13,14 @@ import { StorageService } from 'src/app/services/storage.service';
 })
 export class CartComponent implements OnInit {
   cartItems: (ProductCart & { newQuantity: number })[] = [];
-  //cartItems: (ProductCart)[] = [];
   totalAmount: number = 0;
+  rating: number = 0;
+  comment : string = '';
+  productIdRating : number = 0;
 
-  constructor(private cartService: CartService,
+  constructor(
+    private cartService: CartService,
+    private productService: ProductService,
     private notificationService : NotificationService,
     private confirmDialogComponent: ConfirmDialogComponent,
     private storage : StorageService
@@ -104,6 +109,45 @@ export class CartComponent implements OnInit {
       return false;
     }
     return true;
+  }
+
+
+  setRating(star: number): void {
+    this.rating = star;
+  }
+
+  setProductIdRating(id : number):void{
+    this.productIdRating=id;
+  }
+
+
+  giveFeedback(): void {
+    if (this.rating === 0  && this.comment==='') {
+      this.notificationService.showWarning('Feedback','Please provide a rating or comment or both before submitting.')
+      return;
+    }
+
+    const feedbackData = {
+      productId: this.productIdRating,
+      ratingValue: this.rating === 0 ? null : this.rating,
+      comment: this.comment
+    };
+
+    console.log(feedbackData);
+
+    this.productService.submitFeedback(feedbackData).subscribe({
+      next : (response) => {
+        this.notificationService.showSuccess('Feedback',response.body ?? undefined);
+      },error : (error) => {
+        this.notificationService.handleSaveError(error);
+      }
+    });
+    this.clearFeedback();
+  }
+
+  clearFeedback(): void {
+    this.rating = 0;
+    this.comment = '';
   }
 
 

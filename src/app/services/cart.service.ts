@@ -10,6 +10,8 @@ import { ProductToCartModule } from '../models/product-to-cart/product-to-cart.m
 })
 export class CartService {
 
+  private apiURL = 'http://localhost:8080';
+
   private token = this.storage.getItem('token');
 
   private headers = new HttpHeaders({ 'Content-Type': 'application/json'});
@@ -25,11 +27,11 @@ export class CartService {
   ) {}
 
   getCartItems(): Observable<ProductCart[]> {
-    return this.http.get<ProductCart[]>('http://localhost:8080/customer/cart/get-products-from-cart', { headers : this.headersWithToken });
+    return this.http.get<ProductCart[]>(`${this.apiURL}/customer/cart/get-products-from-cart`, { headers : this.headersWithToken });
   }
 
   getCartItemsLength(): Observable<HttpResponse<number>> {
-    return this.http.get<number>('http://localhost:8080/customer/cart/get-cart-length', {
+    return this.http.get<number>(`${this.apiURL}/customer/cart/get-cart-length`, {
       headers: this.headersWithToken,
       observe: 'response',
       responseType: 'text' as 'json'
@@ -37,7 +39,7 @@ export class CartService {
   }
 
   removeItemFromCartItem(id: number): Observable<HttpResponse<string>> {
-    return this.http.delete<string>('http://localhost:8080/customer/cart/delete-item-from-cart', {
+    return this.http.delete<string>(`${this.apiURL}/customer/cart/delete-item-from-cart`, {
         headers: this.headersWithToken,
         observe: 'response',
         responseType: 'text' as 'json',
@@ -49,7 +51,7 @@ export class CartService {
     let body = {
       itemId,newQuantity
     };
-    return this.http.put<string>('http://localhost:8080/customer/cart/update-item-quantity', body,{
+    return this.http.put<string>(`${this.apiURL}/customer/cart/update-item-quantity`, body,{
         headers: this.headersWithToken,
         observe: 'response',
         responseType: 'text' as 'json'
@@ -57,7 +59,7 @@ export class CartService {
   }
 
   addProductToCart(product : ProductToCartModule) : Observable<HttpResponse<string>>{
-    return this.http.post<string>('http://localhost:8080/customer/cart/add-item-to-cart', product,{
+    return this.http.post<string>(`${this.apiURL}/customer/cart/add-item-to-cart`, product,{
       headers: this.headersWithToken,
       observe: 'response',
       responseType: 'text' as 'json'

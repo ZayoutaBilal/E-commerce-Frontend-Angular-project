@@ -8,11 +8,13 @@ import { Category } from '../models/category/category.module';
 })
 export class CategoryService {
 
+  private apiURL = 'http://localhost:8080';
+
   private headers = new HttpHeaders({ 'Content-Type': 'application/json'});
   constructor(private http: HttpClient) {}
 
   getCategories(): Observable<Category[]> {
-    return this.http.get<Category[]>('http://localhost:8080/user/categories/get-categories',{headers : this.headers});
+    return this.http.get<Category[]>(`${this.apiURL}/user/categories/get-categories`,{headers : this.headers});
   }
 
 

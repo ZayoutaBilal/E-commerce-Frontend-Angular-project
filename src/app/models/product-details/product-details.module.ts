@@ -4,7 +4,7 @@ export interface ProductDetailsModule {
   productCategory: string;
   productDiscount: number;
   productDescription?: string;
-  productInformation?: string;
+  productInformation: string;
   productPrice: number;
   productStars:number;
   productTotalRatings:number;

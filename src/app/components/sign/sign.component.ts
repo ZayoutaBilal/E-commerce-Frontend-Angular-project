@@ -2,18 +2,18 @@ import { Component, AfterViewInit, OnInit ,Inject,PLATFORM_ID} from '@angular/co
 // import { MatDialog } from '@angular/material/dialog';
 import { isPlatformBrowser } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
-import { PopupDialogComponent } from '../popup-dialog/popup-dialog.component'; // Adjust path as necessary
+import { PopupDialogComponent } from '../popup-dialog/popup-dialog.component';
 import { Router } from '@angular/router';
-import { UserService } from '../services/user.service';
-import { UserDetailsModule } from '../models/user-details/user-details.module';
+import { UserService } from '../../services/user.service';
+import { UserDetailsModule } from '../../models/user-details/user-details.module';
 import {CookieService} from 'ngx-cookie-service';
 import { NavigationEnd } from '@angular/router';
-import { AuthService } from '../services/auth.service';
-import { NotificationService } from '../services/notification.service';
+import { AuthService } from '../../services/auth.service';
+import { NotificationService } from '../../services/notification.service';
 import { response } from 'express';
 import { HttpResponse } from '@angular/common/http';
 import { error } from 'console';
-import { ProfileComponent } from '../components/profile/profile.component';
+import { ProfileComponent } from '../profile/profile.component';
 @Component({
   selector: 'app-sign',
   templateUrl: './sign.component.html',
@@ -132,31 +132,14 @@ export class SignComponent implements AfterViewInit {
       next: (response : HttpResponse<UserDetailsModule>) => {
         const userDetails = response.body;
         if(userDetails){
-          console.log("Valid login :",userDetails);
-          console.log("Token :",userDetails.token);
+          console.log("Valid login :",userDetails.username);
           this.authService.logIn(userDetails.token);
-          this.notificationService.showSuccess(`Welcome back ${userDetails.username}`);
           
         }
       },
       error: (error) => {
         console.error(error);
-        switch(error.status){
-          case 400 :
-          case 404 : {
-            this.notificationService.showWarning("Login",error.error);
-            break;
-          }
-          case 0 :
-          case 503 : {
-            this.notificationService.showError("Login","Service Unavailable");
-            break;
-          }
-          case 500 : {
-            this.notificationService.showError("Login","An internal server error occurred. Please try again later.");
-            break;
-          }
-        }
+        this.notificationService.handleSaveError(error);
        }
     });
   }

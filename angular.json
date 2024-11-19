@@ -33,6 +33,7 @@
             ],
             "scripts": [
               "node_modules/bootstrap/dist/js/bootstrap.min.js",
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
               "node_modules/popper.js/dist/umd/popper.min.js",
               "node_modules/jquery/dist/jquery.min.js"
             ]
@@ -121,20 +122,23 @@
           },
           "defaultConfiguration": "production"
         },
-        "serve-ssr": {
+       "serve-ssr": {
           "builder": "@nguniversal/builders:ssr-dev-server",
           "configurations": {
             "development": {
               "browserTarget": "click-and-buy:build:development",
               "serverTarget": "click-and-buy:server:development"
+              
             },
             "production": {
               "browserTarget": "click-and-buy:build:production",
               "serverTarget": "click-and-buy:server:production"
+              
             }
           },
           "defaultConfiguration": "development"
-        },
+        }
+        ,
         "prerender": {
           "builder": "@nguniversal/builders:prerender",
           "options": {

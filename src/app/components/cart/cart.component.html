@@ -32,7 +32,7 @@
                     <i class="fas fa-trash"></i>
                   </button>
                   <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-danger btn-sm mb-2" data-mdb-tooltip-init
-                    title="Move to the wish list">
+                    title="Move to the wish list" data-bs-toggle="modal" data-bs-target="#ratingModal" (click)="setProductIdRating(item.productId)">
                     <i class="fas fa-heart"></i>
                   </button>
                   <!-- Data -->
@@ -136,3 +136,62 @@
       </div>
     </div>
   </section>
+
+
+
+
+  
+
+<div class="modal fade" id="ratingModal" tabindex="-1" aria-labelledby="ratingModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ratingModalLabel">Rate this Product</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <!-- Rating Section -->
+        <div class="d-flex justify-content-center mb-3">
+          <i 
+            class="fa-star fa-sm text-warning clickable me-2" 
+            [class.fas]="rating >= 1" 
+            [class.far]="rating < 1"
+            (click)="setRating(1)">
+          </i>
+          <i 
+            class="fa-star fa-sm text-warning clickable me-2" 
+            [class.fas]="rating >= 2" 
+            [class.far]="rating < 2"
+            (click)="setRating(2)">
+          </i>
+          <i 
+            class="fa-star fa-sm text-warning clickable me-2" 
+            [class.fas]="rating >= 3" 
+            [class.far]="rating < 3"
+            (click)="setRating(3)">
+          </i>
+          <i 
+            class="fa-star fa-sm text-warning clickable me-2" 
+            [class.fas]="rating >= 4" 
+            [class.far]="rating < 4"
+            (click)="setRating(4)">
+          </i>
+          <i 
+            class="fa-star fa-sm text-warning clickable" 
+            [class.fas]="rating >= 5" 
+            [class.far]="rating < 5"
+            (click)="setRating(5)">
+          </i>
+        </div>
+        <!-- Comment Section -->
+        <div>
+          <textarea class="form-control" id="commentTextArea" rows="4" placeholder="Write your comment here..." [(ngModel)]="comment"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" data-bs-dismiss="modal" (click)="giveFeedback()">Submit</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -2,7 +2,7 @@ import { Component, OnInit, OnChanges, Input, EventEmitter, OnDestroy } from '@a
 import { UserService } from '../../services/user.service';
 import { UserInfosModule } from '../../models/user-infos/user-infos.module';
 import { NotificationService } from 'src/app/services/notification.service';
-import { ConfirmDialogComponent } from 'src/app/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from 'src/app/components/confirm-dialog/confirm-dialog.component';
 import { AuthService } from 'src/app/services/auth.service';
 
 import { Subscription } from 'rxjs';

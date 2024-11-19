@@ -12,6 +12,8 @@ import { StorageService } from './storage.service';
 })
 export class UserService {
 
+  private apiURL = 'http://localhost:8080';
+
   private token = this.storage.getItem('token');
 
   private headers = new HttpHeaders({ 'Content-Type': 'application/json'});
@@ -34,7 +36,7 @@ export class UserService {
   login(login: string, password: string): Observable<HttpResponse<UserDetailsModule>> {
     const body = { login, password };
     console.log(body);
-    return this.http.post<UserDetailsModule>('http://localhost:8080/user/login', body, { 
+    return this.http.post<UserDetailsModule>(`${this.apiURL}/user/login`, body, { 
       headers: this.headers, 
       observe: 'response' 
     });
@@ -55,11 +57,11 @@ export class UserService {
       city
     }
   };
-    return this.http.post<any>('http://localhost:8080/user/signup', body,  {  headers : this.headers, observe: 'response' ,responseType: 'text' as 'json'});
+    return this.http.post<any>(`${this.apiURL}/user/signup`, body,  {  headers : this.headers, observe: 'response' ,responseType: 'text' as 'json'});
   }
 
   forgetpassword(email: string): Observable<HttpResponse<string>> {
-    const url = `http://localhost:8080/user/forgot-password?email=${encodeURIComponent(email)}`;
+    const url = `${this.apiURL}/user/forgot-password?email=${encodeURIComponent(email)}`;
     return this.http.get<string>(url, {  headers : this.headers, observe: 'response', responseType: 'text' as 'json' });
   }
 
@@ -67,22 +69,22 @@ export class UserService {
     let body = {
       email,newPassword,code
     };
-    return this.http.post<string>('http://localhost:8080/user/verify-code',body, {  headers : this.headers, observe: 'response', responseType: 'text' as 'json' });
+    return this.http.post<string>(`${this.apiURL}/user/verify-code`,body, {  headers : this.headers, observe: 'response', responseType: 'text' as 'json' });
   }
 
   confirmEmail(email: string,code:string): Observable<HttpResponse<string>> {
     let body = {
       email,code
     };
-    return this.http.post<string>('http://localhost:8080/user/confirm-email',body, {  headers : this.headers, observe: 'response', responseType: 'text' as 'json' });
+    return this.http.post<string>(`${this.apiURL}/user/confirm-email`,body, {  headers : this.headers, observe: 'response', responseType: 'text' as 'json' });
   }
 
   getUserInfo(): Observable<UserInfosModule> {
-    return this.http.get<UserInfosModule>('http://localhost:8080/common/get-user-infos', { headers : this.headersWithToken });
+    return this.http.get<UserInfosModule>(`${this.apiURL}/common/get-user-infos`, { headers : this.headersWithToken });
   }
 
   checkToken(toekn : string):Observable<HttpResponse<string>> {
-    return this.http.get<string>('http://localhost:8080/common/check-token',{ headers : this.headersWithToken, observe: 'response', responseType: 'text' as 'json' })
+    return this.http.get<string>(`${this.apiURL}/common/check-token`,{ headers : this.headersWithToken, observe: 'response', responseType: 'text' as 'json' })
   }
 
   updateUserInfos( firstName : string,lastName :string,birthday : Date,gender:string,address : string,
@@ -96,23 +98,23 @@ export class UserService {
         phone,
         city
       };
-      return this.http.put<string>('http://localhost:8080/common/update-user-infos',body,{ headers : this.headersWithToken , observe : 'response', responseType: 'text' as 'json'})
+      return this.http.put<string>(`${this.apiURL}/common/update-user-infos`,body,{ headers : this.headersWithToken , observe : 'response', responseType: 'text' as 'json'})
     }
 
   updatePassword(  oldPassword : string , newPassword : string) : Observable<HttpResponse<string>>{
       let body = {
         oldPassword,newPassword
       };
-      return this.http.put<string>('http://localhost:8080/common/update-password',body,{ headers : this.headersWithToken , observe : 'response', responseType: 'text' as 'json'})
+      return this.http.put<string>(`${this.apiURL}/common/update-password`,body,{ headers : this.headersWithToken , observe : 'response', responseType: 'text' as 'json'})
     }
 
   deleteMyAccount() : Observable<HttpResponse<string>>{
-    return this.http.delete<string>('http://localhost:8080/common/delete-my-account',{ headers : this.headersWithToken , observe : 'response', responseType: 'text' as 'json'})
+    return this.http.delete<string>(`${this.apiURL}/common/delete-my-account`,{ headers : this.headersWithToken , observe : 'response', responseType: 'text' as 'json'})
   }
 
   updateUsername(username: string): Observable<HttpResponse<string>> {
     const params = new HttpParams().set('username', username);
-    return this.http.put<string>('http://localhost:8080/common/update-username', null, {
+    return this.http.put<string>(`${this.apiURL}/common/update-username`, null, {
       headers: this.headersWithToken,
       observe: 'response',
       responseType: 'text' as 'json',
@@ -123,7 +125,7 @@ export class UserService {
   updatePictur(file: File): Observable<HttpResponse<string>> {
     const formData = new FormData();
     formData.append('file', file);
-    return this.http.post<string>('http://localhost:8080/common/upload-picture', formData, {
+    return this.http.post<string>(`${this.apiURL}/common/upload-picture`, formData, {
       headers: this.headersWithTokenImage,
       observe: 'response',
       responseType: 'text' as 'json'
@@ -134,7 +136,7 @@ export class UserService {
     let body = {
       message,email,name
     };
-    return this.http.post<string>('http://localhost:8080/user/message/send-message',body, {  headers : this.headers, observe: 'response', responseType: 'text' as 'json' });
+    return this.http.post<string>(`${this.apiURL}/user/message/send-message`,body, {  headers : this.headers, observe: 'response', responseType: 'text' as 'json' });
   }
 
 
