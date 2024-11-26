@@ -6,6 +6,7 @@ import { ProductToCartModule } from 'src/app/models/product-to-cart/product-to-c
 import { CartService } from 'src/app/services/cart.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { StorageService } from 'src/app/services/storage.service';
 
 
 declare var bootstrap: any;
@@ -20,11 +21,15 @@ declare var bootstrap: any;
 export class ProductDetailsComponent implements OnInit,AfterViewInit{
 
   isLoggedIn: boolean = false;
+  private CartLength:number=0;
+
   activeTab: string = 'description';
   selectedSize: string | null = null;
   selectedColor: string | null = null;
   productDetails: ProductDetailsModule | null = null;
   productId: number | null = null;
+  rating: number = 0;
+  com : string = '';
 
   
 
@@ -34,7 +39,8 @@ export class ProductDetailsComponent implements OnInit,AfterViewInit{
     private productService : ProductService,
     private cartService : CartService,
     private notificationService : NotificationService,
-    private authService : AuthService
+    private authService : AuthService,
+    private storageService : StorageService
 
   ) {}
 
@@ -131,12 +137,47 @@ export class ProductDetailsComponent implements OnInit,AfterViewInit{
     const product = new ProductToCartModule(productId, selectedQuantity, selectedColor, selectedSize);
     this.cartService.addProductToCart(product).subscribe(
       {next:(response) => {
+        this.CartLength=this.storageService.getCartLength();
+        this.storageService.setCartLength(++this.CartLength);
         this.notificationService.showSuccess("Cart",response.body ?? undefined);
       },
       error:(error) => {
         this.notificationService.handleSaveError(error);
       }}
     );
+  }
+
+  setRating(star: number): void {
+    this.rating = star;
+  }
+
+  giveFeedback(): void {
+    if (this.rating === 0  && this.com==='') {
+      this.notificationService.showWarning('Feedback','Please provide a rating or comment or both before submitting.')
+      return;
+    }
+
+    const feedbackData = {
+      productId: this.productId,
+      ratingValue: this.rating === 0 ? null : this.rating,
+      comment: this.com
+    };
+
+    console.log(feedbackData);
+
+    this.productService.submitFeedback(feedbackData).subscribe({
+      next : (response) => {
+        this.notificationService.showSuccess('Feedback',response.body ?? undefined);
+      },error : (error) => {
+        this.notificationService.handleSaveError(error);
+      }
+    });
+    this.clearFeedback();
+  }
+
+  clearFeedback(): void {
+    this.rating = 0;
+    this.com = '';
   }
   
 

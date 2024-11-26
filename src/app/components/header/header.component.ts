@@ -1,9 +1,10 @@
 import { Component, HostListener, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { Observable ,BehaviorSubject } from 'rxjs';
 import { CartService } from '../../services/cart.service';
-import { response } from 'express';
 import { StorageService } from '../../services/storage.service';
+import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
   selector: 'app-header',
@@ -15,10 +16,14 @@ export class HeaderComponent implements OnInit {
   isLoggedIn: boolean = false;
   menuOpen : boolean = false;
   cartItemsLength = 0;
+  searchCategory = '';
+  
 
   constructor(private authService: AuthService,
     private cartService : CartService,
-    private storage : StorageService
+    private storage : StorageService,
+    private sharedService : SharedService,
+    private router: Router
   ) {
      
   }
@@ -55,4 +60,21 @@ export class HeaderComponent implements OnInit {
       this.menuOpen = false;
     }
   }
+
+
+  onSearch(): void {
+    if(this.searchCategory){
+      if (this.router.url !== '/shop') {
+        this.router.navigateByUrl('/shop');
+      }
+      this.sharedService.updateSearchQuery(this.searchCategory);
+    }
+  }
+
+
+
+
+
 }
+
+

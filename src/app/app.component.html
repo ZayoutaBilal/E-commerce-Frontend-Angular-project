@@ -4,5 +4,12 @@
   <div class="component-container">
     <router-outlet></router-outlet>
   </div>
+  <a
+  class="btn btn-primary back-to-top" 
+  [class.show]="showBackToTop" 
+  (click)="scrollToTop()">
+ <i class="fa fa-angle-double-up"></i>
+</a>
+<app-scroll-top></app-scroll-top>
   <app-footer></app-footer>
 </ng-container>

@@ -11,9 +11,18 @@ export interface ProductDetailsModule {
   productOldPrice: number;
   productImages: string[];
   colorSizeQuantityCombinations: ColorSizeQuantityCombination[];
+  productReviews : ProductReview[];
 }
 
 export interface ColorSizeQuantityCombination {
   size: string;
   colorQuantityMap: { [color: string]: number };
+}
+
+export interface ProductReview {
+  comment : string;
+  username : string;
+  stars : number;
+  image : string;
+  creationDate : Date;
 }

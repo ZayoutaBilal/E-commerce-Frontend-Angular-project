@@ -10,6 +10,8 @@ import { AuthService } from 'src/app/services/auth.service';
 import { CartService } from 'src/app/services/cart.service';
 import { ProductToCartModule } from 'src/app/models/product-to-cart/product-to-cart.module';
 import { ColorSizeQuantityCombination } from 'src/app/models/product-details/product-details.module';
+import { StorageService } from 'src/app/services/storage.service';
+import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
   selector: 'app-shop',
@@ -19,6 +21,7 @@ import { ColorSizeQuantityCombination } from 'src/app/models/product-details/pro
 export class ShopComponent {
   
   isLoggedIn: boolean = false;
+  private CartLength:number=0;
   
   products: { content: ProductOverview[]; totalPages: number; totalElements: number; } | null = null;
   currentPage: number = 0;
@@ -37,6 +40,8 @@ export class ShopComponent {
   colorSizeQuantityCombinations: ColorSizeQuantityCombination[] = [];
   selectedSize: string | null = null;
   selectedColor: string | null = null;
+
+
   
 
   setRating(star: number): void {
@@ -53,7 +58,8 @@ export class ShopComponent {
     private router : Router,
     private authService : AuthService,
     private cartService : CartService,
-    
+    private storageService : StorageService,
+    private sharedService : SharedService
     
   ) {}
 
@@ -65,6 +71,15 @@ export class ShopComponent {
       this.categories = data;
     });
     this.loadProducts(this.currentPage);
+
+    this.sharedService.searchCategory$.subscribe((cat) => {
+      if(cat) {
+        this.getProductsByCategory(cat);
+      }
+    });
+    
+
+    
   }
 
   toggleCategory(categoryName: string): void {
@@ -74,8 +89,8 @@ export class ShopComponent {
   
 
 
-  loadProducts(page: number, categoryName? : string,origin? : string): void {
-    if(categoryName && origin){
+  loadProducts(page: number, categoryName? : string,origin : string =''): void {
+    if(categoryName){
       this.productService.getProductByCategpry(categoryName,origin,page).subscribe({
         next: (data) => {
           this.products = data;
@@ -87,7 +102,8 @@ export class ShopComponent {
         }
       });
     }else{
-      this.productService.getAllForCustomer(page).subscribe({
+      if(this.isLoggedIn)
+      {this.productService.getAllForCustomer(page).subscribe({
         next: (data) => {
           this.products = data;
           this.currentPage = page;
@@ -97,13 +113,16 @@ export class ShopComponent {
          this.notificationService.handleSaveError(error);
         }
       });
+    }else{
+      
+    }
     }
   }
 
-  getProductsByCategory(categoryName : string,origin : string) : void {
+  getProductsByCategory(categoryName : string,origin : string = '') : void {
     this.categoryChosen=categoryName;
     this.origin=origin;
-    this.path=["/",origin,"/",categoryName].join(' ');
+    this.path=[origin ? '/' : '',origin,"/",categoryName].join(' ');
     this.loadProducts(0,categoryName,origin);
 
   }
@@ -215,9 +234,13 @@ export class ShopComponent {
       return;
     }
 
+    
+
     const prod = new ProductToCartModule(this.selectedProduct.id, 1, this.selectedColor, this.selectedSize);
     this.cartService.addProductToCart(prod).subscribe(
       {next:(response) => {
+        this.CartLength=this.storageService.getCartLength();
+        this.storageService.setCartLength(++this.CartLength);
         this.notificationService.showSuccess("Cart",response.body ?? undefined);
       },
       error:(error) => {

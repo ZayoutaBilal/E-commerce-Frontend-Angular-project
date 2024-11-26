@@ -1,4 +1,4 @@
-import { Component, OnInit,Output,EventEmitter } from '@angular/core';
+import { Component, OnInit,Output,EventEmitter, ViewChild, ElementRef, AfterViewInit, HostListener } from '@angular/core';
 import { AuthService } from './services/auth.service';
 
 
@@ -9,6 +9,7 @@ import { AuthService } from './services/auth.service';
 })
 export class AppComponent implements OnInit {
   isLoading = true;
+  showBackToTop = false;
   constructor(private authService: AuthService) {}
   
 
@@ -28,4 +29,19 @@ export class AppComponent implements OnInit {
       });
    }, 2000);
   }
+  @HostListener('window:scroll', [])
+  onScroll() {
+    // Ensure this gets triggered
+    this.showBackToTop = window.scrollY > 200; // Adjust value if needed
+    console.log('Scroll event detected. ScrollY:', window.scrollY); // Debug log
+  }
+
+  scrollToTop() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  }
+
+  
 }

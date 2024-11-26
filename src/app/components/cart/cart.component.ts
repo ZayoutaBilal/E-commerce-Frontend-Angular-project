@@ -57,6 +57,7 @@ export class CartComponent implements OnInit {
         this.cartService.removeItemFromCartItem(itemId).subscribe({
           next:(response) => {
             this.cartItems = this.cartItems.filter(item => item.itemId !== itemId);
+            this.storage.setCartLength(this.cartItems.length);
             this.notificationService.showSuccess("Cart",response.body ?? undefined);
           },error:(error) => {
             this.notificationService.handleSaveError(error);
