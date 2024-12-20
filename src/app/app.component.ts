@@ -31,9 +31,7 @@ export class AppComponent implements OnInit {
   }
   @HostListener('window:scroll', [])
   onScroll() {
-    // Ensure this gets triggered
-    this.showBackToTop = window.scrollY > 200; // Adjust value if needed
-    console.log('Scroll event detected. ScrollY:', window.scrollY); // Debug log
+    this.showBackToTop = window.scrollY > 200;
   }
 
   scrollToTop() {

@@ -52,7 +52,7 @@ export class ProfileComponent implements OnInit {
         this.initialized = true;
       },
       error: (error) => {
-        console.error('Error fetching user info', error);
+        this.notificationService.handleSaveError(error);
         this.clearUserInfo();
       }
     });
@@ -183,19 +183,7 @@ export class ProfileComponent implements OnInit {
   }
 
   private handleSaveError(error: any) {
-    switch (error.status) {
-      case 400:
-      case 404:
-        this.notificationService.showWarning("Account", error.error);
-        break;
-      case 0:
-      case 503:
-        this.notificationService.showError("Account", "Service Unavailable");
-        break;
-      case 500:
-        this.notificationService.showError("Account", "An internal server error occurred. Please try again later.");
-        break;
-    }
+    this.notificationService.handleSaveError(error);
   }
 
   private updateUserInfoOrigin() {

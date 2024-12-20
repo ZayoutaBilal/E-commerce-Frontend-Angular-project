@@ -1,11 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ProductService } from 'src/app/services/product.service';
 import { ProductOverview } from 'src/app/models/product-overview/product-overview.module';
 import { Category } from 'src/app/models/category/category.module';
 import { CategoryService } from 'src/app/services/category.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { Router }  from '@angular/router';
-import { Modal } from 'bootstrap';
 import { AuthService } from 'src/app/services/auth.service';
 import { CartService } from 'src/app/services/cart.service';
 import { ProductToCartModule } from 'src/app/models/product-to-cart/product-to-cart.module';
@@ -18,7 +17,7 @@ import { SharedService } from 'src/app/services/shared.service';
   templateUrl: './shop.component.html',
   styleUrls: ['./shop.component.css']
 })
-export class ShopComponent {
+export class ShopComponent implements OnInit,OnDestroy{
   
   isLoggedIn: boolean = false;
   private CartLength:number=0;
@@ -62,19 +61,24 @@ export class ShopComponent {
     private sharedService : SharedService
     
   ) {}
+  ngOnDestroy(): void {
+    this.sharedService.updateSearchQuery("");
+  }
 
   ngOnInit(): void {
     this.authService.isLoggedIn().subscribe((status) => {
       this.isLoggedIn = status;
     });
+
     this.categoryService.getCategories().subscribe((data) => {
       this.categories = data;
     });
-    this.loadProducts(this.currentPage);
 
-    this.sharedService.searchCategory$.subscribe((cat) => {
-      if(cat) {
-        this.getProductsByCategory(cat);
+    this.sharedService.searchCategory$.subscribe((category) => {
+      if(category) {
+        this.getProductsByCategory(category);
+      }else{
+        this.loadProducts(this.currentPage);
       }
     });
     

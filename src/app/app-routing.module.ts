@@ -14,7 +14,7 @@ import { ProductDetailsComponent } from './components/product-details/product-de
 const routes: Routes = [
   
 
-  { path: '', component: HomeComponent },
+  { path: 'home', component: HomeComponent },
   { path: 'loading', component: LoadingComponent },
   { path: 'product-details/:productId', component: ProductDetailsComponent },
   { path: 'contact', component: ContactComponent },
@@ -24,7 +24,7 @@ const routes: Routes = [
   { path: 'signin', component: SignComponent },
   { path: "profile", component: ProfileComponent, canActivate: [authGuard] },
   { path: "cart", component: CartComponent, canActivate: [authGuard] },
-  { path: '**', redirectTo: '', pathMatch: 'full' }
+  { path: '**', redirectTo: 'home', pathMatch: 'full' }
 ];
 
 @NgModule({

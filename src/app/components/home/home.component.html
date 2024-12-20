@@ -1,1 +1,153 @@
-<p>home works!</p>
+<!-- Carousel Start -->
+<div class="container-fluid mb-3">
+    <div class="row px-xl-5">
+      <div class="col-lg-8">
+        <div id="header-carousel" class="carousel slide carousel-fade mb-30 mb-lg-0" data-bs-ride="carousel">
+          <ol class="carousel-indicators">
+            <li data-bs-target="#header-carousel" data-bs-slide-to="0" class="active"></li>
+            <li data-bs-target="#header-carousel" data-bs-slide-to="1"></li>
+            <li data-bs-target="#header-carousel" data-bs-slide-to="2"></li>
+          </ol>
+          <div class="carousel-inner">
+            <div class="carousel-item active" style="height: 430px;">
+              <img src="../../../assets/images/carousel-1.jpg" class="d-block w-100 h-100" alt="Men Fashion" style="object-fit: cover;">
+              <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                <div class="p-3" style="max-width: 700px;">
+                  <h1 class="display-4 text-white mb-3">Men Fashion</h1>
+                  <p class="mx-md-5 px-5">Discover the latest styles for men.</p>
+                  <a href="#" class="btn btn-primary py-2 px-4">Shop Now</a>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item" style="height: 430px;">
+              <img src="../../../assets/images/carousel-2.jpg" class="d-block w-100 h-100" alt="Women Fashion" style="object-fit: cover;">
+              <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                <div class="p-3" style="max-width: 700px;">
+                  <h1 class="display-4 text-white mb-3">Women Fashion</h1>
+                  <p class="mx-md-5 px-5">Elegant and trendy styles for women.</p>
+                  <a href="#" class="btn btn-primary py-2 px-4">Shop Now</a>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item" style="height: 430px;">
+              <img src="../../../assets/images/carousel-3.jpg" class="d-block w-100 h-100" alt="Kids Fashion" style="object-fit: cover;">
+              <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                <div class="p-3" style="max-width: 700px;">
+                  <h1 class="display-4 text-white mb-3">Kids Fashion</h1>
+                  <p class="mx-md-5 px-5">Trendy outfits for the little ones.</p>
+                  <a href="#" class="btn btn-primary py-2 px-4">Shop Now</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="product-offer mb-3" style="height: 200px;">
+          <img src="../../../assets/images/carousel-1.jpg" class="img-fluid" alt="">
+          <div class="offer-text">
+            <h6 class="text-white text-uppercase">Save 20%</h6>
+            <h3 class="text-white mb-3">Special Offer</h3>
+            <a href="#" class="btn btn-primary">Shop Now</a>
+          </div>
+        </div>
+        <div class="product-offer mb-30" style="height: 200px;">
+          <img src="../../../assets/images/carousel-1.jpg" class="img-fluid" alt="">
+          <div class="offer-text">
+            <h6 class="text-white text-uppercase">Save 20%</h6>
+            <h3 class="text-white mb-3">Special Offer</h3>
+            <a href="#" class="btn btn-primary">Shop Now</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Carousel End -->
+
+
+  
+    <!-- Categories Start -->
+    <div class="container-fluid pt-5">
+        <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4">
+            <span class="pr-3 bg-transparent">Categories</span>
+        </h2>
+        <div class="row px-xl-5 pb-3 text-center">
+            <div *ngFor="let category of categories" class="col-12 mb-4">
+                <!-- Main Category Name -->
+                <h4>{{ category.name }}</h4>
+                <div class="row">
+                    <!-- Subcategories -->
+                    <div *ngFor="let subcategory of category.subcategories; let i = index" class="col-lg-3 col-md-4 col-sm-6 pb-1" (click)="onSearch(subcategory)">
+                        <a class="text-decoration-none">
+                            <div class="cat-item d-flex align-items-center mb-4">
+                                <div class="overflow-hidden" style="width: 100px; height: 100px;">
+                                    <img class="img-fluid" src="../../../assets/images/categories/{{subcategory}}.jpeg" alt="{{ subcategory }}">
+                                </div>
+                                <div class="flex-fill pl-3">
+                                    <h5>{{ subcategory }}</h5>
+                                    <small class="text-body">{{ category.productsCount[i] }} Products</small>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Categories End -->
+
+
+
+    
+   <!-- Products Start -->
+<div class="container-fluid py-5">
+  <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4">
+    <span class="bg-transparent pr-3">Recent Products</span>
+  </h2>
+  <div class="row px-xl-5">
+    <div class="col">
+      <ngb-carousel [interval]="4000" [wrap]="true" [pauseOnHover]="true" *ngIf="recentProducts">
+        <ng-template ngbSlide *ngFor="let group of productGroups">
+          <div class="row">
+            <div *ngFor="let product of group" class="col-md-3">
+              <div class="product-item bg-light">
+                <div class="product-img position-relative overflow-hidden">
+                  <img
+                    class="img-fluid w-100"
+                    [src]="'data:image/jpeg;base64,' + product.image"
+                    alt="{{ product.name }}"
+                  />
+                </div>
+                <div class="text-center py-4">
+                  <a class="h6 text-decoration-none text-truncate" [routerLink]="['/product-details',product.id]">{{ product.name }}</a>
+                  <div class="d-flex align-items-center justify-content-center mt-2">
+                    <h5>{{ product.newPrice | currency }}</h5>
+                    <h6 class="text-muted ml-2">
+                      <del>{{ product.oldPrice | currency }}</del>
+                    </h6>
+                  </div>
+                  <div class="d-flex align-items-center justify-content-center mb-1">
+                    <ul class="list-unstyled d-flex mb-1">
+                      <li>
+                        <i
+                          *ngFor="let star of [].constructor(5); let i = index"
+                          class="fa fa-star"
+                          [ngClass]="{ 'text-warning': i < product.stars, 'text-muted': i >= product.stars }"
+                        >
+                        </i>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </ngb-carousel>
+    </div>
+  </div>
+</div>
+<!-- Products End -->
+
+  

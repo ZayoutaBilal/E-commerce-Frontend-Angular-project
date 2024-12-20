@@ -9,7 +9,8 @@ export class SharedService {
   private searchCategory = new BehaviorSubject<string>('');
   searchCategory$ = this.searchCategory.asObservable();
 
-  updateSearchQuery(query: string): void {
-    this.searchCategory.next(query);
+  updateSearchQuery(searchCategory: string): void {
+    this.searchCategory.next(searchCategory);
   }
+  
 }

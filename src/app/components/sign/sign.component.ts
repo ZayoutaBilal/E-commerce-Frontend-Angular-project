@@ -1,5 +1,4 @@
 import { Component, AfterViewInit, OnInit ,Inject,PLATFORM_ID} from '@angular/core';
-// import { MatDialog } from '@angular/material/dialog';
 import { isPlatformBrowser } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { PopupDialogComponent } from '../popup-dialog/popup-dialog.component';
@@ -7,13 +6,10 @@ import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { UserDetailsModule } from '../../models/user-details/user-details.module';
 import {CookieService} from 'ngx-cookie-service';
-import { NavigationEnd } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { NotificationService } from '../../services/notification.service';
-import { response } from 'express';
 import { HttpResponse } from '@angular/common/http';
-import { error } from 'console';
-import { ProfileComponent } from '../profile/profile.component';
+
 @Component({
   selector: 'app-sign',
   templateUrl: './sign.component.html',
@@ -43,7 +39,7 @@ export class SignComponent implements AfterViewInit {
     private notificationService : NotificationService,
     @Inject(PLATFORM_ID) private platformId: Object,
     private authService: AuthService,
-    private profileComponent : ProfileComponent
+    
     
   ) { }
   

@@ -36,6 +36,10 @@ export class ProductService {
     return this.http.get<Page<ProductOverview>>(`${this.apiURL}/customer/products/all-for-customer`,{headers : this.headersWithToken , params : params });
   }
 
+  getRecentProducts(): Observable<Page<ProductOverview>> {
+    return this.http.get<Page<ProductOverview>>(`${this.apiURL}/user/products/recent`,{headers : this.headers });
+  }
+
   getProductByCategpry(categoryName : string,origin : string,page: number): Observable<Page<ProductOverview>> {
     const body = {
       categoryName,origin,page

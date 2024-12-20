@@ -21,13 +21,14 @@ import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dial
 import { CartComponent } from './components/cart/cart.component';
 import { ShopComponent } from './components/shop/shop.component';
 import { ProductDetailsComponent } from './components/product-details/product-details.component';
-import { ScrollTopComponent } from './components/scroll-top/scroll-top.component';
+import { HomeComponent } from './components/home/home.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
+    HomeComponent,
     FooterComponent,
     ContactComponent,
     SignComponent,
@@ -37,7 +38,7 @@ import { ScrollTopComponent } from './components/scroll-top/scroll-top.component
     CartComponent,
     ShopComponent,
     ProductDetailsComponent,
-    ScrollTopComponent
+    
   ],
   imports: [
     BrowserModule,
@@ -67,7 +68,7 @@ import { ScrollTopComponent } from './components/scroll-top/scroll-top.component
 
   providers: [
     ConfirmDialogComponent,
-    ProfileComponent,
+    
   ],
   bootstrap: [AppComponent]
 })

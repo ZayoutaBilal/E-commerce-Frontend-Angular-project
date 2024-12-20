@@ -3,21 +3,18 @@
     margin-bottom: 70px;
   }
 
- 
-  .back-to-top {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 1000;
-    display: none;
-    background-color: #59ab6e !important;
-    border-color: #59ab6e !important;
-  }
 
-
-  
-  .back-to-top.show {
-    display: block;
-    cursor: pointer;
+.back-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  display: none;
+  background-color: #59ab6e !important;
+  border-color: #59ab6e !important;
 }
-  
+
+.back-to-top.show {
+  display: block;
+  cursor: pointer;
+}
