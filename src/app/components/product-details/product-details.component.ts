@@ -18,7 +18,7 @@ declare var bootstrap: any;
 })
 
 
-export class ProductDetailsComponent implements OnInit,AfterViewInit{
+export class ProductDetailsComponent implements OnInit{
 
   isLoggedIn: boolean = false;
   private CartLength:number=0;
@@ -65,15 +65,7 @@ export class ProductDetailsComponent implements OnInit,AfterViewInit{
     
   }
 
-  ngAfterViewInit(): void {
-    // Initialize carousel after the view is loaded
-    const carouselElement = document.querySelector('#product-carousel')!;
-    const carousel = new bootstrap.Carousel(carouselElement, {
-      interval: 3000, // Auto sliding every 3 seconds
-      ride: 'carousel', // Auto-start the carousel on page load
-    });
-    carousel.cycle();
-  }
+
 
   
 
@@ -116,7 +108,7 @@ export class ProductDetailsComponent implements OnInit,AfterViewInit{
   }
   
 
-  addItemToCart(productId: number): void {
+  addItemToCart(pid: number): void {
 
     if(!this.isLoggedIn){
       this.router.navigateByUrl('/signin');
@@ -134,7 +126,7 @@ export class ProductDetailsComponent implements OnInit,AfterViewInit{
       return;
     }
 
-    const product = new ProductToCartModule(productId, selectedQuantity, selectedColor, selectedSize);
+    const product = new ProductToCartModule(pid, selectedQuantity, selectedColor, selectedSize);
     this.cartService.addProductToCart(product).subscribe(
       {next:(response) => {
         this.CartLength=this.storageService.getCartLength();

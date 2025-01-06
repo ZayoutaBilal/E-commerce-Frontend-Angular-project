@@ -19,28 +19,41 @@ export class ProductService {
 
   private token = this.storage.getItem('token');
 
-  private headers = new HttpHeaders({ 'Content-Type': 'application/json'});
-
-  private headersWithToken = new HttpHeaders({
-    'Authorization': `Bearer ${this.token}`,
-    'Content-Type': 'application/json'
-  });
+  private headers : HttpHeaders;
 
 
   constructor(private http: HttpClient,
     private storage : StorageService
-  ){ }
+  ){ 
+    console.log(this.token)
+    if(this.token){
+      this.headers=new HttpHeaders({
+        'Authorization': `Bearer ${this.token}`,
+        'Content-Type': 'application/json'
+      });    
+    }else{
+      this.headers = new HttpHeaders({ 'Content-Type': 'application/json'});
+    }
+  }
 
   getAllForCustomer(page: number): Observable<Page<ProductOverview>> {
     const params = new HttpParams().set('page', page);
-    return this.http.get<Page<ProductOverview>>(`${this.apiURL}/customer/products/all-for-customer`,{headers : this.headersWithToken , params : params });
+    return this.http.get<Page<ProductOverview>>(`${this.apiURL}/customer/products/all-for-customer`,{headers : this.headers , params : params });
+  }
+
+  getRecommendationsForNewUser(page: number): Observable<Page<ProductOverview>>{
+    return this.http.get<Page<ProductOverview>>(`${this.apiURL}/user/products/new-user?page=${page}`);
   }
 
   getRecentProducts(): Observable<Page<ProductOverview>> {
     return this.http.get<Page<ProductOverview>>(`${this.apiURL}/user/products/recent`,{headers : this.headers });
   }
 
-  getProductByCategpry(categoryName : string,origin : string,page: number): Observable<Page<ProductOverview>> {
+  getMostLikedProducts(): Observable<Page<ProductOverview>> {
+    return this.http.get<Page<ProductOverview>>(`${this.apiURL}/user/products/most-liked`,{headers : this.headers });
+  }
+
+  getProductByCategory(categoryName : string,origin : string,page: number): Observable<Page<ProductOverview>> {
     const body = {
       categoryName,origin,page
     };
@@ -58,6 +71,6 @@ export class ProductService {
   }
 
   submitFeedback(productRating:any): Observable<HttpResponse<string>> {
-    return this.http.post<string>(`${this.apiURL}/customer/products/rate-and-comment`,productRating,{headers : this.headersWithToken, observe: 'response', responseType: 'text' as 'json' });
+    return this.http.post<string>(`${this.apiURL}/customer/products/rate-and-comment`,productRating,{headers : this.headers, observe: 'response', responseType: 'text' as 'json' });
   }
 }

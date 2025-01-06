@@ -22,7 +22,9 @@ export class HomeComponent implements OnInit{
   categories: Category[] = [];
   searchCategory = '';
   recentProducts : { content: ProductOverview[]; totalPages: number; totalElements: number; } | null = null;
+  mostlikedProducts : { content: ProductOverview[]; totalPages: number; totalElements: number; } | null = null;
   productGroups: ProductOverview[][] = [];
+  mostlikedGroup: ProductOverview[][] = [];
 
   constructor(private productService: ProductService,
       private categoryService: CategoryService,
@@ -46,6 +48,11 @@ export class HomeComponent implements OnInit{
         this.recentProducts = data;
         this.createProductGroups();
       });
+
+      this.productService.getMostLikedProducts().subscribe((data) => {
+        this.mostlikedProducts = data;
+        this.createlikedProductGroups();
+      });
       
     }
 
@@ -61,6 +68,16 @@ export class HomeComponent implements OnInit{
       if (this.recentProducts?.content) {
         for (let i = 0; i < this.recentProducts.content.length; i += groupSize) {
           this.productGroups.push(this.recentProducts.content.slice(i, i + groupSize));
+        }
+      }
+    }
+
+    createlikedProductGroups(): void {
+      console.log(this.mostlikedProducts)
+      const groupSize = 4;
+      if (this.mostlikedProducts?.content) {
+        for (let i = 0; i < this.mostlikedProducts.content.length; i += groupSize) {
+          this.mostlikedGroup.push(this.mostlikedProducts.content.slice(i, i + groupSize));
         }
       }
     }

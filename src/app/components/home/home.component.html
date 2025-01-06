@@ -100,15 +100,15 @@
 
 
     
-   <!-- Products Start -->
+   <!-- liked rated Products Start -->
 <div class="container-fluid py-5">
   <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4">
-    <span class="bg-transparent pr-3">Recent Products</span>
+    <span class="bg-transparent pr-3">Most liked Products</span>
   </h2>
   <div class="row px-xl-5">
     <div class="col">
-      <ngb-carousel [interval]="4000" [wrap]="true" [pauseOnHover]="true" *ngIf="recentProducts">
-        <ng-template ngbSlide *ngFor="let group of productGroups">
+      <ngb-carousel [interval]="4000" [wrap]="true" [pauseOnHover]="true" *ngIf="mostlikedProducts">
+        <ng-template ngbSlide *ngFor="let group of mostlikedGroup">
           <div class="row">
             <div *ngFor="let product of group" class="col-md-3">
               <div class="product-item bg-light">
@@ -148,6 +148,60 @@
     </div>
   </div>
 </div>
-<!-- Products End -->
+<!-- liked rated Products End -->
+
+
+
+
+   <!-- recent Products Start -->
+   <div class="container-fluid py-5">
+    <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4">
+      <span class="bg-transparent pr-3">Recent Products</span>
+    </h2>
+    <div class="row px-xl-5">
+      <div class="col">
+        <ngb-carousel [interval]="4000" [wrap]="true" [pauseOnHover]="true" *ngIf="recentProducts">
+          <ng-template ngbSlide *ngFor="let group of productGroups">
+            <div class="row">
+              <div *ngFor="let product of group" class="col-md-3">
+                <div class="product-item bg-light">
+                  <div class="product-img position-relative overflow-hidden">
+                    <img
+                      class="img-fluid w-100"
+                      [src]="'data:image/jpeg;base64,' + product.image"
+                      alt="{{ product.name }}"
+                    />
+                  </div>
+                  <div class="text-center py-4">
+                    <a class="h6 text-decoration-none text-truncate" [routerLink]="['/product-details',product.id]">{{ product.name }}</a>
+                    <div class="d-flex align-items-center justify-content-center mt-2">
+                      <h5>{{ product.newPrice | currency }}</h5>
+                      <h6 class="text-muted ml-2">
+                        <del>{{ product.oldPrice | currency }}</del>
+                      </h6>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-center mb-1">
+                      <ul class="list-unstyled d-flex mb-1">
+                        <li>
+                          <i
+                            *ngFor="let star of [].constructor(5); let i = index"
+                            class="fa fa-star"
+                            [ngClass]="{ 'text-warning': i < product.stars, 'text-muted': i >= product.stars }"
+                          >
+                          </i>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </ngb-carousel>
+      </div>
+    </div>
+  </div>
+  <!-- recent Products End -->
+  
 
   

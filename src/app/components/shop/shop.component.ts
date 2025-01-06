@@ -95,7 +95,7 @@ export class ShopComponent implements OnInit,OnDestroy{
 
   loadProducts(page: number, categoryName? : string,origin : string =''): void {
     if(categoryName){
-      this.productService.getProductByCategpry(categoryName,origin,page).subscribe({
+      this.productService.getProductByCategory(categoryName,origin,page).subscribe({
         next: (data) => {
           this.products = data;
           this.currentPage = page;
