@@ -1,0 +1,28 @@
+.container-fluid {
+  padding: 0 1rem;
+  overflow-x: hidden;
+}
+
+.content {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.row.g-3 {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+button {
+  max-width: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+

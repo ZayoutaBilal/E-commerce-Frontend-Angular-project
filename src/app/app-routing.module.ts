@@ -11,8 +11,14 @@ import { HomeComponent } from './components/home/home.component';
 import { CartComponent } from './components/cart/cart.component';
 import { ShopComponent } from './components/shop/shop.component';
 import { ProductDetailsComponent } from './components/product-details/product-details.component';
+import { CustomerServiceComponent } from './components/customer-service/customer-service.component';
+import { CategoriesComponent } from './components/categories/categories.component';
+import {OverviewComponent} from "./components/overview/overview.component";
+import {NewProductComponent} from "./components/products-routes/new-product/new-product.component";
+import {ProductsComponent} from "./components/products-routes/products/products.component";
+import {ProductDetailComponent} from "./components/products-routes/product-detail/product-detail.component";
 const routes: Routes = [
-  
+
 
   { path: 'home', component: HomeComponent },
   { path: 'loading', component: LoadingComponent },
@@ -22,6 +28,11 @@ const routes: Routes = [
   { path: 'about', component: AboutComponent },
   { path: 'signup', component: SignComponent },
   { path: 'signin', component: SignComponent },
+  { path: 'customer-service', component: CustomerServiceComponent },
+  { path: 'customer-service/categories', component: CategoriesComponent },
+  { path: 'customer-service/products', component: ProductsComponent },
+  { path: 'customer-service/products/new', component: NewProductComponent },
+  { path: 'customer-service/products/product', component: ProductDetailComponent },
   { path: "profile", component: ProfileComponent, canActivate: [authGuard] },
   { path: "cart", component: CartComponent, canActivate: [authGuard] },
   { path: '**', redirectTo: 'home', pathMatch: 'full' }

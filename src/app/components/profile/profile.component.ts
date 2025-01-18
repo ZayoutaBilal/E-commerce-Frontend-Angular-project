@@ -21,8 +21,8 @@ export class ProfileComponent implements OnInit {
   newPassword = undefined;
   oldPassword = undefined;
   confirmPassword = undefined;
-  
-  
+
+
 
   constructor(private userService: UserService,
               private notificationService: NotificationService,
@@ -40,9 +40,9 @@ export class ProfileComponent implements OnInit {
     });
   }
 
- 
 
-  
+
+
 
   loadUserInfo(): void {
     this.userService.getUserInfo().subscribe({
@@ -71,23 +71,23 @@ export class ProfileComponent implements OnInit {
     switch (this.selectedTab) {
       case 'account-general': {
         if (this.userInfo.username.length < 5 || this.userInfo.username.length > 15) {
-          this.notificationService.showWarning("Account", "Username must be between 5 and 15 chars");
+          this.notificationService.showWarning("Username must be between 5 and 15 chars");
           break;
         }
         if (this.userInfo.username) {
           this.userService.updateUsername(this.userInfo.username).subscribe({
             next: (response) => {
-              this.notificationService.showSuccess("Account", response.body ?? undefined);
+              this.notificationService.showSuccess(response.body ?? undefined);
               this.userInfoOrigin.username = this.userInfo.username;
             },
             error: (error) =>  {
               this.userInfo.username=this.userInfoOrigin.username;
               this.notificationService.handleSaveError(error);
-              
+
             }
           });
         } else {
-          this.notificationService.showWarning("Account", "You must fill in the username field");
+          this.notificationService.showWarning("You must fill in the username field");
         }
         break;
       }
@@ -103,7 +103,7 @@ export class ProfileComponent implements OnInit {
           this.userInfo.city
         ).subscribe({
           next: (response) => {
-            this.notificationService.showSuccess("Account", response.body ?? undefined);
+            this.notificationService.showSuccess(response.body ?? undefined);
             this.updateUserInfoOrigin();
           },
           error: (error) => {
@@ -119,15 +119,15 @@ export class ProfileComponent implements OnInit {
           if (this.newPassword === this.confirmPassword) {
             this.userService.updatePassword(this.oldPassword, this.newPassword).subscribe({
               next: (response) => {
-                this.notificationService.showSuccess("Account", response.body ?? undefined);
+                this.notificationService.showSuccess(response.body ?? undefined);
               },
               error: (error) => this.handleSaveError(error)
             });
           } else {
-            this.notificationService.showWarning("Account", "Passwords do not match");
+            this.notificationService.showWarning("Passwords do not match");
           }
         } else {
-          this.notificationService.showWarning("Account", "You must fill all inputs");
+          this.notificationService.showWarning("You must fill all inputs");
         }
         break;
       }
@@ -142,13 +142,13 @@ export class ProfileComponent implements OnInit {
       if (result) {
         this.userService.deleteMyAccount().subscribe({
           next: (response) => {
-            this.notificationService.showSuccess("Account", response.body ?? undefined);
+            this.notificationService.showSuccess(response.body ?? undefined);
             this.authService.logOut();
           },
           error: (error) => this.handleSaveError(error)
         });
       } else {
-        this.notificationService.showInfo("Account", "Thank you for not deleting your account");
+        this.notificationService.showInfo("Thank you for not deleting your account");
       }
     });
   }
@@ -157,20 +157,19 @@ export class ProfileComponent implements OnInit {
     const fileInput = event.target as HTMLInputElement;
     if (fileInput.files && fileInput.files[0]) {
       const file = fileInput.files[0];
-      
-      if (file.size > 1024 * 1024) {
-        this.notificationService.showWarning("Account", 'File size should not exceed 1 MB.');
-        return;
-      }
 
       if (!['image/jpeg', 'image/gif', 'image/png', 'image/jpg'].includes(file.type)) {
-        this.notificationService.showWarning("Account", 'Only JPG, GIF, or PNG formats are allowed.');
+        this.notificationService.showWarning('Only JPG, GIF, JPEG, or PNG formats are allowed.');
+        return;
+      }
+      if (file.size > 1024 * 1024) {
+        this.notificationService.showWarning('File size should not exceed 1 MB.');
         return;
       }
 
-      this.userService.updatePictur(file).subscribe({
+      this.userService.updatePicture(file).subscribe({
         next: (response) => {
-          this.notificationService.showSuccess("Account", response.body ?? undefined);
+          this.notificationService.showSuccess(response.body ?? undefined);
           const reader = new FileReader();
           reader.onload = () => {
             this.userInfo.picture = reader.result?.toString().split(',')[1] || '';

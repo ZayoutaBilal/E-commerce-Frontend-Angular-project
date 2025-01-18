@@ -9,30 +9,25 @@ import { StorageService } from './storage.service';
 import { ProductOverview } from '../models/product-overview/product-overview.module';
 import { Page } from '../models/page/page.module';
 import { ColorSizeQuantityCombination, ProductDetailsModule } from '../models/product-details/product-details.module';
+import {environment} from "../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
 
-  private apiURL = 'http://localhost:8080';
+  private apiURL = environment.apiUrl;
 
   private token = this.storage.getItem('token');
 
-  private headers : HttpHeaders;
+  private readonly headers : HttpHeaders = new HttpHeaders();
 
 
   constructor(private http: HttpClient,
     private storage : StorageService
-  ){ 
-    console.log(this.token)
+  ){
     if(this.token){
-      this.headers=new HttpHeaders({
-        'Authorization': `Bearer ${this.token}`,
-        'Content-Type': 'application/json'
-      });    
-    }else{
-      this.headers = new HttpHeaders({ 'Content-Type': 'application/json'});
+      this.headers = this.headers.append('Authorization', `Bearer ${this.token}`);
     }
   }
 

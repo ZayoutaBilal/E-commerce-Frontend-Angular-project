@@ -1,0 +1,34 @@
+.fly-item {
+  position: absolute;
+  top: -6.5px;
+  right: -6.5px;
+  height: 19px;
+  width: 19px;
+  font-size: 12px;
+  border-radius: 50%;
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-weight: bold;
+}
+
+.trinagleErr{
+  transition: all ease-in 0.3s;
+}
+
+.errors::after{
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  top: -25px;
+
+  right: 8px;
+  border-top: 15px solid transparent;
+  /* border-bottom: 15px solid rgb(239 68 68 / 5); */
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 15px solid black;
+
+}
+

@@ -35,7 +35,7 @@ export class HomeComponent implements OnInit{
       private sharedService : SharedService,
       private http: HttpClient,
       private router: Router
-      
+
     ) {}
 
 
@@ -53,7 +53,7 @@ export class HomeComponent implements OnInit{
         this.mostlikedProducts = data;
         this.createlikedProductGroups();
       });
-      
+
     }
 
     onSearch(subcategory : string): void {
@@ -73,7 +73,7 @@ export class HomeComponent implements OnInit{
     }
 
     createlikedProductGroups(): void {
-      console.log(this.mostlikedProducts)
+
       const groupSize = 4;
       if (this.mostlikedProducts?.content) {
         for (let i = 0; i < this.mostlikedProducts.content.length; i += groupSize) {
@@ -82,5 +82,5 @@ export class HomeComponent implements OnInit{
       }
     }
 
-    
+
 }

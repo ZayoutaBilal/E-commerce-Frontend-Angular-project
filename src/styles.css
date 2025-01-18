@@ -1,10 +1,50 @@
-@import "~bootstrap/dist/css/bootstrap.min.css";
+/*@import "~bootstrap/dist/css/bootstrap.min.css";*/
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap');
+
+body{
+  margin: 0;
+  padding:0;
+  font-family: "Open Sans", sans-serif;
+  background-color: #f4f3ef
+}
+
+/*@tailwind base;*/
+/*@tailwind components;*/
+/*@tailwind utilities;*/
+
+
+
+
+::-webkit-scrollbar {
+  width: 6px;
+
+}
+
+
+::-webkit-scrollbar-thumb {
+  background: #000000;
+  border-radius: 25px;
+  height: 150px;
+}
+
+
+::-webkit-scrollbar-track {
+  background: #f0f0f0;
+}
+
+
+
+
+body {
+  scroll-behavior: smooth;
+}
+
+
+
 
 /*
 
-TemplateMo 559 Zay Shop
 
-https://templatemo.com/tm-559-zay-shop
 
 ---------------------------------------------
 Table of contents
@@ -76,7 +116,7 @@ body, ul, li, p, a, label, input, div {
   #templatemo_main_nav a { color: #212934;}
   #templatemo_main_nav a:hover { color: #69bb7e;}
   #templatemo_main_nav .navbar .nav-icon { margin-right: 20px;}
-  
+
   /* Hero Carousel */
   #template-mo-zay-hero-carousel { background: #efefef !important;}
   /* Accordion */
@@ -169,16 +209,16 @@ body, ul, li, p, a, label, input, div {
     width: 6px;
     height: 6px;
   }
-  
+
   @media (min-width: 576px) {
     .tempaltemo-carousel .h1 { font-size: 1em !important;}
   }
-  
+
   /*// Medium devices (tablets, 768px and up)*/
   @media (min-width: 768px) {
     #templatemo_main_nav .navbar-nav {max-width: 450px;}
    }
-  
+
   /* Large devices (desktops, 992px and up)*/
   @media (min-width: 992px) {
     #templatemo_main_nav .navbar-nav {max-width: 550px;}
@@ -189,11 +229,11 @@ body, ul, li, p, a, label, input, div {
       height: 12px;
     }
   }
-  
+
   /* Extra large devices (large desktops, 1200px and up)*/
   @media (min-width: 1200px) {}
 
-  
+
 /* styles.css */
 * {
   margin: 0; /* Reset margin */

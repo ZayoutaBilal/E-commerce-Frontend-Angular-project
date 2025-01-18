@@ -1,0 +1,81 @@
+<div class="container-fluid px-5">
+  <!-- Title Section (Outside Scrollable Area) -->
+  <div class="mt-5 w-full mb-4 pb-4 border-bottom">
+    <h2 class="h2 font-weight-bold">
+      Categories
+    </h2>
+    <p class="text-muted">
+      Manage Categories
+    </p>
+  </div>
+
+  <!-- Scrollable Content -->
+  <div class="content" style="max-height: calc((100px + 24px) * 3.5 + 16px); overflow-y: auto;">
+    <div class="row g-3">
+      <!-- Add New Category Form -->
+      <div class="col-lg-3">
+        <div class="bg-white shadow-sm rounded p-2 h-100">
+          <form (ngSubmit)="onSubmit()">
+            <div class="form-group mb-2">
+              <input type="text" name="nameCat" class="form-control form-control-sm" placeholder="Enter a Title" [(ngModel)]="nameCat" />
+            </div>
+            <div class="form-group mb-2">
+              <textarea  name="descriptionCat" class="form-control form-control-sm" rows="2" placeholder="Enter a Description" [(ngModel)]="descriptionCat"></textarea>
+            </div>
+            <div class="form-group mb-2">
+              <select name="parentCategory" class="form-control form-control-sm"
+              [(ngModel)]="parentCategoryId">
+                <option value="" disabled selected>Select Parent Category</option>
+                <option [value]="0">None</option>
+                <option *ngFor="let parent of categories" [value]="parent.categoryId">{{ parent.name }}</option>
+              </select>
+            </div>
+            <div class="form-group mb-2">
+              <input type="file" id="image" (change)="onImageChange($event)" accept="image/*" class="form-control-file d-none cursor-pointer" />
+              <div (click)="openImage()" class="cursor-pointer position-relative bg-light border border-secondary rounded d-flex justify-content-center align-items-center"
+                   style="height: 100px; overflow: hidden;">
+                <ng-container *ngIf="imageUrl; else noImage">
+                  <img [src]="imageUrl" [alt]="imageUrl" class="w-100 h-100 object-fit-cover" />
+                </ng-container>
+                <ng-template #noImage>
+                  <img src="../../assets/download.png" alt="preview" class="w-100 h-100 object-fit-contain opacity-50" />
+                </ng-template>
+              </div>
+            </div>
+            <button class="btn btn-dark btn-sm w-100 m-1" type="submit">
+              {{ editMode ? "Edit" : (loading ? "Adding..." : "Add New") }}
+            </button>
+          </form>
+          <button class="btn btn-dark btn-sm w-100 m-1" (click)="clear()">
+            Clear
+          </button>
+        </div>
+      </div>
+
+      <!-- Category Items -->
+      <div class="col-lg-3" *ngFor="let cat of categories">
+        <div class="bg-white shadow-sm rounded p-2 h-100 d-flex flex-column">
+          <div class="cursor-pointer position-relative bg-light border border-secondary rounded d-flex justify-content-center align-items-center"
+               style="height: 100px; overflow: hidden;">
+            <img *ngIf="cat.image" [src]="'data:image/jpeg;base64,'+cat.image" [alt]="cat.name" class="w-100 h-100 object-fit-cover" />
+          </div>
+          <div class="info flex-1 pb-2 border-bottom">
+            <h1 class="h6 font-weight-medium text-truncate">{{ cat.name }}</h1>
+            <p class="text-muted text-truncate" style="min-height: 40px;">{{ cat.description }}</p>
+          </div>
+          <div class="d-flex justify-content-between align-items-center pt-2">
+            <span class="text-muted small">{{ formatReadableDate(cat.createdAt) }}</span>
+            <div class="d-flex align-items-center gap-2">
+              <button class="btn btn-success btn-sm" (click)="update(cat)">
+                <i class="fa-solid fa-pen-to-square"></i>
+              </button>
+              <button class="btn btn-danger btn-sm" (click)="delete(cat)">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

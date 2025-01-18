@@ -5,6 +5,7 @@ import { Observable ,BehaviorSubject } from 'rxjs';
 import { CartService } from '../../services/cart.service';
 import { StorageService } from '../../services/storage.service';
 import { SharedService } from 'src/app/services/shared.service';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 @Component({
   selector: 'app-header',
@@ -17,6 +18,7 @@ export class HeaderComponent implements OnInit {
   menuOpen : boolean = false;
   cartItemsLength = 0;
   searchCategory = '';
+  authorities : string[] = [];
   
 
   constructor(private authService: AuthService,
@@ -34,10 +36,15 @@ export class HeaderComponent implements OnInit {
     this.authService.isLoggedIn().subscribe((status) => {
       this.isLoggedIn = status;
     });
+
+    this.authService.getAuthorities().subscribe((authorities) => {
+      this.authorities = authorities;
+    });
     
     this.storage.cartLength$.subscribe(length => {
       this.cartItemsLength = length;
     });
+
     
   }
 

@@ -4,35 +4,32 @@ import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { StorageService } from './storage.service';
 import { ProductToCartModule } from '../models/product-to-cart/product-to-cart.module';
-
+import { environment } from '../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
 
-  private apiURL = 'http://localhost:8080';
+  private apiURL = environment.apiUrl;
 
   private token = this.storage.getItem('token');
 
-  private headers = new HttpHeaders({ 'Content-Type': 'application/json'});
+  private readonly headers : HttpHeaders = new HttpHeaders();
 
-  private headersWithToken = new HttpHeaders({
-    'Authorization': `Bearer ${this.token}`,
-    'Content-Type': 'application/json'
-  });
-  
 
   constructor(private http: HttpClient,
     private storage : StorageService,
-  ) {}
+  ) {if(this.token){
+    this.headers = this.headers.append('Authorization', `Bearer ${this.token}`);
+  }}
 
   getCartItems(): Observable<ProductCart[]> {
-    return this.http.get<ProductCart[]>(`${this.apiURL}/customer/cart/get-products-from-cart`, { headers : this.headersWithToken });
+    return this.http.get<ProductCart[]>(`${this.apiURL}/customer/cart/get-products-from-cart`, { headers : this.headers });
   }
 
   getCartItemsLength(): Observable<HttpResponse<number>> {
     return this.http.get<number>(`${this.apiURL}/customer/cart/get-cart-length`, {
-      headers: this.headersWithToken,
+      headers: this.headers,
       observe: 'response',
       responseType: 'text' as 'json'
     });
@@ -40,7 +37,7 @@ export class CartService {
 
   removeItemFromCartItem(id: number): Observable<HttpResponse<string>> {
     return this.http.delete<string>(`${this.apiURL}/customer/cart/delete-item-from-cart`, {
-        headers: this.headersWithToken,
+        headers: this.headers,
         observe: 'response',
         responseType: 'text' as 'json',
         params: { itemId: id }
@@ -52,7 +49,7 @@ export class CartService {
       itemId,newQuantity
     };
     return this.http.put<string>(`${this.apiURL}/customer/cart/update-item-quantity`, body,{
-        headers: this.headersWithToken,
+        headers: this.headers,
         observe: 'response',
         responseType: 'text' as 'json'
     });
@@ -60,11 +57,11 @@ export class CartService {
 
   addProductToCart(product : ProductToCartModule) : Observable<HttpResponse<string>>{
     return this.http.post<string>(`${this.apiURL}/customer/cart/add-item-to-cart`, product,{
-      headers: this.headersWithToken,
+      headers: this.headers,
       observe: 'response',
       responseType: 'text' as 'json'
   });
   }
 
-  
+
 }

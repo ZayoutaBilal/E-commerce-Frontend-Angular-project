@@ -12,6 +12,7 @@ import { NotificationService } from './notification.service';
 })
 export class AuthService {
   private loggedIn = new BehaviorSubject<boolean>(false);
+  private authorities = new BehaviorSubject<string[]>([]);
  
   
 
@@ -29,12 +30,12 @@ export class AuthService {
     
       const token = this.storage.getItem('token');
       if (token !== null && token !== '') {
-        this.userService.checkToken(token as string).subscribe({
-          next: () => {
+        this.userService.checkToken().subscribe({
+          next: (response) => {
             this.loggedIn.next(true);
-           this.router.navigate(['/']);
-           setTimeout( () => {this.notificationService.showInfo(`Welcome back`);},2000);
-            
+            this.authorities.next(response.body ?? []);
+            this.router.navigate(['/']);
+            setTimeout( () => {this.notificationService.show(`Welcome back`);},2000);
           },
           error: () => {
             this.loggedIn.next(false);
@@ -48,24 +49,29 @@ export class AuthService {
     
   }
 
-  logIn(token: string) {
+  logIn(token: string,authorities: string[]) {
+    console.log("authorities",authorities);
     this.storage.setItem('token',token);
     this.loggedIn.next(true);
+    this.authorities.next(authorities);
     window.location.reload();
-    
-    
   }
 
   logOut() {
     
     this.storage.removeItem('token');
     this.loggedIn.next(false);
+    this.authorities.next([]);
     this.router.navigateByUrl('/');
     
   }
 
   isLoggedIn() {
     return this.loggedIn.asObservable();
+  }
+
+  getAuthorities() {
+    return this.authorities.asObservable();
   }
   
 

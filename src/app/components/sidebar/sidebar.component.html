@@ -1,0 +1,40 @@
+<div class="d-flex">
+  <!-- Sidebar with fixed width -->
+  <div class="bg-dark shadow-lg p-3 z-20" style="width: 18rem;">
+    <div class="d-flex justify-content-between align-items-center text-center">
+      <a routerLink="/overview" class="text-white fs-1 fw-bold text-decoration-none">
+        Store
+      </a>
+    </div>
+
+    <div class="mt-4">
+      <div *ngFor="let link of links">
+        <p class="text-muted mt-4 mb-4 text-uppercase fw-bold">
+          {{ link.title }}
+        </p>
+        <ul class="list-unstyled border-bottom border-secondary py-2">
+          <li *ngFor="let item of link.items"
+              class="p-3 rounded-md"
+              [ngClass]="{'bg-primary text-white': selectedItem === item.name, 'bg-dark text-white': selectedItem !== item.name}">
+            <a class="d-flex gap-3 align-items-center text-white text-decoration-none"
+               (click)="navigateTo(item.name)">
+              <i class="{{ item.icon }} fs-4"></i>
+              <span class="d-none d-sm-block fs-5">{{ item.name ? item.name : 'overview' }}</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content area with flexible space -->
+  <div class="flex-fill min-vh-100">
+    <app-header-customer-service></app-header-customer-service>
+    <ng-container [ngSwitch]="selectedItem">
+      <app-categories *ngSwitchCase="'categories'"></app-categories>
+      <app-overview *ngSwitchCase="'overview'"></app-overview>
+      <app-products *ngSwitchCase="'products'"></app-products>
+      <app-new-product *ngSwitchCase="'new-product'"></app-new-product>
+    </ng-container>
+  </div>
+</div>

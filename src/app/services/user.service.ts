@@ -6,46 +6,38 @@ import {CookieService} from 'ngx-cookie-service';
 import { UserInfosModule } from '../models/user-infos/user-infos.module';
 import { HttpParams } from '@angular/common/http';
 import { StorageService } from './storage.service';
+import {environment} from "../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  private apiURL = 'http://localhost:8080';
+  private apiURL = environment.apiUrl;
 
   private token = this.storage.getItem('token');
 
-  private headers = new HttpHeaders({ 'Content-Type': 'application/json'});
-
-  private headersWithToken = new HttpHeaders({
-    'Authorization': `Bearer ${this.token}`,
-    'Content-Type': 'application/json'
-  });
-
-  private headersWithTokenImage = new HttpHeaders({
-    'Authorization': `Bearer ${this.token}`,
-    'enctype': 'multipart/form-data'
-  });
+  private readonly headers : HttpHeaders = new HttpHeaders();
 
 
   constructor(private http: HttpClient,
     private storage : StorageService
-  ){ }
+  ){if(this.token){
+    this.headers = this.headers.append('Authorization', `Bearer ${this.token}`);
+  } }
 
   login(login: string, password: string): Observable<HttpResponse<UserDetailsModule>> {
     const body = { login, password };
-    console.log(body);
-    return this.http.post<UserDetailsModule>(`${this.apiURL}/user/login`, body, { 
-      headers: this.headers, 
-      observe: 'response' 
+    return this.http.post<UserDetailsModule>(`${this.apiURL}/user/login`, body, {
+      headers: this.headers,
+      observe: 'response'
     });
   }
-  
+
 
   register(username: string,email: string,password: string,
     firstName: string,lastName: string,phone: string,city: string): Observable<HttpResponse<any>> {
-    let body ={ 
+    let body ={
       user:{
       username,
       email,
@@ -80,11 +72,11 @@ export class UserService {
   }
 
   getUserInfo(): Observable<UserInfosModule> {
-    return this.http.get<UserInfosModule>(`${this.apiURL}/common/get-user-infos`, { headers : this.headersWithToken });
+    return this.http.get<UserInfosModule>(`${this.apiURL}/common/account/get-user-infos`, { headers : this.headers });
   }
 
-  checkToken(toekn : string):Observable<HttpResponse<string>> {
-    return this.http.get<string>(`${this.apiURL}/common/check-token`,{ headers : this.headersWithToken, observe: 'response', responseType: 'text' as 'json' })
+  checkToken():Observable<HttpResponse<string[]>> {
+    return this.http.get<string[]>(`${this.apiURL}/common/check-token`,{ headers : this.headers, observe: 'response', responseType: 'text' as 'json' })
   }
 
   updateUserInfos( firstName : string,lastName :string,birthday : Date,gender:string,address : string,
@@ -98,35 +90,35 @@ export class UserService {
         phone,
         city
       };
-      return this.http.put<string>(`${this.apiURL}/common/update-user-infos`,body,{ headers : this.headersWithToken , observe : 'response', responseType: 'text' as 'json'})
+      return this.http.put<string>(`${this.apiURL}/common/account/update-user-infos`,body,{ headers : this.headers , observe : 'response', responseType: 'text' as 'json'})
     }
 
   updatePassword(  oldPassword : string , newPassword : string) : Observable<HttpResponse<string>>{
       let body = {
         oldPassword,newPassword
       };
-      return this.http.put<string>(`${this.apiURL}/common/update-password`,body,{ headers : this.headersWithToken , observe : 'response', responseType: 'text' as 'json'})
+      return this.http.put<string>(`${this.apiURL}/common/account/update-password`,body,{ headers : this.headers , observe : 'response', responseType: 'text' as 'json'})
     }
 
   deleteMyAccount() : Observable<HttpResponse<string>>{
-    return this.http.delete<string>(`${this.apiURL}/common/delete-my-account`,{ headers : this.headersWithToken , observe : 'response', responseType: 'text' as 'json'})
+    return this.http.delete<string>(`${this.apiURL}/common/account/delete-mine`,{ headers : this.headers , observe : 'response', responseType: 'text' as 'json'})
   }
 
   updateUsername(username: string): Observable<HttpResponse<string>> {
     const params = new HttpParams().set('username', username);
-    return this.http.put<string>(`${this.apiURL}/common/update-username`, null, {
-      headers: this.headersWithToken,
+    return this.http.put<string>(`${this.apiURL}/common/account/update-username`, null, {
+      headers: this.headers,
       observe: 'response',
       responseType: 'text' as 'json',
       params: params
     });
   }
 
-  updatePictur(file: File): Observable<HttpResponse<string>> {
+  updatePicture(file: File): Observable<HttpResponse<string>> {
     const formData = new FormData();
     formData.append('file', file);
-    return this.http.post<string>(`${this.apiURL}/common/upload-picture`, formData, {
-      headers: this.headersWithTokenImage,
+    return this.http.post<string>(`${this.apiURL}/common/account/upload-picture`, formData, {
+      headers: this.headers,
       observe: 'response',
       responseType: 'text' as 'json'
     });

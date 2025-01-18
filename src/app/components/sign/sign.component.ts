@@ -126,11 +126,9 @@ export class SignComponent implements AfterViewInit {
   logIn() {
     this.userService.login(this.loginLogin, this.passwordLogin).subscribe({
       next: (response : HttpResponse<UserDetailsModule>) => {
-        const userDetails = response.body;
-        if(userDetails){
-          console.log("Valid login :",userDetails.username);
-          this.authService.logIn(userDetails.token);
-          
+        if(response.body){
+          console.log("authorities",response.body.authorities);
+          this.authService.logIn(response.body.token,response.body.authorities);          
         }
       },
       error: (error) => {
@@ -176,26 +174,11 @@ export class SignComponent implements AfterViewInit {
                   this.userService.login(this.usernameRegister, this.passwordRegister).subscribe({
                     next:(response) => {
                       if(response.body)
-                        this.authService.logIn(response.body.token);
+                        this.authService.logIn(response.body.token,response.body.authorities);
                     }
                   });
                 },error:(error) => {
-                  switch(error.status){
-                    case 400 :
-                    case 404 : {
-                      this.notificationService.showWarning("Sign up",error.error);
-                      break;
-                    }
-                    case 0 :
-                    case 503 : {
-                      this.notificationService.showError("Login","Service Unavailable");
-                      break;
-                    }
-                    case 500 : {
-                      this.notificationService.showError("Login","An internal server error occurred. Please try again later.");
-                      break;
-                    }
-                  }
+                  this.notificationService.handleSaveError(error);
                 }
               });
               
@@ -203,22 +186,7 @@ export class SignComponent implements AfterViewInit {
           
           },
           error: (error) => {
-            switch(error.status){
-              case 400 :
-              case 404 : {
-                this.notificationService.showWarning("Sign up",error.error);
-                break;
-              }
-              case 0 :
-              case 503 : {
-                this.notificationService.showError("Login","Service Unavailable");
-                break;
-              }
-              case 500 : {
-                this.notificationService.showError("Login","An internal server error occurred. Please try again later.");
-                break;
-              }
-            }
+            this.notificationService.handleSaveError(error);
           }
         });
   }

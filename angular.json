@@ -28,6 +28,7 @@
               "src/custom-theme.scss",
               "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
+
               "src/styles.css",
               "node_modules/ngx-toastr/toastr.css"
             ],
@@ -128,12 +129,12 @@
             "development": {
               "browserTarget": "click-and-buy:build:development",
               "serverTarget": "click-and-buy:server:development"
-              
+
             },
             "production": {
               "browserTarget": "click-and-buy:build:production",
               "serverTarget": "click-and-buy:server:production"
-              
+
             }
           },
           "defaultConfiguration": "development"
