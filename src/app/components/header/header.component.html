@@ -53,13 +53,13 @@
                             <li class="nav-item">
                                 <a class="nav-link btn custom-signup-btn text-white" routerLink="/signup" >Sign Up</a>
                             </li>
-                        </div>          
+                        </div>
                     </div>
-                    
-                        
+
+
                 </ul>
             </div>
-        
+
             <div class="navbar align-self-center d-flex">
                 <a class="nav-icon d-none d-lg-inline mr-3" href="" data-bs-toggle="modal" data-bs-target="#templatemo_search">
                     <i class="fa fa-fw fa-search text-dark "></i>
@@ -92,7 +92,7 @@
                     <a class="nav-icon position-relative text-decoration-none" (click)="toggleMenu()">
                         <i class="fa fa-fw fa-user text-dark mr-1"></i>
                     </a>
-                    <div *ngIf="menuOpen" class="dropdown-menu">                       
+                    <div *ngIf="menuOpen" class="dropdown-menu">
                         <a class="dropdown-item" routerLink="/profile">
                             <i class="fa fa-fw fa-sm fa-user-circle text-dark"></i> Account
                         </a>
@@ -100,18 +100,18 @@
                             <i class="fa fa-fw fa-sm fa-sign-out-alt text-dark"></i> Logout
                         </div>
                     </div>
-                    
-                    
+
+
                 </div>
 
-                <div class="dropdown-item" *ngIf="authorities.includes('ROLE_CUSTOMER_SERVICE')">
+                <div class="dropdown-item bg-black" *ngIf="authorities.includes('ROLE_CUSTOMER_SERVICE')">
                     <i class="fa fa-fw fa-sm fa-heart text-dark" routerLink="/customer-service"></i>
                 </div>
-                
-                  
+
+
             </div>
         </div>
     </div>
-    
+
 </nav>
 <!-- Close Header -->

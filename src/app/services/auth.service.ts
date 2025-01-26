@@ -13,8 +13,8 @@ import { NotificationService } from './notification.service';
 export class AuthService {
   private loggedIn = new BehaviorSubject<boolean>(false);
   private authorities = new BehaviorSubject<string[]>([]);
- 
-  
+
+
 
   constructor(
     private router: Router,
@@ -22,13 +22,13 @@ export class AuthService {
     private storage : StorageService,
     private notificationService : NotificationService,
   ) {
-    
+
     this.check();
   }
 
   check(): void {
-    
-      const token = this.storage.getItem('token');
+
+      const token = this.storage.getToken();
       if (token !== null && token !== '') {
         this.userService.checkToken().subscribe({
           next: (response) => {
@@ -43,27 +43,27 @@ export class AuthService {
         });
       } else {
         this.loggedIn.next(false);
-       
-        
+
+
       }
-    
+
   }
 
   logIn(token: string,authorities: string[]) {
     console.log("authorities",authorities);
-    this.storage.setItem('token',token);
+    this.storage.setToken(token);
     this.loggedIn.next(true);
     this.authorities.next(authorities);
     window.location.reload();
   }
 
   logOut() {
-    
-    this.storage.removeItem('token');
+
+    this.storage.removeToken();
     this.loggedIn.next(false);
     this.authorities.next([]);
     this.router.navigateByUrl('/');
-    
+
   }
 
   isLoggedIn() {
@@ -73,11 +73,11 @@ export class AuthService {
   getAuthorities() {
     return this.authorities.asObservable();
   }
-  
 
- 
 
-  
 
-  
+
+
+
+
 }

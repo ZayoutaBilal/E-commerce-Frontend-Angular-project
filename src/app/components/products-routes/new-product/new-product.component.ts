@@ -1,9 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ProductService} from "../../../services/product.service";
-import { CategoryService } from '../../../services/category.service'
 import {SharedService} from "../../../services/shared.service";
 import {DiscountService} from "../../../services/discount.service";
+import {NotificationService} from "../../../services/notification.service";
 
 @Component({
   selector: 'app-new-product',
@@ -12,12 +12,12 @@ import {DiscountService} from "../../../services/discount.service";
 })
 export class NewProductComponent implements OnInit {
 
-  public productForm: FormGroup;
-  public imageUrls: string[] = [];
-  public categories: any[] = [];
-  public discounts: any[] = [];
-  discountId : number | undefined;
-  categoryId: number | undefined;
+  productForm: FormGroup;
+  imageUrls: string[] = [];
+  files: File[] = [];
+  categories: any[] = [];
+  discounts: any[] = [];
+
 
 
   constructor(
@@ -25,12 +25,12 @@ export class NewProductComponent implements OnInit {
     private discountService: DiscountService,
     private productService: ProductService,
     private sharedService : SharedService,
+    private notificationService : NotificationService,
 
   ) {
     this.productForm = this.fb.group({
       name: ['', Validators.required],
-      price: ['', Validators.required],
-      images: ['',Validators.required],
+      price: [0, [Validators.required, Validators.min(0)]],
       description: ['', Validators.required],
       information: ['', Validators.required],
       category: ['', Validators.required],
@@ -75,8 +75,41 @@ export class NewProductComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.productForm);
+    if (!this.productForm.valid) {
+      this.notificationService.showWarning('Please fill in all required fields.');
+      return;
+    }
+    if (this.files.length === 0) {
+      this.notificationService.showWarning('Please upload at least one image.');
+      return;
+    }
+    if (!this.variations.valid) {
+      this.notificationService.showWarning('Please fill the variations modal.');
+      return;
+    }
+
+    const productData = {
+      price: this.productForm.get('price')?.value as number,
+      name: this.productForm.get('name')?.value,
+      description: this.productForm.get('description')?.value,
+      information: this.productForm.get('information')?.value,
+      category: this.productForm.get('category')?.value as number,
+      discount: this.productForm.get('discount')?.value as number,
+      variations: this.productForm.get('variations')?.value,
+    };
+
+    this.productService.addProduct(productData, this.files).subscribe({
+      next: (response) => {
+        this.notificationService.showSuccess(response.body ?? undefined);
+        this.productForm.reset();
+        this.files = [];
+        this.imageUrls = [];
+      },
+      error: (error) =>   this.notificationService.handleSaveError(error)
+
+    });
   }
+
 
   onImageChange(event: Event) {
     const target = event.target as HTMLInputElement;
@@ -88,6 +121,7 @@ export class NewProductComponent implements OnInit {
         reader.onload = (e: ProgressEvent<FileReader>) => {
           if (e.target?.result) {
             this.imageUrls.push(e.target.result.toString());
+            this.files.push(file);
           }
         };
         reader.readAsDataURL(file);
@@ -97,6 +131,8 @@ export class NewProductComponent implements OnInit {
 
   removeImage(index: number) {
     this.imageUrls.splice(index, 1);
+    this.files.splice(index, 1);
+
   }
 
 

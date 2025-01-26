@@ -14,22 +14,19 @@ import {SharedService} from "../../../services/shared.service";
 export class ProductsComponent implements OnInit {
 
   displayedColumns: string[] = [
-    '_id',
-    'image',
-    'name',
-    'quantity',
-    'price',
-    'discount',
-    'category',
-    'tag',
-    'featured',
-    'firstDate',
-    'updateDate',
+    'ID',
+    'Image',
+    'Name',
+    'Price',
+    'Old price',
+    'Quantity',
+    'Discount',
+    'Category',
+    'Created at',
+    'Updated at',
   ];
 
   products: any[] = [];
-
-  currentRoutePath: string = '';
 
   dataSource = new MatTableDataSource<any>([]);
 
@@ -38,9 +35,7 @@ export class ProductsComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
-    private router: Router,
     private productService: ProductService,
-    private route: ActivatedRoute,
     private sharedService : SharedService,
   ) {
     const initialData = [
@@ -50,9 +45,9 @@ export class ProductsComponent implements OnInit {
     this.dataSource = new MatTableDataSource(initialData);
   }
 
-  //routing
+
   navigateToProduct(productId: string) {
-    this.router.navigate(['/products', productId]);
+
   }
 
   Filterchange(event: Event) {
@@ -100,12 +95,7 @@ export class ProductsComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.route.url.subscribe((urlSegments) => {
 
-      //const path = urlSegments.map((segment) => segment.path).join('/');
-      this.currentRoutePath = "products";
-
-    });
 
 
 

@@ -10,7 +10,7 @@ import {Observable} from "rxjs";
 export class DiscountService {
 
   private apiURL = environment.apiUrl;
-  private token = this.storage.getItem('token');
+  private token = this.storage.getToken();
   private readonly headers : HttpHeaders = new HttpHeaders();
 
   constructor(private http: HttpClient,

@@ -1,6 +1,5 @@
 <div class="px-5">
-  <div *ngIf="currentRoutePath === 'products'; then thenBlock else elseBlock"></div>
-  <ng-template #thenBlock>
+
     <div class="mt-5 d-flex justify-content-between align-items-center gap-3 border-bottom pb-4">
       <div class="ms-auto">
         <h2 class="fs-5 fw-bold">Products ({{products.length}})</h2>
@@ -19,43 +18,42 @@
         <thead class="thead-dark">
         <tr>
           <th *ngFor="let column of displayedColumns">
-            {{ column === '_id' ? '#ID' : column === 'firstDate' ? 'Added Date' : column === 'updateDate' ? 'Updated Date' : column }}
+            <ng-container>{{column}}</ng-container>
           </th>
         </tr>
         </thead>
         <tbody>
         <tr *ngFor="let element of dataSource.data" (click)="navigateToProduct(element._id)">
           <td *ngFor="let column of displayedColumns">
-            <ng-container *ngIf="column === 'image'">
+            <ng-container *ngIf="column === 'Image'">
               <div class="d-flex justify-content-center align-items-center" style="height: 56px; width: 56px;">
                 <img [src]="element.image" alt="Product Image" class="img-fluid rounded-circle" style="height: 48px; width: 48px; object-fit: cover;">
               </div>
             </ng-container>
-            <ng-container *ngIf="column === '_id';">
+            <ng-container *ngIf="column === 'ID';">
               #ID
             </ng-container>
 
-            <ng-container *ngIf="column === 'name';">
+            <ng-container *ngIf="column === 'Name';">
               <span class="text-decoration-underline cursor-pointer">{{ element.name }}</span>
             </ng-container>
-            <ng-container *ngIf="column === 'quantity';">
+            <ng-container *ngIf="column === 'Quantity';">
               <p class="font-weight-bold text-center mb-0">{{ element.quantity }}</p>
             </ng-container>
-            <ng-container *ngIf="column === 'price';">
+            <ng-container *ngIf="column === 'Price';">
               <p class="font-weight-bold mb-0">{{ formatPrice(element.price) }}</p>
             </ng-container>
-            <ng-container *ngIf="column === 'discount';">
-              <p class="font-weight-bold mb-0">{{ formatPrice(element.discount) }}</p>
+            <ng-container *ngIf="column === 'Old price';">
+              <p class="font-weight-bold mb-0">{{ formatPrice(element.price) }}</p>
             </ng-container>
-            <ng-container *ngIf="column === 'category';">{{ element.category }}</ng-container>
-            <ng-container *ngIf="column === 'tag';">{{ element.tag }}</ng-container>
-            <ng-container *ngIf="column === 'featured';">
-              <p class="text-center mb-0">{{ element.featured ? "Featured" : "Not Featured" }}</p>
+            <ng-container *ngIf="column === 'Discount';">
+              <p class="font-weight-bold mb-0">{{ (element.discount) + '%' }}</p>
             </ng-container>
-            <ng-container *ngIf="column === 'firstDate';">
+            <ng-container *ngIf="column === 'Category';">{{ element.category }}</ng-container>
+            <ng-container *ngIf="column === 'Created at';">
               {{ formatReadableDate(element.firstDate) }}
             </ng-container>
-            <ng-container *ngIf="column === 'updateDate';">
+            <ng-container *ngIf="column === 'Updated at';">
                 <span [ngClass]="compareDates(element.updateDate, element.firstDate)">
                   {{ formatReadableDate(element.updateDate) }}
                 </span>
@@ -76,9 +74,5 @@
         </li>
       </ul>
     </nav>
-  </ng-template>
-  <ng-template #elseBlock>
-    <router-outlet></router-outlet>
-  </ng-template>
 </div>
 

@@ -17,8 +17,16 @@ import { HttpResponse } from '@angular/common/http';
 })
 export class SignComponent implements AfterViewInit {
 
+  isSignUp: boolean = false; // Tracks whether to show sign-up or sign-in
+  title: string = 'Welcome Back!';
+  option : string = 'in';
+  toggleView() {
+    this.isSignUp = !this.isSignUp;
+    this.option='up';
+    this.title = this.isSignUp ? 'Create Your Account' : 'Welcome Back!';
+  }
   private emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*/
-    
+
   loginLogin: string = '';
   passwordLogin: string = '';
 
@@ -33,16 +41,16 @@ export class SignComponent implements AfterViewInit {
 
 
   constructor(private dialog: MatDialog,
-    private userService : UserService, 
+    private userService : UserService,
     private router : Router,
     private cookieService: CookieService,
     private notificationService : NotificationService,
     @Inject(PLATFORM_ID) private platformId: Object,
     private authService: AuthService,
-    
-    
+
+
   ) { }
-  
+
   forgetPassword(): void {
     const dialogRef = this.dialog.open(PopupDialogComponent, {
       data: {
@@ -52,7 +60,7 @@ export class SignComponent implements AfterViewInit {
           { label: 'Email', value: '', placeholder: 'Enter email' },
         ],
       },
-      
+
     });
     dialogRef.afterClosed().subscribe(result => {
       let email=result[0].value;
@@ -62,16 +70,16 @@ export class SignComponent implements AfterViewInit {
           next:(response) => {
             this.notificationService.showInfo("Forget password",response.body ?? undefined);
                 const dialogRef = this.dialog.open(PopupDialogComponent, {
-                  data: { 
-                    title: 'Forgot Password', 
-                    content: 'Enter your verification code and new password', 
+                  data: {
+                    title: 'Forgot Password',
+                    content: 'Enter your verification code and new password',
                     fields: [
                       { label: 'Verification Code', value: '', placeholder: 'Enter code' },
                       { label: 'New Password', value: '', placeholder: 'Enter new password' },
                     ],
                   },
                 });
-              
+
                 dialogRef.afterClosed().subscribe(result => {
                   if (result) {
                     this.userService.verifyCode(email,result[1].value,result[0].value)
@@ -99,14 +107,14 @@ export class SignComponent implements AfterViewInit {
     }
     });
   }
- 
+
 
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
     const signUpButton = document.getElementById('signUp') as HTMLButtonElement;
     const signInButton = document.getElementById('signIn') as HTMLButtonElement;
     const container = document.getElementById('container') as HTMLElement;
-    
+
     if (signUpButton && signInButton && container) {
         signUpButton.addEventListener('click', () => {
         container.classList.add("right-panel-active");
@@ -117,7 +125,7 @@ export class SignComponent implements AfterViewInit {
       });
     } else {
       console.error('Sign up, sign in, or container element not found.');
-    }   
+    }
     }
   }
 
@@ -128,7 +136,7 @@ export class SignComponent implements AfterViewInit {
       next: (response : HttpResponse<UserDetailsModule>) => {
         if(response.body){
           console.log("authorities",response.body.authorities);
-          this.authService.logIn(response.body.token,response.body.authorities);          
+          this.authService.logIn(response.body.token,response.body.authorities);
         }
       },
       error: (error) => {
@@ -163,9 +171,9 @@ export class SignComponent implements AfterViewInit {
                   { label: 'Code', value: '', placeholder: 'Enter code' },
                 ],
               },
-              
+
             });
-        
+
             dialogRef.afterClosed().subscribe(result => {
               console.log('The dialog was closed', result[0].value);
               this.userService.confirmEmail(this.emailRegister,result[0].value).subscribe({
@@ -181,16 +189,16 @@ export class SignComponent implements AfterViewInit {
                   this.notificationService.handleSaveError(error);
                 }
               });
-              
+
             });
-          
+
           },
           error: (error) => {
             this.notificationService.handleSaveError(error);
           }
         });
   }
-  
+
 
 
 }

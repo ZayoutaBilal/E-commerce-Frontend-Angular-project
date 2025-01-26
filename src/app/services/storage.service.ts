@@ -2,6 +2,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ProductCart } from '../models/product-cart/product-cart.module';
+import {environment} from "../../environments/environment";
 
 
 @Injectable({
@@ -17,7 +18,7 @@ export class StorageService {
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     this.isBrowser = isPlatformBrowser(platformId);
 
-    
+
     if (this.isBrowser) {
       const cartItemsLength = this.getItem<number>(this.cartLengthKey) || 0;
       this.cartLengthSubject.next(cartItemsLength);
@@ -51,8 +52,18 @@ export class StorageService {
     }
   }
 
-  
-  
+  getToken(): string | null {
+    return this.getItem(environment.tokenName);
+  }
+
+  setToken(value : any): void {
+    this.setItem(environment.tokenName,value);
+  }
+
+  removeToken(): void {
+    this.removeItem(environment.tokenName);
+  }
+
 
   setCartLength(length: number): void {
     if (this.isBrowser) {
@@ -61,7 +72,7 @@ export class StorageService {
     }
   }
 
-  
+
   getCartLength(): number {
     return this.cartLengthSubject.value;
   }

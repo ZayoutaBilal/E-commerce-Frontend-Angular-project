@@ -18,7 +18,7 @@ export class ProductService {
 
   private apiURL = environment.apiUrl;
 
-  private token = this.storage.getItem('token');
+  private token = this.storage.getToken();
 
   private readonly headers : HttpHeaders = new HttpHeaders();
 
@@ -67,5 +67,18 @@ export class ProductService {
 
   submitFeedback(productRating:any): Observable<HttpResponse<string>> {
     return this.http.post<string>(`${this.apiURL}/customer/products/rate-and-comment`,productRating,{headers : this.headers, observe: 'response', responseType: 'text' as 'json' });
+  }
+
+  addProduct(productInsertion: any, images: File[]): Observable<HttpResponse<string>> {
+    const formData = new FormData();
+    formData.append('product',JSON.stringify(productInsertion));
+    images.forEach((image) => {
+      formData.append('images', image);
+    });
+    return this.http.post<string>(`${this.apiURL}/customer-service/products/add`, formData, {
+      headers: this.headers,
+      observe: 'response',
+      responseType : 'text' as 'json'
+    });
   }
 }

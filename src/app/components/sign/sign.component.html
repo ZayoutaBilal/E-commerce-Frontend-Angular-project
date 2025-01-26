@@ -1,59 +1,59 @@
 <div class="component-container">
-<div class="container" id="container">
-	<div class="form-container sign-up-container">
-            <form action="" (ngSubmit)="register()">
-                <h1>Create Account</h1>
-                <div class="social-container">
-                    <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
-                    <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
-                </div>
-                <span>or use your email for registration</span>
+    <!-- Card Container -->
+  <div class="card-container">
+    <div class="form-content">
+      <ng-container *ngIf="option === 'up'">
+        <!-- Sign-Up Form -->
+        <form class="form sign-up-form" action="" (ngSubmit)="register()">
+          <h2>Create Account</h2>
+          <div class="social-container">
+            <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+            <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+          <span>or use your email for registration</span>
 
-                <div class="scrollable-inputs">
-					<input type="text" placeholder="First Name" id="firstNameRegister" name="firstNameRegister" [(ngModel)]="firstNameRegister"/>
-					<input type="text" placeholder="Last name" id="LastNameRegister" name="LastNameRegister" [(ngModel)]="lastNameRegister"/>
-					<input type="text" placeholder="City" id="cityRegister" name="cityRegister" [(ngModel)]="cityRegister"/>
-					<input type="tel" placeholder="Phone" id="phoneRegister" name="phoneRegister" [(ngModel)]="phoneRegister"/>
-					<input type="email" placeholder="Email" id="emailRegister" name="emailRegister" [(ngModel)]="emailRegister"/>
-					<input type="text" placeholder="Username" id="usernameRegister" name="usernameRegister" [(ngModel)]="usernameRegister"/>
-					<input type="password" placeholder="Password" id="passwordRegister" name="passwordRegister" [(ngModel)]="passwordRegister"/>
-					<input type="password" placeholder="Confirm Password" id="passwordConfirmRegister" name="passwordConfirmRegister" [(ngModel)]="passwordConfirmRegister"/>
-                </div>
+          <div class="input-row">
+            <input type="text" placeholder="First Name" id="firstNameRegister" name="firstNameRegister" [(ngModel)]="firstNameRegister" />
+            <input type="text" placeholder="Last Name" id="lastNameRegister" name="lastNameRegister" [(ngModel)]="lastNameRegister" />
+          </div>
+          <div class="input-row">
+            <input type="text" placeholder="City" id="cityRegister" name="cityRegister" [(ngModel)]="cityRegister" />
+            <input type="tel" placeholder="Phone" id="phoneRegister" name="phoneRegister" [(ngModel)]="phoneRegister" />
+          </div>
+          <div class="input-row">
+            <input type="email" placeholder="Email" id="emailRegister" name="emailRegister" [(ngModel)]="emailRegister" />
+            <input type="text" placeholder="Username" id="usernameRegister" name="usernameRegister" [(ngModel)]="usernameRegister" />
+          </div>
+          <div class="input-row">
+            <input type="password" placeholder="Password" id="passwordRegister" name="passwordRegister" [(ngModel)]="passwordRegister" />
+            <input type="password" placeholder="Confirm Password" id="passwordConfirmRegister" name="passwordConfirmRegister" [(ngModel)]="passwordConfirmRegister" />
+          </div>
 
-                <button type="submit">Sign Up</button>
-            </form>
-			</div>
-	<div class="form-container sign-in-container">
-		<form action="" (ngSubmit)="logIn()">
-			<h1>Sign in</h1>
-			<div class="social-container">
-				<a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-				<a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
-				<a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
-			</div>
-			<span>or use your account</span>
-			<input type="text" placeholder="Email/Username" id="loginLogin" name="login" [(ngModel)]="loginLogin" />
-			<input type="password" placeholder="Password" id="passwordLogin" name="password" [(ngModel)]="passwordLogin" />
-			<a (click)="forgetPassword()" id="forgetpassword">Forgot your password?</a>
-			<button>Sign In</button>		</form>
-	</div>
-	
-	  
-	<div class="overlay-container">
-		<div class="overlay">
-			<div class="overlay-panel overlay-left">
-				<h1>Welcome Back!</h1>
-				<p>To keep connected with us please login with your personal info</p>
-				<button class="ghost" id="signIn">Sign In</button>
-			</div>
-			<div class="overlay-panel overlay-right">
-				<h1>Hello, Friend!</h1>
-				<p>Enter your personal details and start journey with us</p>
-				<button class="ghost" id="signUp">Sign Up</button>
-			</div>
-		</div>
-	</div>
+          <button type="submit">Sign Up</button>
+        </form>
+      </ng-container>
+
+      <ng-container *ngIf="option === 'in'">
+        <!-- Sign-In Form -->
+        <form class="form sign-in-form" action="" (ngSubmit)="logIn()">
+          <h2>Sign In</h2>
+          <div class="social-container">
+            <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+            <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+          <span>or use your account</span>
+          <input type="text" placeholder="Email/Username" id="loginLogin" name="login" [(ngModel)]="loginLogin" />
+          <input type="password" placeholder="Password" id="passwordLogin" name="password" [(ngModel)]="passwordLogin" />
+          <a (click)="forgetPassword()" id="forgetpassword">Forgot your password?</a>
+          <button type="submit">Sign In</button>
+        </form>
+      </ng-container>
+    </div>
+
+    <a class="switch-button" (click)="toggleView()">
+      {{ option === 'up' ? 'Switch to Sign In' : 'Switch to Sign Up' }}
+    </a>
+  </div>
 </div>
-</div>
-
