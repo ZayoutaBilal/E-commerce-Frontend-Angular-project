@@ -75,10 +75,28 @@ export class ProductService {
     images.forEach((image) => {
       formData.append('images', image);
     });
-    return this.http.post<string>(`${this.apiURL}/customer-service/products/add`, formData, {
+    return this.http.post<string>(`${this.apiURL}/customer-service/products`, formData, {
       headers: this.headers,
       observe: 'response',
       responseType : 'text' as 'json'
+    });
+  }
+
+  getProducts(page: number,size : number,sortedBy? :string,order? : string): Observable<Page<any>> {
+    let params = new HttpParams();
+    params = params.set('size', size);
+    params = params.set('page', page);
+    if(sortedBy) params = params.set('sortedBy', sortedBy);
+    if(order) params = params.set('order', order);
+    return this.http.get<Page<any>>(`${this.apiURL}/customer-service/products`,{headers : this.headers , params : params });
+  }
+
+  deleteProduct(productId: number) : Observable<HttpResponse<string>> {
+    return this.http.delete<string>(`${this.apiURL}/customer-service/products`, {
+      headers: this.headers,
+      observe: 'response',
+      responseType: 'text' as 'json',
+      params: {productId: productId}
     });
   }
 }

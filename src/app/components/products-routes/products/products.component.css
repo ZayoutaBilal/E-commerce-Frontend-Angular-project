@@ -1,36 +1,170 @@
-.variations-container {
-  max-height: 30px;
-  overflow-y: scroll;
+.products-container {
+  padding: 20px;
 }
 
-.shadow-input {
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.products-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 1rem;
 }
 
-.shadow-sm {
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+.products-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #333;
 }
 
-.hover-input:hover {
-  border-color: #007bff;
+.products-search-input {
+  margin-bottom: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 0.8rem;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.products-search-input:focus {
+  outline: none;
+  border-color: #28a745;
+}
+
+.products-table-container {
+  overflow-x: auto;
+}
+
+.products-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  margin-bottom: 1rem;
+}
+
+.products-table th,
+.products-table td {
+  padding: 0.8rem;
+  border: 1px solid #eee;
+}
+
+.products-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #333;
+}
+
+.products-table-row {
+  transition: background-color 0.2s;
+}
+
+.products-table-row:hover {
+  background-color: #f0f0f0;
+}
+
+.products-table-image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 56px;
+  width: 56px;
+}
+
+.products-table-image {
+  height: 48px;
+  width: 48px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.products-table-name {
+  text-decoration: underline;
+}
+
+.products-table-name:hover ,.fas:hover{
+  cursor: pointer;
+}
+
+.products-table-quantity,
+.products-table-price,
+.products-table-discount {
+  text-align: center;
+  margin-bottom: 0;
+  font-weight: bold;
+}
+
+.no-products {
+  text-align: center;
+  padding: 1rem;
+}
+
+.products-pagination {
+  margin-top: 1rem;
+}
+
+.pagination {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pagination button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  background-color: transparent;
+  color: #333;
+  border-radius: 5px;
+  cursor: pointer;
   transition: all 0.3s ease-in-out;
 }
 
-.hover-shadow:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease-in-out;
+.pagination button:hover {
+  background-color: #28a745;
+  color: white;
+  border-color: #28a745;
 }
 
-img:hover {
-  transform: scale(1.05);
-  transition: transform 0.3s ease-in-out;
+.pagination .page-item.disabled button {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: transparent;
+  color: #777;
+  border-color: #ddd;
 }
 
-button[type="button"], button[type="submit"] {
-  transition: all 0.3s ease;
+.current-page-label {
+  padding: 0.5rem 1rem;
+  color: #333;
+  font-weight: bold;
 }
 
-button[type="button"]:hover, button[type="submit"]:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+
+.button {
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s, color 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.button.button-secondary {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.button.button-secondary:hover {
+  background-color: #e0e0e0;
+  color: #28a745;
+}
+
+.fas.fa-edit {
+  color: #28a745;
+}
+
+
+.fas.fa-trash-alt {
+  color: #dc3545;
 }

@@ -2,7 +2,7 @@
     <!-- Card Container -->
   <div class="card-container">
     <div class="form-content">
-      <ng-container *ngIf="option === 'up'">
+      <ng-container *ngIf="isSignUp">
         <!-- Sign-Up Form -->
         <form class="form sign-up-form" action="" (ngSubmit)="register()">
           <h2>Create Account</h2>
@@ -34,7 +34,7 @@
         </form>
       </ng-container>
 
-      <ng-container *ngIf="option === 'in'">
+      <ng-container *ngIf="!isSignUp">
         <!-- Sign-In Form -->
         <form class="form sign-in-form" action="" (ngSubmit)="logIn()">
           <h2>Sign In</h2>
@@ -52,8 +52,8 @@
       </ng-container>
     </div>
 
-    <a class="switch-button" (click)="toggleView()">
-      {{ option === 'up' ? 'Switch to Sign In' : 'Switch to Sign Up' }}
+    <a class="switch-button" [routerLink]="['/sign', isSignUp ? 'in' : 'up']">
+      {{ isSignUp ? 'Sign In' : 'Sign Up' }}
     </a>
   </div>
 </div>

@@ -1,30 +1,29 @@
-import { Component, AfterViewInit, OnInit ,Inject,PLATFORM_ID} from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { Component, OnInit ,Inject,PLATFORM_ID} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PopupDialogComponent } from '../popup-dialog/popup-dialog.component';
-import { Router } from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { UserDetailsModule } from '../../models/user-details/user-details.module';
-import {CookieService} from 'ngx-cookie-service';
 import { AuthService } from '../../services/auth.service';
 import { NotificationService } from '../../services/notification.service';
 import { HttpResponse } from '@angular/common/http';
+
 
 @Component({
   selector: 'app-sign',
   templateUrl: './sign.component.html',
   styleUrls: ['./sign.component.css']
 })
-export class SignComponent implements AfterViewInit {
+export class SignComponent implements OnInit {
 
-  isSignUp: boolean = false; // Tracks whether to show sign-up or sign-in
-  title: string = 'Welcome Back!';
-  option : string = 'in';
-  toggleView() {
-    this.isSignUp = !this.isSignUp;
-    this.option='up';
-    this.title = this.isSignUp ? 'Create Your Account' : 'Welcome Back!';
+  isSignUp: boolean = false;
+  ngOnInit(): void {
+
+    this.activatedRoute.paramMap.subscribe(params => {
+      this.isSignUp = (params.get('option') ?? 'in') === 'up';
+    });
   }
+
   private emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*/
 
   loginLogin: string = '';
@@ -42,13 +41,9 @@ export class SignComponent implements AfterViewInit {
 
   constructor(private dialog: MatDialog,
     private userService : UserService,
-    private router : Router,
-    private cookieService: CookieService,
     private notificationService : NotificationService,
-    @Inject(PLATFORM_ID) private platformId: Object,
+    private activatedRoute : ActivatedRoute,
     private authService: AuthService,
-
-
   ) { }
 
   forgetPassword(): void {
@@ -108,26 +103,6 @@ export class SignComponent implements AfterViewInit {
     });
   }
 
-
-  ngAfterViewInit(): void {
-    if (isPlatformBrowser(this.platformId)) {
-    const signUpButton = document.getElementById('signUp') as HTMLButtonElement;
-    const signInButton = document.getElementById('signIn') as HTMLButtonElement;
-    const container = document.getElementById('container') as HTMLElement;
-
-    if (signUpButton && signInButton && container) {
-        signUpButton.addEventListener('click', () => {
-        container.classList.add("right-panel-active");
-      });
-
-        signInButton.addEventListener('click', () => {
-        container.classList.remove("right-panel-active");
-      });
-    } else {
-      console.error('Sign up, sign in, or container element not found.');
-    }
-    }
-  }
 
 
 
@@ -198,6 +173,8 @@ export class SignComponent implements AfterViewInit {
           }
         });
   }
+
+
 
 
 

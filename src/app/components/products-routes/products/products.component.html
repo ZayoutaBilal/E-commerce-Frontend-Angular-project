@@ -1,78 +1,83 @@
-<div class="px-5">
-
-    <div class="mt-5 d-flex justify-content-between align-items-center gap-3 border-bottom pb-4">
-      <div class="ms-auto">
-        <h2 class="fs-5 fw-bold">Products ({{products.length}})</h2>
-      </div>
-      <a (click)="goToNewProductComponent()" class="btn btn-dark d-flex align-items-center gap-2">
-        <i class="fa-solid fa-plus"></i>
-        Add New
-      </a>
-    </div>
-
-    <input type="text" (keyup)="Filterchange($event)" placeholder="Search here"
-           class="form-control mt-3 mb-3" />
-
-    <div class="table-responsive">
-      <table class="table table-hover table-bordered">
-        <thead class="thead-dark">
-        <tr>
-          <th *ngFor="let column of displayedColumns">
-            <ng-container>{{column}}</ng-container>
-          </th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let element of dataSource.data" (click)="navigateToProduct(element._id)">
+<div class="products-container">
+  <div class="products-header">
+    <h2 class="products-title">Products ({{ totalProducts }})</h2>
+    <button (click)="goToNewProductComponent()" class="button button-secondary">
+      <i class="fa-solid fa-plus"></i>
+      <span>Add New</span>
+    </button>
+  </div>
+  <input type="text" (keyup)="Filterchange($event)" placeholder="Search products by name" class="form-control products-search-input" />
+  <div class="table-responsive products-table-container">
+    <table class="products-table">
+      <thead>
+      <tr>
+        <th *ngFor="let column of displayedColumns">{{ column }}</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let element of dataSource.data" (click)="navigateToProduct(element._id)" class="products-table-row">
+        <ng-container *ngIf="dataSource.data.length > 0; else noProducts">
           <td *ngFor="let column of displayedColumns">
             <ng-container *ngIf="column === 'Image'">
-              <div class="d-flex justify-content-center align-items-center" style="height: 56px; width: 56px;">
-                <img [src]="element.image" alt="Product Image" class="img-fluid rounded-circle" style="height: 48px; width: 48px; object-fit: cover;">
+              <div class="products-table-image-container">
+                <img [src]="'data:image/jpeg;base64,'+element.image" [alt]="element.name" class="products-table-image" />
               </div>
             </ng-container>
             <ng-container *ngIf="column === 'ID';">
-              #ID
+              {{element.productId}}
             </ng-container>
-
-            <ng-container *ngIf="column === 'Name';">
-              <span class="text-decoration-underline cursor-pointer">{{ element.name }}</span>
+            <ng-container *ngIf="column === 'Name'">
+              <span class="products-table-name">{{ element.name }}</span>
             </ng-container>
-            <ng-container *ngIf="column === 'Quantity';">
-              <p class="font-weight-bold text-center mb-0">{{ element.quantity }}</p>
+            <ng-container *ngIf="column === 'Quantity'">
+              <p class="products-table-quantity">{{ 100 }}</p>
             </ng-container>
-            <ng-container *ngIf="column === 'Price';">
-              <p class="font-weight-bold mb-0">{{ formatPrice(element.price) }}</p>
+            <ng-container *ngIf="column === 'Price'">
+              <p class="products-table-price">{{ formatPrice(element.price) }}</p>
             </ng-container>
             <ng-container *ngIf="column === 'Old price';">
-              <p class="font-weight-bold mb-0">{{ formatPrice(element.price) }}</p>
+              <p class="products-table-price">{{ formatPrice(element.oldPrice) }}</p>
             </ng-container>
-            <ng-container *ngIf="column === 'Discount';">
-              <p class="font-weight-bold mb-0">{{ (element.discount) + '%' }}</p>
+            <ng-container *ngIf="column === 'Discount'">
+              <p class="products-table-discount">{{ (element.discountPercent) + '%' }}</p>
             </ng-container>
-            <ng-container *ngIf="column === 'Category';">{{ element.category }}</ng-container>
-            <ng-container *ngIf="column === 'Created at';">
-              {{ formatReadableDate(element.firstDate) }}
+            <ng-container *ngIf="column === 'Category'">{{ element.categoryName }}</ng-container>
+            <ng-container *ngIf="column === 'Created at'">
+              {{ formatReadableDate(element.createdAt) }}
             </ng-container>
-            <ng-container *ngIf="column === 'Updated at';">
-                <span [ngClass]="compareDates(element.updateDate, element.firstDate)">
-                  {{ formatReadableDate(element.updateDate) }}
-                </span>
+            <ng-container *ngIf="column === 'Updated at'">
+              {{ formatReadableDate(element.updatedAt) }}
+            </ng-container>
+            <ng-container *ngIf="column === 'Edit'">
+                <i class="fas fa-edit" (click)="editProduct(element.productId)"></i>
+            </ng-container>
+            <ng-container *ngIf="column === 'Delete'">
+                <i class="fas fa-trash-alt" (click)="deleteProduct(element.productId)"></i>
             </ng-container>
           </td>
+        </ng-container>
+      </tr>
+      <ng-template #noProducts>
+        <tr>
+          <td [attr.colspan]="displayedColumns.length" class="no-products">
+            No products found.
+          </td>
         </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <nav aria-label="Page navigation" class="mt-3">
-      <ul class="pagination justify-content-end">
-        <li class="page-item">
-          <button class="page-link" >Previous</button>
-        </li>
-        <li class="page-item">
-          <button class="page-link" >Next</button>
-        </li>
-      </ul>
-    </nav>
+      </ng-template>
+      </tbody>
+    </table>
+  </div>
+  <nav aria-label="Page navigation" class="products-pagination">
+    <ul class="pagination justify-content-between">
+      <li class="page-item" [class.disabled]="currentPage === 0">
+        <button class="page-link" (click)="previousPage()">Previous</button>
+      </li>
+      <li class="page-item">
+        <span class="page-link current-page-label">{{ currentPage+1 }}/{{ totalPages }}</span>
+      </li>
+      <li class="page-item" [class.disabled]="currentPage === totalPages-1">
+        <button class="page-link" (click)="nextPage()">Next</button>
+      </li>
+    </ul>
+  </nav>
 </div>
-

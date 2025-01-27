@@ -27,11 +27,11 @@ export class CategoryService {
   }
 
   getAllCategoriesForCustomerService(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiURL}/customer-service/categories/get`,{headers : this.headers});
+    return this.http.get<any[]>(`${this.apiURL}/customer-service/categories`,{headers : this.headers});
   }
 
   deleteCategory(categoryId : number): Observable<HttpResponse<string>> {
-    return this.http.delete<string>(`${this.apiURL}/customer-service/categories/delete`, {
+    return this.http.delete<string>(`${this.apiURL}/customer-service/categories`, {
       headers: this.headers,
       observe: 'response',
       responseType: 'text' as 'json',
@@ -45,7 +45,7 @@ export class CategoryService {
     formData.append('name', name);
     formData.append('description', description);
     formData.append('parentCategoryId', parentCategoryId.toString());
-    return this.http.post<any>(`${this.apiURL}/customer-service/categories/add`, formData, {
+    return this.http.post<any>(`${this.apiURL}/customer-service/categories`, formData, {
       headers: this.headers,
       observe: 'response',
     });
@@ -58,7 +58,7 @@ export class CategoryService {
     formData.append('description', description);
     formData.append('parentCategoryId', parentCategoryId.toString());
     formData.append('categoryId', categoryId.toString());
-    return this.http.put<string>(`${this.apiURL}/customer-service/categories/update`, formData, {
+    return this.http.put<string>(`${this.apiURL}/customer-service/categories`, formData, {
       headers: this.headers,
       observe: 'response',
       responseType: 'text' as 'json'

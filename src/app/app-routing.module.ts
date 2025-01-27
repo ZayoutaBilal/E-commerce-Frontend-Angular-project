@@ -27,7 +27,7 @@ const routes: Routes = [
   { path: 'shop', component: ShopComponent },
   { path: 'about', component: AboutComponent },
   { path: 'signup', component: SignComponent },
-  { path: 'signin', component: SignComponent },
+  { path: 'sign/:option', component: SignComponent },
   { path: 'customer-service', component: CustomerServiceComponent },
   { path: 'customer-service/categories', component: CategoriesComponent },
   { path: 'customer-service/products', component: ProductsComponent },

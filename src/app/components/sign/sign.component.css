@@ -8,12 +8,6 @@
 
 }
 
-.dynamic-title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 2rem;
-  text-align: center;
-}
 
 .card-container {
   background-color: #ffffff;
@@ -97,7 +91,7 @@
 .form input {
   padding: 12px;
   margin: 8px 0;
-  border: 1px solid #aed581; /* Green border */
+  border: 1px solid #aed581;
   border-radius: 5px;
   font-size: 1rem;
   transition: border-color 0.3s;
@@ -110,14 +104,14 @@
   outline: none;
 }
 
-.form a{
+.form a,.switch-button{
   text-decoration: none;
   margin-top: 5px;
   font-size: 0.9rem;
   color: blue;
 }
 
-.form a:hover {
+.form a:hover ,.switch-button:hover{
   text-decoration: underline;
   cursor: pointer;
   color: #689f38;
@@ -143,23 +137,6 @@
   background-color: #388e3c;
 }
 
-/*.switch-button {*/
-/*  background-color: transparent;*/
-/*  color: #689f38;*/
-/*  border: 1px solid #aed581;*/
-/*  border-radius: 5px;*/
-/*  padding: 10px 20px;*/
-/*  font-size: 0.9rem;*/
-/*  cursor: pointer;*/
-/*  transition: background-color 0.3s, color 0.3s;*/
-/*  margin-top: 10px;*/
-/*  align-self: center;*/
-/*}*/
-
-/*.switch-button:hover {*/
-/*  background-color: #e8f5e9;*/
-/*  color: #333;*/
-/*}*/
 
 @media (max-width: 600px) {
   .card-container{

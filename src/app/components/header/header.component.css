@@ -1,76 +1,258 @@
-/* Common styles for both buttons */
+
+#templatemo_nav_top {
+  background-color: #f8f9fa;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+#templatemo_nav_top .text-light {
+  color: #777 !important;
+}
+
+
+#templatemo_nav_top a {
+  text-decoration: none;
+  color: #777 !important;
+  transition: color 0.2s;
+
+}
+#templatemo_nav_top a:hover{
+  color: #28a745 !important;
+}
+
+
+#templatemo_nav_top i {
+  margin: 0 0.3rem;
+  color: #777;
+}
+
+
+.navbar {
+  padding: 1rem 0;
+}
+
+
+.dropdown-menu {
+  position: absolute;
+  z-index: 1000;
+  display: none;
+  min-width: 10rem;
+  padding: 0.5rem 0;
+  margin: 0;
+  font-size: 1rem;
+  color: #212529;
+  text-align: left;
+  list-style: none;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: 0.25rem;
+  margin-top: 5px;
+  right: 0;
+}
+
+.dropdown-menu.show {
+  display: block;
+}
+
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 0.25rem 1rem;
+  clear: both;
+  font-weight: 400;
+  color: #212529;
+  text-align: inherit;
+  text-decoration: none;
+  white-space: nowrap;
+  background-color: transparent;
+  border: 0;
+  transition: all .2s ease-in-out;
+}
+
+.dropdown-item:hover {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.navbar-brand {
+  font-weight: 600;
+  font-size: 1.8rem;
+  text-decoration: none;
+}
+
+.navbar-brand:hover{
+  color: #28a745;
+}
+
+.navbar-toggler {
+  border: none;
+}
+
+.navbar-toggler:focus {
+  box-shadow: none;
+}
+
+
 .nav-item .nav-link {
-    padding: 8px 16px; /* Ensures equal padding */
-    font-size: 16px;   /* Sets font size */
-    display: inline-block;
-    text-align: center;
+  font-weight: 500;
+  color: #333;
+  transition: color 0.2s;
+  padding: 0.5rem 1rem;
 }
 
-/* Sign In button with green border and white background */
+
+.nav-item .nav-link:hover {
+  color: #28a745;
+}
+
+.nav-item .nav-link.active {
+  color: #28a745;
+  font-weight: bold;
+}
+
+
 .custom-signin-btn {
-    border: 2px solid #198754; /* Green border */
-    background-color: #fff;    /* White background */
-    color: #000 !important;    /* Black text */
+  color: #333;
+  background-color: transparent;
+  border: 1px solid #ccc;
+  transition: all .3s ease-in-out;
 }
-
 .custom-signin-btn:hover {
-    background-color: #198754 !important; /* Green background on hover */
-    color: #fff !important;               /* White text on hover */
+  background-color: #f0f0f0;
 }
 
-/* Sign Up button with green background */
 .custom-signup-btn {
-    background-color: #198754; /* Green background */
-    color: #fff !important;    /* White text */
-    border: 2px solid #198754; /* Adds border to match "Sign In" */
+  background-color: #28a745;
+  color: #ffffff;
+  transition: all .3s ease-in-out;
 }
 
 .custom-signup-btn:hover {
-    background-color: #145a32 !important; /* Darker green on hover */
-    color: #fff !important;
+  background-color: #196f32;
 }
 
-.nav-icon {
-    position: relative;
-    cursor: pointer;
-  }
-  
-  .dropdown-menu {
-    position: absolute; 
-    top: 100%; /* Position it below the icon */
-    right: 10px; /* Add a bit of space from the edge */
-    background-color: #ffffff; 
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
-    z-index: 1000; 
-    display: flex;
-    flex-direction: column;
-    padding: 0;
-  }
-  
-  
-  .dropdown-item {
-    padding: 8px 12px; /* Adjust padding for smaller items */
-    cursor: pointer; /* Indicate it's clickable */
-    display: flex; /* Align icon and text */
-    align-items: center; /* Center vertically */
-  }
-  
-  .dropdown-item i {
-    margin-right: 8px; /* Space between icon and text */
-    font-size: 0.9rem; /* Smaller icon size */
-  }
-  
-  .dropdown-item:hover {
-    background-color: #f0f0f0; /* Change background on hover */
-  }
-  .non-clickable {
-    cursor: default; /* Regular arrow cursor */
-    color: #6c757d; /* Optional: Lighter color to indicate it's not clickable */
-    pointer-events: none; /* Ensures no clicking functionality */
-  }
 
-  
-  
-  
+
+.modal-content {
+  border: none;
+  border-radius: 10px;
+}
+.input-group-text {
+  background-color: #28a745;
+  border: none;
+}
+.btn-close {
+  box-shadow: none;
+}
+
+
+.nav-icon {
+  color: #333;
+  font-size: 1.2rem;
+  margin: 0 0.3rem;
+  transition: color 0.2s;
+  cursor: pointer;
+
+}
+
+.nav-icon:hover {
+  color: #28a745;
+}
+.customer-service-icon-container:hover,.dropdown-item:hover{
+  cursor: pointer;
+}
+
+.dropdown-menu {
+  position: absolute;
+  z-index: 1000;
+  display: none;
+  min-width: 10rem;
+  padding: 0.5rem 0;
+  margin: 0;
+  font-size: 1rem;
+  color: #212529;
+  text-align: left;
+  list-style: none;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: 0.25rem;
+  margin-top: 5px;
+  right: 0;
+}
+
+.dropdown-menu.show {
+  display: block;
+}
+
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 0.25rem 1rem;
+  clear: both;
+  font-weight: 400;
+  color: #212529;
+  text-align: inherit;
+  text-decoration: none;
+  white-space: nowrap;
+  background-color: transparent;
+  border: 0;
+  transition: all .2s ease-in-out;
+}
+
+.dropdown-item:hover {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+
+.admin-icon-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  background-color: transparent;
+  cursor: pointer;
+  transition: all .2s ease-in-out;
+  margin-left: 10px;
+
+}
+
+.admin-icon-container:hover {
+  background-color: #f0f0f0;
+}
+
+.admin-icon-container i {
+  font-size: 1.2rem;
+  color: #333;
+  transition: color 0.2s;
+
+}
+
+
+.admin-icon-container:hover i {
+  color: #28a745;
+}
+
+
+@media (max-width: 768px) {
+  .admin-icon-container{
+    width: 30px;
+    height: 30px;
+  }
+  .admin-icon-container i{
+    font-size: 1rem;
+  }
+}
+@media (max-width: 576px) {
+  .admin-icon-container{
+    width: 25px;
+    height: 25px;
+  }
+  .admin-icon-container i{
+    font-size: 0.9rem;
+  }
+}

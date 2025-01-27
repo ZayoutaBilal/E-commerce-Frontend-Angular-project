@@ -25,8 +25,6 @@ import { CustomerServiceComponent } from './components/customer-service/customer
 import { CategoriesComponent } from './components/categories/categories.component';
 import {FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {OverviewComponent} from "./components/overview/overview.component";
-import {SidebarComponent} from "./components/sidebar/sidebar.component";
-import {HeaderCustomerServiceComponent} from "./components/header-customer-service/header-customer-service.component";
 import {NewProductComponent} from "./components/products-routes/new-product/new-product.component";
 import {ProductsComponent} from "./components/products-routes/products/products.component";
 import {ProductDetailComponent} from "./components/products-routes/product-detail/product-detail.component";
@@ -48,8 +46,6 @@ import {NgOptimizedImage} from "@angular/common";
     ShopComponent,
     ProductDetailsComponent,
     OverviewComponent,
-    SidebarComponent,
-    HeaderCustomerServiceComponent,
     CategoriesComponent,
     NewProductComponent,
     ProductsComponent,

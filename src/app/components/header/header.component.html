@@ -48,10 +48,10 @@
                     <div *ngIf="!isLoggedIn">
                         <div class="nav d-flex align-items-center">
                             <li class="nav-item">
-                                <a class="nav-link btn custom-signin-btn me-2" routerLink="/signin" routerLinkActive="active" ariaCurrentWhenActive="page">Sign In</a>
+                                <a class="nav-link btn custom-signin-btn me-2" [routerLink]="['/sign','in']" routerLinkActive="active" ariaCurrentWhenActive="page">Sign In</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link btn custom-signup-btn text-white" routerLink="/signup" >Sign Up</a>
+                                <a class="nav-link btn custom-signup-btn text-white" [routerLink]="['/sign','up']" >Sign Up</a>
                             </li>
                         </div>
                     </div>
@@ -89,24 +89,33 @@
                         {{ cartItemsLength }}
                       </span>
                     </a>
-                    <a class="nav-icon position-relative text-decoration-none" (click)="toggleMenu()">
-                        <i class="fa fa-fw fa-user text-dark mr-1"></i>
+
+                  <a class="nav-icon position-relative text-decoration-none" (click)="toggleMenu()">
+                    <i class="fa fa-fw fa-user text-dark mr-1"></i>
+                  </a>
+                  <div *ngIf="menuOpen" class="dropdown-menu show">
+                    <a class="dropdown-item" routerLink="/profile">
+                      <i class="fa fa-fw fa-sm fa-user-circle text-dark"></i> Account
                     </a>
-                    <div *ngIf="menuOpen" class="dropdown-menu">
-                        <a class="dropdown-item" routerLink="/profile">
-                            <i class="fa fa-fw fa-sm fa-user-circle text-dark"></i> Account
-                        </a>
-                        <div class="dropdown-item" (click)="logOut()">
-                            <i class="fa fa-fw fa-sm fa-sign-out-alt text-dark"></i> Logout
-                        </div>
+                    <div class="dropdown-item" (click)="logOut()">
+                      <i class="fa fa-fw fa-sm fa-sign-out-alt text-dark"></i> Logout
                     </div>
+                  </div>
 
 
                 </div>
 
-                <div class="dropdown-item bg-black" *ngIf="authorities.includes('ROLE_CUSTOMER_SERVICE')">
-                    <i class="fa fa-fw fa-sm fa-heart text-dark" routerLink="/customer-service"></i>
-                </div>
+              <div  *ngIf="authorities.includes('ROLE_CUSTOMER_SERVICE')" class="customer-service-icon-container">
+                <a>
+                  <i class="fa fa-fw fa-sm fa-store text-dark" routerLink="/customer-service"></i>
+                </a>
+              </div>
+
+              <div *ngIf="authorities.includes('ROLE_ADMIN')" class="admin-icon-container">
+                <a>
+                  <i class="fas fa-user-shield text-dark" routerLink="/admin"></i>
+                </a>
+              </div>
 
 
             </div>

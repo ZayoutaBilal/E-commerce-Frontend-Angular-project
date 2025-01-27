@@ -19,7 +19,7 @@ export class HeaderComponent implements OnInit {
   cartItemsLength = 0;
   searchCategory = '';
   authorities : string[] = [];
-  
+
 
   constructor(private authService: AuthService,
     private cartService : CartService,
@@ -27,12 +27,12 @@ export class HeaderComponent implements OnInit {
     private sharedService : SharedService,
     private router: Router
   ) {
-     
+
   }
 
-  
+
   ngOnInit()   {
-    
+
     this.authService.isLoggedIn().subscribe((status) => {
       this.isLoggedIn = status;
     });
@@ -40,12 +40,12 @@ export class HeaderComponent implements OnInit {
     this.authService.getAuthorities().subscribe((authorities) => {
       this.authorities = authorities;
     });
-    
+
     this.storage.cartLength$.subscribe(length => {
       this.cartItemsLength = length;
     });
 
-    
+
   }
 
   toggleMenu() {
@@ -56,8 +56,8 @@ export class HeaderComponent implements OnInit {
     this.authService.logOut();
     this.menuOpen = false;
     this.isLoggedIn = false;
-    
-    
+
+
   }
 
   @HostListener('document:click', ['$event'])
