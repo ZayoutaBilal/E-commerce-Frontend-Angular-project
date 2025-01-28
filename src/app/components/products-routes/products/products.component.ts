@@ -148,7 +148,8 @@ export class ProductsComponent implements OnInit {
         this.productService.deleteProduct(productId).subscribe({
           next: (response) => {
             this.notificationService.showSuccess(response.body ?? undefined);
-            this.products=this.products.filter(p => p.productId !== productId);
+            this.dataSource.data.filter(product => product.id !== productId);
+            //this.products=this.products.filter(product => product.productId !== productId);
           },
           error: (error) => this.notificationService.handleSaveError(error)
         });
@@ -157,7 +158,8 @@ export class ProductsComponent implements OnInit {
   }
 
   editProduct(id:number){
-    this.notificationService.showInfo(id+'');
+    this.sharedService.updateProductIdEditing(id);
+    this.goToNewProductComponent();
   }
 
 }

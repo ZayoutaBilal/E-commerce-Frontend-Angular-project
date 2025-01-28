@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ProductService} from "../../../services/product.service";
 import {SharedService} from "../../../services/shared.service";
 import {DiscountService} from "../../../services/discount.service";
 import {NotificationService} from "../../../services/notification.service";
+import {Image, Variation} from "../../../models/product-management/product-management.module";
+
+
 
 @Component({
   selector: 'app-new-product',
@@ -13,19 +16,25 @@ import {NotificationService} from "../../../services/notification.service";
 export class NewProductComponent implements OnInit {
 
   productForm: FormGroup;
+  productId: number | undefined;
   imageUrls: string[] = [];
   files: File[] = [];
   categories: any[] = [];
   discounts: any[] = [];
+  isAdding: boolean = true;
 
 
+  existingImages: Image[] = [];
+  deletedImageIds: number[] = [];
+  showImageModal: boolean = false;
+  modalImageUrls: Image[] = [];
 
   constructor(
     private fb: FormBuilder,
     private discountService: DiscountService,
     private productService: ProductService,
     private sharedService : SharedService,
-    private notificationService : NotificationService,
+    private notificationService : NotificationService
 
   ) {
     this.productForm = this.fb.group({
@@ -40,6 +49,34 @@ export class NewProductComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.sharedService.productIdEditing$.subscribe({
+      next: (param) => {
+        if(param !== 0){
+          this.isAdding=false;
+          this.productId=param;
+          this.productService.getProductForManagement(param).subscribe({
+            next: (data) => {
+              this.productForm.patchValue({
+                name: data.name,
+                price: data.price,
+                description: data.description,
+                information : data.information,
+                category: data.category,
+                discount: data.discount,
+              });
+              if (data.images && data.images.length > 0) {
+                this.existingImages = data.images.map((img:any) => ({
+                  url: 'data:image/jpeg;base64,'+img.url,
+                  id: img.id
+                }));
+              }
+              this.addVariation(data.variations);
+            },error: (error) => this.notificationService.handleSaveError(error)
+          })
+        }
+      },error:(error) => this.notificationService.handleSaveError(error)
+    })
+
     this.getAllCategoriesAndAllDiscounts();
   }
 
@@ -61,14 +98,25 @@ export class NewProductComponent implements OnInit {
   }
 
 
-  addVariation() {
-    const variationGroup = this.fb.group({
-      size: ['', Validators.required],
-      color: ['', Validators.required],
-      quantity: [1, [Validators.required, Validators.min(1)]],
-    });
-    this.variations.push(variationGroup);
+  addVariation(variations?: Variation[]) {
+    if (!variations || variations.length === 0) {
+      this.variations.push(this.createVariationGroup());
+    } else {
+      variations.forEach((variation) => {
+        this.variations.push(this.createVariationGroup(variation));
+      });
+    }
   }
+
+  createVariationGroup(variation?: Variation): FormGroup {
+    return this.fb.group({
+      size: [variation?.size || '', Validators.required],
+      color: [variation?.color || '', Validators.required],
+      quantity: [variation?.quantity || 1, [Validators.required, Validators.min(1)]],
+    });
+  }
+
+
 
   removeVariation(index: number) {
     this.variations.removeAt(index);
@@ -98,16 +146,25 @@ export class NewProductComponent implements OnInit {
       variations: this.productForm.get('variations')?.value,
     };
 
-    this.productService.addProduct(productData, this.files).subscribe({
-      next: (response) => {
-        this.notificationService.showSuccess(response.body ?? undefined);
-        this.productForm.reset();
-        this.files = [];
-        this.imageUrls = [];
-      },
-      error: (error) =>   this.notificationService.handleSaveError(error)
-
-    });
+    if(this.isAdding)
+      this.productService.addProduct(productData, this.files).subscribe({
+        next: (response) => {
+          this.notificationService.showSuccess(response.body ?? undefined);
+          this.clearForm();
+        },
+        error: (error) =>   this.notificationService.handleSaveError(error)
+      });
+    else
+      if(this.productId)
+        this.productService.updateProduct(this.productId,productData, this.files,this.deletedImageIds).subscribe({
+          next: (response) => {
+            this.notificationService.showSuccess(response.body ?? undefined);
+            this.clearForm();
+            this.sharedService.updateProductIdEditing(0);
+            this.switchToProductsComponent();
+          },
+          error: (error) =>   this.notificationService.handleSaveError(error)
+        });
   }
 
 
@@ -135,6 +192,41 @@ export class NewProductComponent implements OnInit {
 
   }
 
+  clearForm(){
+    this.productForm.reset();
+    this.files = [];
+    this.imageUrls = [];
+    this.deletedImageIds = [];
+  }
+
+  openImageModal() {
+    this.modalImageUrls = [...this.existingImages];
+    this.showImageModal = true;
+  }
+
+  closeImageModal() {
+    this.showImageModal = false;
+    this.deletedImageIds = [];
+  }
+
+  removeImageFromModal(index: number) {
+    const removedImage = this.modalImageUrls[index];
+    this.modalImageUrls.splice(index, 1);
+
+    if (removedImage.id) {
+      this.deletedImageIds.push(removedImage.id);
+      this.notificationService.show(removedImage.id+'');
+    }
+  }
+  removeAllImagesFromModal() {
+    this.deletedImageIds.push(...this.modalImageUrls.filter(image => image.id).map(image => image.id as number));
+    this.modalImageUrls = [];
+  }
+
+  saveModalImages() {
+    this.existingImages = [...this.modalImageUrls];
+    this.closeImageModal();
+  }
 
 
 

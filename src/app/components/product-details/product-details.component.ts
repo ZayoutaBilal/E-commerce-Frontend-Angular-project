@@ -9,8 +9,6 @@ import { AuthService } from 'src/app/services/auth.service';
 import { StorageService } from 'src/app/services/storage.service';
 
 
-declare var bootstrap: any;
-
 @Component({
   selector: 'app-product-details',
   templateUrl: './product-details.component.html',
@@ -31,7 +29,7 @@ export class ProductDetailsComponent implements OnInit{
   rating: number = 0;
   com : string = '';
 
-  
+
 
   constructor(
     private activatedRoute : ActivatedRoute,
@@ -62,12 +60,12 @@ export class ProductDetailsComponent implements OnInit{
     this.authService.isLoggedIn().subscribe((status) => {
       this.isLoggedIn = status;
     });
-    
+
   }
 
 
 
-  
+
 
   selectColor(color: string): void {
     this.selectedColor = color;
@@ -96,7 +94,7 @@ export class ProductDetailsComponent implements OnInit{
       quantityInput.value = (currentValue + 1).toString();
     }
   }
-  
+
   decrementQuantity(): void {
     const quantityInput = document.querySelector('.quantity input') as HTMLInputElement;
     if (quantityInput) {
@@ -106,21 +104,21 @@ export class ProductDetailsComponent implements OnInit{
       }
     }
   }
-  
+
 
   addItemToCart(pid: number): void {
 
     if(!this.isLoggedIn){
-      this.router.navigateByUrl('/signin');
+      this.router.navigateByUrl('/sign/in');
       this.notificationService.showInfo(undefined,'You must log in first !');
       return;
     }
-    
+
     const selectedSize = this.selectedSize;
     const selectedColor = this.selectedColor;
     const quantityInput = document.querySelector('.quantity input') as HTMLInputElement;
     const selectedQuantity = quantityInput ? parseInt(quantityInput.value, 10) : 1;
-  
+
     if (!selectedSize || !selectedColor) {
       this.notificationService.showWarning(undefined,'Please select a size and color.');
       return;
@@ -171,7 +169,7 @@ export class ProductDetailsComponent implements OnInit{
     this.rating = 0;
     this.com = '';
   }
-  
+
 
 
 

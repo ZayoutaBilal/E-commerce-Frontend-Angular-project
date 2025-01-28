@@ -27,7 +27,7 @@
               {{element.productId}}
             </ng-container>
             <ng-container *ngIf="column === 'Name'">
-              <span class="products-table-name">{{ element.name }}</span>
+              <span class="products-table-name" [routerLink]="['/product-details',element.productId]">{{ element.name }}</span>
             </ng-container>
             <ng-container *ngIf="column === 'Quantity'">
               <p class="products-table-quantity">{{ 100 }}</p>

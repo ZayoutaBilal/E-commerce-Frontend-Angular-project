@@ -1,15 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders,HttpResponse } from '@angular/common/http';
-import { Observable, observeOn } from 'rxjs';
-import { UserDetailsModule } from '../models/user-details/user-details.module';
-import {CookieService} from 'ngx-cookie-service';
-import { UserInfosModule } from '../models/user-infos/user-infos.module';
+import { Observable } from 'rxjs';
 import { HttpParams } from '@angular/common/http';
 import { StorageService } from './storage.service';
 import { ProductOverview } from '../models/product-overview/product-overview.module';
 import { Page } from '../models/page/page.module';
 import { ColorSizeQuantityCombination, ProductDetailsModule } from '../models/product-details/product-details.module';
 import {environment} from "../../environments/environment";
+import {ProductManagement} from "../models/product-management/product-management.module";
 
 @Injectable({
   providedIn: 'root'
@@ -82,6 +80,21 @@ export class ProductService {
     });
   }
 
+  updateProduct(productId:number,productInsertion: any, images: File[],deletedImageIds: number[]): Observable<HttpResponse<string>> {
+    const form = new FormData();
+    form.append('product',JSON.stringify(productInsertion));
+    form.append('deletedImageIds',JSON.stringify(deletedImageIds));
+    form.append('productId',productId.toString());
+    images.forEach((image) => {
+      form.append('images', image);
+    });
+    return this.http.put<string>(`${this.apiURL}/customer-service/products`, form, {
+      headers: this.headers,
+      observe: 'response',
+      responseType : 'text' as 'json'
+    });
+  }
+
   getProducts(page: number,size : number,sortedBy? :string,order? : string): Observable<Page<any>> {
     let params = new HttpParams();
     params = params.set('size', size);
@@ -98,5 +111,9 @@ export class ProductService {
       responseType: 'text' as 'json',
       params: {productId: productId}
     });
+  }
+
+  getProductForManagement(productId: number): Observable<ProductManagement> {
+    return this.http.get<ProductManagement>(`${this.apiURL}/customer-service/products/${productId}`,{headers : this.headers});
   }
 }

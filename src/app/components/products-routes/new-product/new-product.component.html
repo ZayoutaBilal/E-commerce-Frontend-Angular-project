@@ -1,6 +1,6 @@
 <div class="product-card">
   <div class="card-header">
-    <h2 class="card-title">Create Product</h2>
+    <h2 class="card-title">{{ isAdding ? 'Create' : 'Edit'}} Product</h2>
     <a (click)="switchToProductsComponent()" class="card-button">
       <i class="fa-solid fa-list"></i>
       <span>Products</span>
@@ -17,20 +17,27 @@
           <label for="price" class="form-label">Price</label>
           <input type="number" id="price" formControlName="price" class="form-control"/>
         </div>
+
         <div class="form-group full-width">
           <label for="images" class="form-label">Images</label>
-          <input type="file" id="images" name="images" (change)="onImageChange($event)" accept="image/*" class="form-control" multiple/>
+          <ng-container *ngIf="!isAdding">
+            <button type="button" class="button button-secondary" (click)="openImageModal()">Manage Existing Images</button>
+          </ng-container>
+          <input type="file" id="images" name="images" (change)="onImageChange($event)" accept="image/*"
+                 class="form-control" multiple/>
           <div class="image-preview">
             <ng-container *ngFor="let image of imageUrls; let i = index">
               <div class="image-container">
-                <img [src]="image" alt="preview" class="image-preview-img" />
+                <img [src]="image" alt="preview" class="image-preview-img"/>
                 <button type="button" class="image-remove-button" (click)="removeImage(i)">
                   <i class="fas fa-times"></i>
                 </button>
               </div>
             </ng-container>
           </div>
+
         </div>
+
         <div class="form-group full-width">
           <label for="information" class="form-label">Information</label>
           <textarea id="information" formControlName="information" class="form-control"></textarea>
@@ -43,8 +50,7 @@
           <label for="category" class="form-label">Category</label>
           <select id="category" formControlName="category" class="form-control">
             <option value="{{undefined}}" selected>Select a category</option>
-            <option value="{{0}}">None</option>
-            <option *ngFor="let category of categories" [value]="category.categoryId">{{ category.name }}</option>
+            <option *ngFor="let category of categories" [value]="category.categoryId">{{category.name}}</option>
           </select>
         </div>
         <div class="form-group">
@@ -52,22 +58,22 @@
           <select id="discount" formControlName="discount" class="form-control">
             <option value="{{undefined}}" selected>Select a discount</option>
             <option value="{{0}}">None</option>
-            <option *ngFor="let discount of discounts" [value]="discount.discountId">{{ discount.name }}</option>
+            <option *ngFor="let discount of discounts" [value]="discount.discountId">{{discount.name}}</option>
           </select>
         </div>
       </div>
       <div class="button-container">
-        <button type="button" class="button button-secondary" data-bs-toggle="modal" data-bs-target="#variationsModal">
+        <button type="button" class="button button-secondary" data-bs-toggle="modal"
+                data-bs-target="#variationsModal">
           <span>Variations</span>
         </button>
         <button type="submit" class="button button-primary">
-          <span>Submit</span>
+          <span>Save</span>
         </button>
       </div>
     </form>
   </div>
 </div>
-
 
 <!-- Modal for Variations -->
 <div class="modal fade" id="variationsModal" tabindex="-1" aria-labelledby="variationsModalLabel" aria-hidden="true">
@@ -80,12 +86,16 @@
       <div class="modal-body">
         <form [formGroup]="productForm">
           <div formArrayName="variations" class="variations-container">
-            <div *ngFor="let variation of variations.controls; let i = index" [formGroupName]="i" class="mb-3 variation-item">
+            <div *ngFor="let variation of variations.controls; let i = index" [formGroupName]="i"
+                 class="mb-3 variation-item">
               <div class="d-flex justify-content-between align-items-center">
                 <div class="w-100 variation-inputs">
-                  <input formControlName="size" type="text" class="form-control" placeholder="Size (e.g., M)" />
-                  <input formControlName="color" type="text" class="form-control" placeholder="Color (e.g., Red)" />
-                  <input formControlName="quantity" type="number" class="form-control" placeholder="Quantity" />
+                  <input formControlName="size" type="text" class="form-control"
+                         placeholder="Size (e.g., M)"/>
+                  <input formControlName="color" type="text" class="form-control"
+                         placeholder="Color (e.g., Red)"/>
+                  <input formControlName="quantity" type="number" class="form-control"
+                         placeholder="Quantity"/>
                 </div>
                 <button type="button" class="button button-danger" (click)="removeVariation(i)">
                   <i class="fas fa-trash-alt"></i>
@@ -98,6 +108,42 @@
       <div class="modal-footer">
         <button type="button" class="button button-secondary" data-bs-dismiss="modal">Close</button>
         <button type="button" class="button button-success" (click)="addVariation()">Add Variation</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Image Modal -->
+<div class="modal fade" id="imageModal" [ngClass]="{'show d-block': showImageModal}"  tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-modal="true" style="overflow: auto;">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="imageModalLabel">Manage Images</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeImageModal()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="image-preview">
+          <ng-container *ngFor="let image of modalImageUrls; let i = index">
+            <div class="image-container">
+              <img [src]="image.url" alt="preview" class="image-preview-img" />
+              <button type="button" class="image-remove-button" (click)="removeImageFromModal(i)">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </ng-container>
+
+          <div *ngIf="modalImageUrls.length == 0" class="text-center">
+            No images
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div *ngIf="modalImageUrls.length > 0">
+          <button type="button" class="btn btn-danger" (click)="removeAllImagesFromModal()">Remove All</button>
+        </div>
+        <button type="button" class="btn btn-secondary" (click)="closeImageModal()">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="saveModalImages()">Save</button>
       </div>
     </div>
   </div>
