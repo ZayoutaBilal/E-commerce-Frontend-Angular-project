@@ -15,12 +15,12 @@ export const authGuard: CanActivateFn = (route, state): Observable<boolean> => {
     take(1),
     map(loggedIn => {
       const { url } = state;
-      if (loggedIn && (url === '/signin' || url === '/signup')) {
-        router.navigateByUrl('/');
+      if (loggedIn && (url === '/sign/in' || url === '/sign/up')) {
+        router.navigateByUrl('/home').then();
         return false;
       }
-      if (!loggedIn && url !== '/signin' && url !== '/signup') {
-        router.navigateByUrl('/signin');
+      if (!loggedIn && url !== '/sign/in' && url !== '/sign/up') {
+        router.navigateByUrl('/sign/in').then();
         return false;
       }
       return true;

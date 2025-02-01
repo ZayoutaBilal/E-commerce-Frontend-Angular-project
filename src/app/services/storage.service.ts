@@ -1,7 +1,6 @@
 import { isPlatformBrowser } from '@angular/common';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { ProductCart } from '../models/product-cart/product-cart.module';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {environment} from "../../environments/environment";
 
 
@@ -9,7 +8,8 @@ import {environment} from "../../environments/environment";
   providedIn: 'root'
 })
 export class StorageService {
-  private isBrowser: boolean;
+  private tokenBehaviorSubject = new BehaviorSubject<string>('');
+  private readonly isBrowser: boolean;
   private cartLengthKey = 'cartLength';
   private cartLengthSubject = new BehaviorSubject<number>(0);
 
@@ -17,11 +17,10 @@ export class StorageService {
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     this.isBrowser = isPlatformBrowser(platformId);
-
-
     if (this.isBrowser) {
       const cartItemsLength = this.getItem<number>(this.cartLengthKey) || 0;
       this.cartLengthSubject.next(cartItemsLength);
+      this.tokenBehaviorSubject.next(this.getItem(environment.tokenName) || '');
     }
   }
 
@@ -37,10 +36,7 @@ export class StorageService {
       if (item) {
         try {
           return JSON.parse(item) as T;
-        } catch (error) {
-          console.error('Error parsing JSON from localStorage:', error);
-          return null;
-        }
+        } catch (error) {}
       }
     }
     return null;
@@ -52,16 +48,18 @@ export class StorageService {
     }
   }
 
-  getToken(): string | null {
-    return this.getItem(environment.tokenName);
+  getToken(): Observable<string> {
+    return this.tokenBehaviorSubject.asObservable();
   }
 
   setToken(value : any): void {
     this.setItem(environment.tokenName,value);
+    this.tokenBehaviorSubject.next(value);
   }
 
   removeToken(): void {
     this.removeItem(environment.tokenName);
+    this.tokenBehaviorSubject.next('');
   }
 
 
@@ -76,4 +74,6 @@ export class StorageService {
   getCartLength(): number {
     return this.cartLengthSubject.value;
   }
+
+
 }

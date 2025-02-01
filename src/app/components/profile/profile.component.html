@@ -10,24 +10,24 @@
             <h6 class="mt-2">{{ userInfo.username }}</h6>
             <label class="btn btn-outline-primary mt-2">
               Upload new photo
-              <input 
-                type="file" 
-                class="account-settings-fileinput" 
-                hidden 
-                ngbTooltip="Allowed: JPG, GIF, or PNG. Max size: 1 M" 
-                (change)="onFileSelected($event)" 
+              <input
+                type="file"
+                class="account-settings-fileinput"
+                hidden
+                ngbTooltip="Allowed: JPG, GIF, or PNG. Max size: 1 M"
+                (change)="onFileSelected($event)"
               />
             </label>
-            
+
           </div>
           <div class="list-group list-group-flush account-settings-links">
             <a class="list-group-item list-group-item-action" [ngClass]="{'active': selectedTab === 'account-general'}" (click)="setSelectedTab('account-general')">General</a>
             <a class="list-group-item list-group-item-action" [ngClass]="{'active': selectedTab === 'account-change-password'}" (click)="setSelectedTab('account-change-password')">Change password</a>
-            <a class="list-group-item list-group-item-action" [ngClass]="{'active': selectedTab === 'account-info'}" (click)="setSelectedTab('account-info')">Info</a>                   
+            <a class="list-group-item list-group-item-action" [ngClass]="{'active': selectedTab === 'account-info'}" (click)="setSelectedTab('account-info')">Info</a>
             <a class="list-group-item list-group-item-action" [ngClass]="{'active': selectedTab === 'account-notifications'}" (click)="setSelectedTab('account-notifications')">Notifications</a>
-        </div>        
         </div>
-        
+        </div>
+
         <div class="col-md-9">
           <div class="tab-content">
             <div class="tab-pane fade" [ngClass]="{'active show': selectedTab === 'account-general'}" id="account-general">
@@ -39,11 +39,11 @@
                 </div>
                 <div class="form-group">
                   <label class="form-label">E-mail</label>
-                  <input type="text" class="form-control mb-1" [(ngModel)]="userInfo.email" readonly>
+                  <input type="text" class="form-control mb-1" [ngModel]="userInfo.email" readonly>
                 </div>
               </div>
             </div>
-  
+
             <div class="tab-pane fade" [ngClass]="{'active show': selectedTab === 'account-change-password'}" id="account-change-password">
               <div class="card-body pb-2">
                 <div class="form-group">
@@ -60,10 +60,10 @@
                 </div>
               </div>
             </div>
-  
+
             <div class="tab-pane fade" [ngClass]="{'active show': selectedTab === 'account-info'}" id="account-info">
               <div class="card-body pb-2">
-                
+
                 <div class="form-group">
                   <label class="form-label">First Name</label>
                   <input type="text" class="form-control" [(ngModel)]="userInfo.firstName">
@@ -91,32 +91,32 @@
                         <option value="France">city</option>
                         <option value="Other">Other</option>
                     </select>
-                </div>                
+                </div>
               </div>
               <div class="form-group">
                 <label class="form-label">Gender</label>
                 <div>
                     <div class="form-check">
-                        <input 
-                            class="form-check-input" 
-                            type="radio" 
-                            id="genderMale" 
-                            value="male" 
+                        <input
+                            class="form-check-input"
+                            type="radio"
+                            id="genderMale"
+                            value="male"
                             [(ngModel)]="userInfo.gender">
                         <label class="form-check-label" for="genderMale">Male</label>
                     </div>
                     <div class="form-check">
-                        <input 
-                            class="form-check-input" 
-                            type="radio" 
-                            id="genderFemale" 
-                            value="female" 
+                        <input
+                            class="form-check-input"
+                            type="radio"
+                            id="genderFemale"
+                            value="female"
                             [(ngModel)]="userInfo.gender">
                         <label class="form-check-label" for="genderFemale">Female</label>
                     </div>
                 </div>
             </div>
-            
+
               <hr class="border-light m-0">
               <div class="card-body pb-2">
                 <h6 class="mb-4">Contacts</h6>
@@ -126,7 +126,7 @@
                 </div>
               </div>
             </div>
-  
+
             <div class="tab-pane fade" [ngClass]="{'active show': selectedTab === 'account-notifications'}" id="account-notifications">
               <div class="card-body pb-2">
                 <h6 class="mb-4">Activity</h6>
@@ -212,4 +212,3 @@
 <ng-template #loadingTemplate>
   <p>Loading user data...</p>
 </ng-template>
-  

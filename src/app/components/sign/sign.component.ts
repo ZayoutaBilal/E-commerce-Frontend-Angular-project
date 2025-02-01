@@ -1,4 +1,4 @@
-import { Component, OnInit ,Inject,PLATFORM_ID} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PopupDialogComponent } from '../popup-dialog/popup-dialog.component';
 import {ActivatedRoute} from '@angular/router';
@@ -61,7 +61,7 @@ export class SignComponent implements OnInit {
       let email=result[0].value;
       if(email){
       if(email.match(this.emailRegex)){
-        this.userService.forgetpassword(email).subscribe({
+        this.userService.passwordHasBeenForgotten(email).subscribe({
           next:(response) => {
             this.notificationService.showInfo("Forget password",response.body ?? undefined);
                 const dialogRef = this.dialog.open(PopupDialogComponent, {
@@ -80,24 +80,21 @@ export class SignComponent implements OnInit {
                     this.userService.verifyCode(email,result[1].value,result[0].value)
                     .subscribe({
                       next:(response) => {
-                        this.notificationService.showSuccess("Forget password",response.body ?? undefined);
+                        this.notificationService.showSuccess(response.body ?? undefined);
 
                       },error:(error) => {
-                        this.notificationService.showError("Forget password",error.error ?? undefined);
+                        this.notificationService.showError(error.error ?? undefined);
                       }
                     })
                   }
                 });
           },
           error:(error) => {
-            if(error.status === 404){
-              this.notificationService.showError("Forget password",error.error ?? undefined);
-            }
-              console.log(error.error);
+            this.notificationService.handleSaveError(error);
           }
         })
       }else{
-        console.log('email not valide', email);
+        //console.log('email not valid', email);
       }
     }
     });
@@ -110,12 +107,10 @@ export class SignComponent implements OnInit {
     this.userService.login(this.loginLogin, this.passwordLogin).subscribe({
       next: (response : HttpResponse<UserDetailsModule>) => {
         if(response.body){
-          console.log("authorities",response.body.authorities);
           this.authService.logIn(response.body.token,response.body.authorities);
         }
       },
       error: (error) => {
-        console.error(error);
         this.notificationService.handleSaveError(error);
        }
     });
@@ -123,12 +118,12 @@ export class SignComponent implements OnInit {
 
   register () {
     if (!this.emailRegister || !this.emailRegister.match(this.emailRegex)) {
-        this.notificationService.showWarning("Sign up","Email is not valid");
+        this.notificationService.showWarning("Email is not valid");
         return ;
     }
 
     if (this.passwordRegister != this.passwordConfirmRegister) {
-      this.notificationService.showWarning("Sign up","Passwords do not match");
+      this.notificationService.showWarning("Passwords do not match");
       return ;
     }
 
@@ -140,8 +135,8 @@ export class SignComponent implements OnInit {
             this.notificationService.showSuccess("Login",response.body ?? undefined);
             const dialogRef = this.dialog.open(PopupDialogComponent, {
               data: {
-                title: 'Confirme email',
-                content: 'Enter your confiramtion code?',
+                title: 'Confirm email',
+                content: 'Enter your verification code?',
                 fields: [
                   { label: 'Code', value: '', placeholder: 'Enter code' },
                 ],
@@ -150,10 +145,9 @@ export class SignComponent implements OnInit {
             });
 
             dialogRef.afterClosed().subscribe(result => {
-              console.log('The dialog was closed', result[0].value);
               this.userService.confirmEmail(this.emailRegister,result[0].value).subscribe({
                 next:(response) => {
-                  this.notificationService.showSuccess("Sign up",response.body ?? undefined);
+                  this.notificationService.showSuccess(response.body ?? undefined);
                   this.userService.login(this.usernameRegister, this.passwordRegister).subscribe({
                     next:(response) => {
                       if(response.body)
@@ -174,6 +168,10 @@ export class SignComponent implements OnInit {
         });
   }
 
+
+  loginWithGoogle(){}
+  loginWithLinkedIn(){}
+  loginWithFacebook() {}
 
 
 

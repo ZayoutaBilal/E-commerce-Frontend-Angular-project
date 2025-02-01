@@ -20,7 +20,7 @@ export class CustomerServiceComponent implements OnInit{
         { name: 'categories', icon: 'fa-solid fa-dumpster-fire' },
         { name: 'comments', icon: 'fa-solid fa-comment' },
         { name: 'customers', icon: 'fa-solid fa-users' },
-        { name: 'tags', icon: 'fa-solid fa-tag' },
+        { name: 'discounts', icon: 'fa-solid fa-tag' },
       ],
     },
   ];

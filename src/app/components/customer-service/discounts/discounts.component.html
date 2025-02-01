@@ -1,0 +1,93 @@
+<div class="header-container">
+  <h2>Discount Management</h2>
+  <div class="filter-container">
+    <label for="filter" class="filter-label">Filter:</label>
+    <select
+      id="filter"
+      class="filter-select"
+      (change)="onFilterChange()"
+      [(ngModel)]="discountFilter"
+    >
+      <option [value]="''" disabled>Select filter</option>
+      <option [value]="'all'">All</option>
+      <option [value]="'active'">Active</option>
+      <option [value]="'ended'">Ended</option>
+    </select>
+  </div>
+
+  <button class="add-discount-btn" (click)="openAddModal()"><i class="fa-solid fa-plus"></i>
+    <span>Add New</span></button>
+</div>
+
+<div class="discounts-container" *ngIf="discounts.length > 0">
+  <div class="discount-card" *ngFor="let discount of discounts">
+    <div class="card-header">
+      <h3 [title]="discount.name">{{ discount.name | truncate:18}}</h3>
+      <div class="actions">
+        <button class="edit-btn" (click)="openEditModal(discount)">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button class="delete-btn" (click)="deleteDiscount(discount.discountId)">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+    </div>
+    <div class="card-content">
+      <p><strong>Name:</strong> {{ discount.name }}</p>
+      <p><strong>Value:</strong> {{ discount.percent + '%'}}</p>
+      <p><strong>Start Date:</strong> {{ discount.startDate | date }}</p>
+      <p>
+        <strong>End Date:</strong>
+        <span *ngIf="discount.endDate; else noEndDate">{{ discount.endDate | date }}</span>
+        <ng-template #noEndDate>N/A</ng-template>
+      </p>
+      <p><strong>Created At:</strong> {{ discount.createdAt | date }}</p>
+    </div>
+
+  </div>
+</div>
+
+
+<div class="no-discounts" *ngIf="discounts.length === 0">
+  No discounts found.
+</div>
+
+
+<div class="modal" *ngIf="showModal">
+  <div class="modal-content">
+    <span class="close" (click)="closeModal()">×</span>
+    <h3>{{ modalMode === 'add' ? 'Add' : 'Edit' }} Discount</h3>
+
+    <div *ngIf="modalMode === 'add'">
+      <form #discountForm="ngForm" (ngSubmit)="saveDiscount()">
+        <div class="form-group">
+          <label for="nameModal">Discount Code:</label>
+          <input type="text" id="nameModal" [(ngModel)]="newDiscount.name" name="name" required />
+        </div>
+
+        <div class="form-group">
+          <label for="percentModal">Value:</label>
+          <input type="number" id="percentModal" [(ngModel)]="newDiscount.percent" name="percent" required />
+        </div>
+
+        <div class="form-group">
+          <label for="startDateModal">Start Date:</label>
+          <input type="date" id="startDateModal" [(ngModel)]="newDiscount.startDate" name="startDate" required />
+        </div>
+
+        <div class="form-group">
+          <label for="endDateModal">End Date (Optional):</label>
+          <input type="date" id="endDateModal" [(ngModel)]="newDiscount.endDate" name="endDate" />
+        </div>
+
+
+        <div class="form-group">
+          <label for="descriptionModal">Description:</label>
+          <textarea id="descriptionModal" [(ngModel)]="newDiscount.description" name="description"></textarea>
+        </div>
+
+        <button type="submit" [disabled]="!discountForm.form.valid" class="submit-button">Save Discount</button>
+      </form>
+    </div>
+  </div>
+</div>

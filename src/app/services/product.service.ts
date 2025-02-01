@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import { HttpClient, HttpHeaders,HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { HttpParams } from '@angular/common/http';
@@ -15,18 +15,14 @@ import {ProductManagement} from "../models/product-management/product-management
 export class ProductService {
 
   private apiURL = environment.apiUrl;
-
-  private token = this.storage.getToken();
-
-  private readonly headers : HttpHeaders = new HttpHeaders();
+  private headers : HttpHeaders = new HttpHeaders();
 
 
-  constructor(private http: HttpClient,
-    private storage : StorageService
-  ){
-    if(this.token){
-      this.headers = this.headers.append('Authorization', `Bearer ${this.token}`);
-    }
+  constructor(private http: HttpClient, private storage: StorageService) {
+    this.storage.getToken().subscribe((token) => {
+      token ? this.headers = new HttpHeaders({ Authorization: `Bearer ${token}` })
+        : this.headers = new HttpHeaders();
+    });
   }
 
   getAllForCustomer(page: number): Observable<Page<ProductOverview>> {

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import {CategoryService} from "../../services/category.service";
-import {NotificationService} from "../../services/notification.service";
-import {ConfirmDialogComponent} from "../confirm-dialog/confirm-dialog.component";
+import {CategoryService} from "../../../services/category.service";
+import {NotificationService} from "../../../services/notification.service";
+import {ConfirmDialogComponent} from "../../confirm-dialog/confirm-dialog.component";
 
 
 @Component({

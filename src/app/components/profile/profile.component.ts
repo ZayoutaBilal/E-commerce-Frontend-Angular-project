@@ -1,18 +1,17 @@
-import { Component, OnInit, OnChanges, Input, EventEmitter, OnDestroy } from '@angular/core';
+import {Component, OnInit, OnChanges, Input, EventEmitter, OnDestroy, SimpleChanges} from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { UserInfosModule } from '../../models/user-infos/user-infos.module';
 import { NotificationService } from 'src/app/services/notification.service';
 import { ConfirmDialogComponent } from 'src/app/components/confirm-dialog/confirm-dialog.component';
 import { AuthService } from 'src/app/services/auth.service';
 
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit{
 
   private userInfoOrigin!: UserInfosModule;
   userInfo = new UserInfosModule();
@@ -30,19 +29,12 @@ export class ProfileComponent implements OnInit {
               private authService: AuthService,
               ) {}
 
+
   ngOnInit(): void {
     this.authService.isLoggedIn().subscribe((loggedIn) => {
-      if (loggedIn) {
-        this.loadUserInfo();
-      } else {
-        this.clearUserInfo();
-      }
+      loggedIn ? this.loadUserInfo() : this.clearUserInfo();
     });
   }
-
-
-
-
 
   loadUserInfo(): void {
     this.userService.getUserInfo().subscribe({
@@ -214,4 +206,6 @@ export class ProfileComponent implements OnInit {
       this.userInfoOrigin.picture
     );
   }
+
+
 }

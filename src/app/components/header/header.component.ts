@@ -56,8 +56,6 @@ export class HeaderComponent implements OnInit {
     this.authService.logOut();
     this.menuOpen = false;
     this.isLoggedIn = false;
-
-
   }
 
   @HostListener('document:click', ['$event'])

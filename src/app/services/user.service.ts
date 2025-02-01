@@ -1,8 +1,7 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import { HttpClient, HttpHeaders,HttpResponse } from '@angular/common/http';
-import { Observable, observeOn } from 'rxjs';
+import { Observable } from 'rxjs';
 import { UserDetailsModule } from '../models/user-details/user-details.module';
-import {CookieService} from 'ngx-cookie-service';
 import { UserInfosModule } from '../models/user-infos/user-infos.module';
 import { HttpParams } from '@angular/common/http';
 import { StorageService } from './storage.service';
@@ -11,20 +10,18 @@ import {environment} from "../../environments/environment";
 @Injectable({
   providedIn: 'root'
 })
-export class UserService {
+export class UserService{
 
   private apiURL = environment.apiUrl;
-
-  private token = this.storage.getToken();
-
-  private readonly headers : HttpHeaders = new HttpHeaders();
+  private headers: HttpHeaders = new HttpHeaders();
 
 
-  constructor(private http: HttpClient,
-    private storage : StorageService
-  ){if(this.token){
-    this.headers = this.headers.append('Authorization', `Bearer ${this.token}`);
-  } }
+  constructor(private http: HttpClient, private storage: StorageService) {
+    this.storage.getToken().subscribe((token) => {
+      token ? this.headers = new HttpHeaders({ Authorization: `Bearer ${token}` })
+        : this.headers = new HttpHeaders();
+    });
+  }
 
   login(login: string, password: string): Observable<HttpResponse<UserDetailsModule>> {
     const body = { login, password };
@@ -52,7 +49,7 @@ export class UserService {
     return this.http.post<any>(`${this.apiURL}/user/signup`, body,  {  headers : this.headers, observe: 'response' ,responseType: 'text' as 'json'});
   }
 
-  forgetpassword(email: string): Observable<HttpResponse<string>> {
+  passwordHasBeenForgotten(email: string): Observable<HttpResponse<string>> {
     const url = `${this.apiURL}/user/forgot-password?email=${encodeURIComponent(email)}`;
     return this.http.get<string>(url, {  headers : this.headers, observe: 'response', responseType: 'text' as 'json' });
   }
@@ -130,6 +127,8 @@ export class UserService {
     };
     return this.http.post<string>(`${this.apiURL}/user/message/send-message`,body, {  headers : this.headers, observe: 'response', responseType: 'text' as 'json' });
   }
+
+
 
 
 }

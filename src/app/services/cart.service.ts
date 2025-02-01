@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import { ProductCart } from '../models/product-cart/product-cart.module';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -11,17 +11,15 @@ import { environment } from '../../environments/environment';
 export class CartService {
 
   private apiURL = environment.apiUrl;
-
-  private token = this.storage.getToken();
-
-  private readonly headers : HttpHeaders = new HttpHeaders();
+  private headers : HttpHeaders = new HttpHeaders();
 
 
-  constructor(private http: HttpClient,
-    private storage : StorageService,
-  ) {if(this.token){
-    this.headers = this.headers.append('Authorization', `Bearer ${this.token}`);
-  }}
+  constructor(private http: HttpClient, private storage: StorageService) {
+    this.storage.getToken().subscribe((token) => {
+      token ? this.headers = new HttpHeaders({ Authorization: `Bearer ${token}` })
+        : this.headers = new HttpHeaders();
+    });
+  }
 
   getCartItems(): Observable<ProductCart[]> {
     return this.http.get<ProductCart[]>(`${this.apiURL}/customer/cart/get-products-from-cart`, { headers : this.headers });

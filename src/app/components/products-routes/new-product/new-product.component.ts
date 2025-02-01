@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ProductService} from "../../../services/product.service";
 import {SharedService} from "../../../services/shared.service";
@@ -8,12 +8,13 @@ import {Image, Variation} from "../../../models/product-management/product-manag
 
 
 
+
 @Component({
   selector: 'app-new-product',
   templateUrl: './new-product.component.html',
   styleUrls: ['./new-product.component.css']
 })
-export class NewProductComponent implements OnInit {
+export class NewProductComponent implements OnInit ,OnDestroy{
 
   productForm: FormGroup;
   productId: number | undefined;
@@ -122,6 +123,7 @@ export class NewProductComponent implements OnInit {
     this.variations.removeAt(index);
   }
 
+
   onSubmit() {
     if (!this.productForm.valid) {
       this.notificationService.showWarning('Please fill in all required fields.');
@@ -226,6 +228,10 @@ export class NewProductComponent implements OnInit {
   saveModalImages() {
     this.existingImages = [...this.modalImageUrls];
     this.closeImageModal();
+  }
+
+  ngOnDestroy(): void {
+    this.sharedService.updateProductIdEditing(0);
   }
 
 
