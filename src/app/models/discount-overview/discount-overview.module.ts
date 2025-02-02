@@ -4,6 +4,6 @@ export interface DiscountOverviewModule {
   name: string;
   startDate: Date;
   endDate: Date ;
-  createdAt: Date ;
   description: string ;
+  createdAt: Date ;
 }

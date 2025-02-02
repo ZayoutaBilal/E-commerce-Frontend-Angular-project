@@ -10,24 +10,25 @@ import { DiscountOverviewModule } from '../../../models/discount-overview/discou
 export class DiscountsComponent implements OnInit {
 
   discounts: DiscountOverviewModule[] = [];
-  discountFilter : string = '';
+  discountFilter : string = 'active';
   showModal: boolean = false;
   modalMode: 'add' | 'edit' = 'add';
-  newDiscount: DiscountOverviewModule = {
-    discountId: 0,
-    name: '',
-    percent: 0,
-    description: '',
-    startDate: Date.prototype,
-    endDate: Date.prototype,
-    createdAt : Date.prototype
-  };
-  editDiscount: DiscountOverviewModule | null = null;
-  nextId: number = 1;
+  discountForm: FormGroup;
+  discountIdEdited : number = 0;
 
   constructor(
     private discountService: DiscountService,
+    private formBuilder: FormBuilder,
+    private notificationService : NotificationService,
+    private confirmDialogComponent: ConfirmDialogComponent,
   ) {
+    this.discountForm = this.formBuilder.group({
+      name: ['', Validators.required],
+      percent: [0, [Validators.required, Validators.min(0),Validators.max(100)]],
+      description: ['', Validators.required],
+      startDate: [Date(), Validators.required],
+      endDate: [Date(), Validators.required],
+    });
   }
 
 
@@ -39,70 +40,75 @@ export class DiscountsComponent implements OnInit {
     this.discountService.getAllDiscounts(isEnded,all).subscribe({
       next : (response) => {
         this.discounts = response.body ?? [];
-      },error : (error) => console.log(error)
+      },error : (error) => this.notificationService.handleSaveError(error)
     });
   }
 
 
   openAddModal() {
     this.modalMode = 'add';
-    this.newDiscount = {
-      discountId: 0,
-      name: '',
-      percent: 0,
-      description: '',
-      startDate: Date.prototype,
-      endDate: Date.prototype,
-      createdAt : Date.prototype
-    };
     this.showModal = true;
   }
 
   openEditModal(discount: DiscountOverviewModule) {
     this.modalMode = 'edit';
-    this.editDiscount = { ...discount };
+    this.discountForm.patchValue(discount);
+    this.discountIdEdited = discount.discountId;
     this.showModal = true;
-
   }
 
   closeModal() {
     this.showModal = false;
-    this.editDiscount = null;
+    this.discountForm.reset();
+    this.discountIdEdited = 0;
   }
 
 
   saveDiscount() {
+    if (this.discountForm.invalid) {
+      this.notificationService.showWarning('Please fill in all fields.');
+      return ;
+    }
     if (this.modalMode === 'add') {
-      // Create new discount object
-      const newDiscountToAdd = {...this.newDiscount}
-
-      this.discounts.push(newDiscountToAdd);
-      this.nextId++;
-      this.saveToLocalStorage();
-    } else if (this.modalMode === 'edit' && this.editDiscount) {
-
-      // Find the index of the discount to be updated
-      const index = this.discounts.findIndex(d => d.discountId === this.editDiscount!.discountId);
-
-      if (index !== -1) {
-        // Update the discount at the found index
-        this.discounts[index] = {
-          ...this.editDiscount
-        };
-        this.saveToLocalStorage();
-      }
-
+      this.discountService.addDiscount(this.discountForm.value).subscribe({
+        next: (response) => {
+          this.notificationService.showSuccess(response.body['message'] ?? undefined);
+          this.discounts.push(response.body['resource']);
+        },error : (error) => this.notificationService.handleSaveError(error)
+      });
+    } else if (this.modalMode === 'edit') {
+        this.discountService.updateDiscount({discountId:this.discountIdEdited,...this.discountForm.value}).subscribe({
+          next: (response) => {
+            this.notificationService.showSuccess(response.body ?? undefined);
+            this.discounts.map(discount => {
+              if (this.discountIdEdited === discount.discountId) {
+                discount.endDate = this.discountForm.get('endDate')?.value;
+                discount.startDate = this.discountForm.get('startDate')?.value;
+                discount.description = this.discountForm.get('description')?.value;
+                discount.name = this.discountForm.get('name')?.value;
+                discount.percent = this.discountForm.get('percent')?.value;
+              }
+            });
+          },error : (error) => this.notificationService.handleSaveError(error)
+        });
     }
     this.closeModal();
   }
 
   deleteDiscount(id: number) {
-    this.discounts = this.discounts.filter(discount => discount.discountId !== id);
-    this.saveToLocalStorage();
-  }
-
-  saveToLocalStorage() {
-
+    this.confirmDialogComponent.openDialog({
+      title: "Discounts",
+      content: "All products related to this discount will lose it, are you sure that you want to delete this discount ?"
+    }).subscribe(result => {
+      if (result) {
+        this.discountService.deleteDiscount(id).subscribe({
+          next: (response) => {
+            this.notificationService.showSuccess(response.body ?? undefined);
+            this.discounts = this.discounts.filter(discount => discount.discountId !== id);
+          },error : (error) => this.notificationService.handleSaveError(error)
+        })
+      }
+    });
   }
 
   onFilterChange() {
@@ -126,6 +132,9 @@ export class DiscountsComponent implements OnInit {
 
 import { Pipe, PipeTransform } from '@angular/core';
 import {DiscountService} from "../../../services/discount.service";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {NotificationService} from "../../../services/notification.service";
+import {ConfirmDialogComponent} from "../../confirm-dialog/confirm-dialog.component";
 
 @Pipe({
   standalone: true,

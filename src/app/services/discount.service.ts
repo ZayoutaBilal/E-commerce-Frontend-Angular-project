@@ -31,4 +31,19 @@ export class DiscountService {
     return this.http.get<DiscountOverviewModule[]>(`${this.apiURL}/customer-service/discounts`,{headers : this.headers,params : params,observe: 'response'});
   }
 
+  addDiscount(discount : DiscountOverviewModule):Observable<HttpResponse<any>> {
+    return this.http.post<any>(`${this.apiURL}/customer-service/discounts`, discount,
+      {headers : this.headers,observe: 'response'});
+  }
+
+  updateDiscount(discount : DiscountOverviewModule) : Observable<HttpResponse<string>> {
+    return this.http.put<string>(`${this.apiURL}/customer-service/discounts`, discount,
+      {headers : this.headers,observe: 'response',responseType: 'text' as 'json',});
+  }
+
+  deleteDiscount(id : number):Observable<HttpResponse<string>> {
+    return this.http.delete<string>(`${this.apiURL}/customer-service/discounts`,
+      {headers : this.headers,params : new HttpParams().set("discountId",id),observe: 'response',responseType: 'text' as 'json',});
+  }
+
 }

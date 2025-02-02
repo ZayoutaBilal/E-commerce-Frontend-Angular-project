@@ -57,37 +57,34 @@
   <div class="modal-content">
     <span class="close" (click)="closeModal()">×</span>
     <h3>{{ modalMode === 'add' ? 'Add' : 'Edit' }} Discount</h3>
-
-    <div *ngIf="modalMode === 'add'">
-      <form #discountForm="ngForm" (ngSubmit)="saveDiscount()">
+      <form (ngSubmit)="saveDiscount()" [formGroup]="discountForm">
         <div class="form-group">
-          <label for="nameModal">Discount Code:</label>
-          <input type="text" id="nameModal" [(ngModel)]="newDiscount.name" name="name" required />
+          <label for="nameModal">Discount Name:</label>
+          <input type="text" id="nameModal" formControlName="name" required />
         </div>
 
         <div class="form-group">
-          <label for="percentModal">Value:</label>
-          <input type="number" id="percentModal" [(ngModel)]="newDiscount.percent" name="percent" required />
+          <label for="percentModal">Value (0% - 100%):</label>
+          <input type="number" id="percentModal" formControlName="percent" name="percent" required />
         </div>
 
         <div class="form-group">
           <label for="startDateModal">Start Date:</label>
-          <input type="date" id="startDateModal" [(ngModel)]="newDiscount.startDate" name="startDate" required />
+          <input type="date" id="startDateModal" formControlName="startDate" name="startDate" required />
         </div>
 
         <div class="form-group">
           <label for="endDateModal">End Date (Optional):</label>
-          <input type="date" id="endDateModal" [(ngModel)]="newDiscount.endDate" name="endDate" />
+          <input type="date" id="endDateModal" formControlName="endDate" name="endDate" />
         </div>
 
 
         <div class="form-group">
           <label for="descriptionModal">Description:</label>
-          <textarea id="descriptionModal" [(ngModel)]="newDiscount.description" name="description"></textarea>
+          <textarea id="descriptionModal" formControlName="description" name="description"></textarea>
         </div>
 
-        <button type="submit" [disabled]="!discountForm.form.valid" class="submit-button">Save Discount</button>
+        <button type="submit" class="submit-button">Save</button>
       </form>
-    </div>
   </div>
 </div>
