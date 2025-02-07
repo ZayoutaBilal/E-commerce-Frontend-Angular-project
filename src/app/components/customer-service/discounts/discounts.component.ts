@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DiscountOverviewModule } from '../../../models/discount-overview/discount-overview.module';
 
-
 @Component({
   selector: 'app-discounts',
   templateUrl: './discounts.component.html',
@@ -24,10 +23,10 @@ export class DiscountsComponent implements OnInit {
   ) {
     this.discountForm = this.formBuilder.group({
       name: ['', Validators.required],
-      percent: [0, [Validators.required, Validators.min(0),Validators.max(100)]],
+      percent: [0, [Validators.required, Validators.min(0), Validators.max(100)]],
       description: ['', Validators.required],
-      startDate: [Date(), Validators.required],
-      endDate: [Date(), Validators.required],
+      startDate: [new Date().toISOString().split('T')[0], Validators.required],
+      endDate: [new Date().toISOString().split('T')[0], Validators.required]
     });
   }
 
@@ -73,26 +72,29 @@ export class DiscountsComponent implements OnInit {
       this.discountService.addDiscount(this.discountForm.value).subscribe({
         next: (response) => {
           this.notificationService.showSuccess(response.body['message'] ?? undefined);
-          this.discounts.push(response.body['resource']);
+          this.discounts.unshift(response.body['resource']);
         },error : (error) => this.notificationService.handleSaveError(error)
       });
     } else if (this.modalMode === 'edit') {
         this.discountService.updateDiscount({discountId:this.discountIdEdited,...this.discountForm.value}).subscribe({
           next: (response) => {
             this.notificationService.showSuccess(response.body ?? undefined);
-            this.discounts.map(discount => {
-              if (this.discountIdEdited === discount.discountId) {
-                discount.endDate = this.discountForm.get('endDate')?.value;
-                discount.startDate = this.discountForm.get('startDate')?.value;
-                discount.description = this.discountForm.get('description')?.value;
-                discount.name = this.discountForm.get('name')?.value;
-                discount.percent = this.discountForm.get('percent')?.value;
-              }
-            });
           },error : (error) => this.notificationService.handleSaveError(error)
         });
+      this.updateDiscount();
     }
     this.closeModal();
+  }
+
+  updateDiscount() {
+    const discountToUpdate = this.discounts.find(d => d.discountId === this.discountIdEdited);
+    if (discountToUpdate) {
+      discountToUpdate.endDate = this.discountForm.get('endDate')?.value;
+      discountToUpdate.startDate = this.discountForm.get('startDate')?.value;
+      discountToUpdate.description = this.discountForm.get('description')?.value;
+      discountToUpdate.name = this.discountForm.get('name')?.value;
+      discountToUpdate.percent = this.discountForm.get('percent')?.value;
+    }
   }
 
   deleteDiscount(id: number) {

@@ -69,6 +69,11 @@
         </div>
 
         <div class="form-group">
+          <label for="descriptionModal">Description:</label>
+          <textarea id="descriptionModal" formControlName="description" name="description"></textarea>
+        </div>
+
+        <div class="form-group">
           <label for="startDateModal">Start Date:</label>
           <input type="date" id="startDateModal" formControlName="startDate" name="startDate" required />
         </div>
@@ -76,12 +81,6 @@
         <div class="form-group">
           <label for="endDateModal">End Date (Optional):</label>
           <input type="date" id="endDateModal" formControlName="endDate" name="endDate" />
-        </div>
-
-
-        <div class="form-group">
-          <label for="descriptionModal">Description:</label>
-          <textarea id="descriptionModal" formControlName="description" name="description"></textarea>
         </div>
 
         <button type="submit" class="submit-button">Save</button>

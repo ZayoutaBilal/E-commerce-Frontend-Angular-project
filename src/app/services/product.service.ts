@@ -7,7 +7,9 @@ import { ProductOverview } from '../models/product-overview/product-overview.mod
 import { Page } from '../models/page/page.module';
 import { ColorSizeQuantityCombination, ProductDetailsModule } from '../models/product-details/product-details.module';
 import {environment} from "../../environments/environment";
-import {ProductManagement} from "../models/product-management/product-management.module";
+import {GetProductModule} from "../models/product-management/get-product.module";
+import {CreateProductModule} from "../models/product-management/create-product.module";
+import {UpdateProductModule} from "../models/product-management/update-product.module";
 
 @Injectable({
   providedIn: 'root'
@@ -63,11 +65,11 @@ export class ProductService {
     return this.http.post<string>(`${this.apiURL}/customer/products/rate-and-comment`,productRating,{headers : this.headers, observe: 'response', responseType: 'text' as 'json' });
   }
 
-  addProduct(productInsertion: any, images: File[]): Observable<HttpResponse<string>> {
+  addProduct(product: CreateProductModule, images: File[]): Observable<HttpResponse<string>> {
     const formData = new FormData();
-    formData.append('product',JSON.stringify(productInsertion));
+    formData.append('createProduct', new Blob([JSON.stringify(product)], { type: 'application/json' }));
     images.forEach((image) => {
-      formData.append('images', image);
+      formData.append('files', image);
     });
     return this.http.post<string>(`${this.apiURL}/customer-service/products`, formData, {
       headers: this.headers,
@@ -76,13 +78,11 @@ export class ProductService {
     });
   }
 
-  updateProduct(productId:number,productInsertion: any, images: File[],deletedImageIds: number[]): Observable<HttpResponse<string>> {
+  updateProduct(product: UpdateProductModule, images: File[]): Observable<HttpResponse<string>> {
     const form = new FormData();
-    form.append('product',JSON.stringify(productInsertion));
-    form.append('deletedImageIds',JSON.stringify(deletedImageIds));
-    form.append('productId',productId.toString());
+    form.append('updateProduct', new Blob([JSON.stringify(product)], { type: 'application/json' }));
     images.forEach((image) => {
-      form.append('images', image);
+      form.append('files', image);
     });
     return this.http.put<string>(`${this.apiURL}/customer-service/products`, form, {
       headers: this.headers,
@@ -109,7 +109,7 @@ export class ProductService {
     });
   }
 
-  getProductForManagement(productId: number): Observable<ProductManagement> {
-    return this.http.get<ProductManagement>(`${this.apiURL}/customer-service/products/${productId}`,{headers : this.headers});
+  getProductForManagement(productId: number): Observable<GetProductModule> {
+    return this.http.get<GetProductModule>(`${this.apiURL}/customer-service/products/${productId}`,{headers : this.headers});
   }
 }

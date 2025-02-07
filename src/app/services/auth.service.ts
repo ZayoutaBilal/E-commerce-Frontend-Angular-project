@@ -29,6 +29,7 @@ export class AuthService {
             },
             error: () => {
               this.loggedIn.next(false);
+              this.storage.removeToken();
             }
           });
         } else

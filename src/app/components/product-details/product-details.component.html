@@ -6,7 +6,7 @@
               id="product-carousel"
               class="carousel slide carousel-fade"
               data-bs-ride="carousel"
-              data-bs-interval="3000"  
+              data-bs-interval="3000"
             >
               <div class="carousel-inner bg-light" style="position: relative; height: 400px;">
                 <div
@@ -34,9 +34,9 @@
                     <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0M4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z"/>
                   </svg>
               </a>
-              
-              
-              
+
+
+
             </div>
           </div>
       <!-- Product Details -->
@@ -45,8 +45,8 @@
           <h3>{{ productDetails.productName }}</h3>
           <div class="d-flex mb-3">
             <div class="text-primary mr-2">
-                <i *ngFor="let star of [].constructor(5); let i = index" 
-                class="fa fa-star" 
+                <i *ngFor="let star of [].constructor(5); let i = index"
+                class="fa fa-star"
                 [ngClass]="{'text-warning': i < productDetails.productStars, 'text-muted': i >= productDetails.productStars}">
              </i>
             </div>
@@ -54,7 +54,7 @@
           </div>
           <h3 class="font-weight-semi-bold mb-4">${{ productDetails.productPrice }}</h3>
           <p class="mb-4">{{ productDetails.productInformation }}</p>
-  
+
           <!-- Sizes -->
           <div class="d-flex mb-3">
             <strong class="text-dark mr-3">Sizes:</strong>
@@ -77,7 +77,7 @@
           </div>
 
           <!-- Colors -->
-          
+
           <div class="d-flex mb-3" *ngIf="selectedSize">
             <strong class="text-dark mr-3">Colors:</strong>
             <div *ngFor="let color of getColorsForSelectedSize() | keyvalue" class="custom-control custom-radio custom-control-inline">
@@ -97,8 +97,8 @@
               </label>
             </div>
           </div>
-          
-  
+
+
           <!-- Quantity -->
           <div class="d-flex align-items-center mb-4 pt-2">
             <div class="input-group quantity mr-3" style="width: 150px;">
@@ -125,7 +125,7 @@
         </div>
       </div>
     </div>
-  
+
     <!-- Tabs -->
     <div class="row px-xl-5">
       <div class="col">
@@ -146,7 +146,7 @@
               Reviews ({{ productDetails.productReviews ? productDetails.productReviews.length : 0 }})
             </a>
           </div>
-  
+
           <div class="tab-content">
             <div
               *ngIf="activeTab === 'description'"
@@ -156,7 +156,7 @@
               <h4 class="mb-3">Product Description</h4>
               <p>{{ productDetails.productDescription }}</p>
             </div>
-  
+
             <div
               *ngIf="activeTab === 'reviews'"
               class="tab-pane fade show active"
@@ -169,67 +169,43 @@
 
                 <div class="col-md-6" *ngIf="productDetails.productReviews">
                   <h4 class="mb-4">{{ productDetails.productReviews.length }} review{{ productDetails.productReviews.length > 1 ? 's' : '' }} for "{{ productDetails.productName }}"</h4>
-                
+
                   <div class="media mb-4" *ngFor="let review of productDetails.productReviews">
-                    <img 
-                      [src]="'data:image/jpeg;base64,' + review.image" 
-                      alt="User Image" 
-                      class="img-fluid mr-3 mt-1" 
+                    <img
+                      [src]="'data:image/jpeg;base64,' + review.image"
+                      alt="User Image"
+                      class="img-fluid mr-3 mt-1"
                       style="width: 45px;">
                     <div class="media-body">
                       <h6>{{ review.username }}<small> - <i>{{ review.creationDate | date:'dd MMM yyyy' }}</i></small></h6>
-                      
+
                         <div class="text-primary mr-2">
-                          <i *ngFor="let star of [].constructor(5); let i = index" 
-                          class="fa fa-star" 
+                          <i *ngFor="let star of [].constructor(5); let i = index"
+                          class="fa fa-star"
                           [ngClass]="{'text-warning': i < review.stars , 'text-muted': i >= review.stars}">
                        </i>
                       </div>
-                      
+
                       <p>{{ review.comment }}</p>
                     </div>
                   </div>
                 </div>
-                
+
 
                 <div class="col-md-6" *ngIf="isLoggedIn">
                   <h4 class="mb-4">Leave a review</h4>
-                  
+
                     <div class="modal-body text-center">
-                      
+
                       <div class="d-flex justify-content-center mb-3">
-                        <i 
-                          class="fa-star fa-sm text-warning clickable me-2" 
-                          [class.fas]="rating >= 1" 
-                          [class.far]="rating < 1"
-                          (click)="setRating(1)">
-                        </i>
-                        <i 
-                          class="fa-star fa-sm text-warning clickable me-2" 
-                          [class.fas]="rating >= 2" 
-                          [class.far]="rating < 2"
-                          (click)="setRating(2)">
-                        </i>
-                        <i 
-                          class="fa-star fa-sm text-warning clickable me-2" 
-                          [class.fas]="rating >= 3" 
-                          [class.far]="rating < 3"
-                          (click)="setRating(3)">
-                        </i>
-                        <i 
-                          class="fa-star fa-sm text-warning clickable me-2" 
-                          [class.fas]="rating >= 4" 
-                          [class.far]="rating < 4"
-                          (click)="setRating(4)">
-                        </i>
-                        <i 
-                          class="fa-star fa-sm text-warning clickable" 
-                          [class.fas]="rating >= 5" 
-                          [class.far]="rating < 5"
-                          (click)="setRating(5)">
+                        <i *ngFor="let star of [1, 2, 3, 4, 5]; let i = index"
+                           class="fa-star fa-lg text-warning clickable me-2"
+                           [class.fas]="rating >= star"
+                           [class.far]="rating < star"
+                           (click)="setRating(star)">
                         </i>
                       </div>
-                      
+
                       <div>
                         <textarea class="form-control" rows="4" placeholder="Write your comment here..." [(ngModel)]="com"></textarea>
                       </div>
@@ -243,7 +219,7 @@
                         (click)="giveFeedback()"
                       />
                     </div>
-                  
+
                 </div>
               </div>
             </div>
@@ -257,4 +233,3 @@
 
 
 
-  

@@ -7,6 +7,7 @@ import { UserDetailsModule } from '../../models/user-details/user-details.module
 import { AuthService } from '../../services/auth.service';
 import { NotificationService } from '../../services/notification.service';
 import { HttpResponse } from '@angular/common/http';
+import {Form, FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 
 @Component({
@@ -26,6 +27,7 @@ export class SignComponent implements OnInit {
 
   private emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*/
 
+  loginForm : FormGroup ;
   loginLogin: string = '';
   passwordLogin: string = '';
 
@@ -43,8 +45,13 @@ export class SignComponent implements OnInit {
     private userService : UserService,
     private notificationService : NotificationService,
     private activatedRoute : ActivatedRoute,
-    private authService: AuthService,
-  ) { }
+    private authService: AuthService, private formBuilder : FormBuilder
+  ) {
+    this.loginForm = this.formBuilder.group({
+      login: ['', Validators.required],
+      password:['', Validators.required]
+    });
+  }
 
   forgetPassword(): void {
     const dialogRef = this.dialog.open(PopupDialogComponent, {
@@ -104,7 +111,12 @@ export class SignComponent implements OnInit {
 
 
   logIn() {
-    this.userService.login(this.loginLogin, this.passwordLogin).subscribe({
+    if(this.loginForm.invalid){
+      this.notificationService.showWarning('Both login and password are required');
+      return
+    }
+
+    this.userService.login(this.loginForm.value).subscribe({
       next: (response : HttpResponse<UserDetailsModule>) => {
         if(response.body){
           this.authService.logIn(response.body.token,response.body.authorities);
@@ -148,7 +160,7 @@ export class SignComponent implements OnInit {
               this.userService.confirmEmail(this.emailRegister,result[0].value).subscribe({
                 next:(response) => {
                   this.notificationService.showSuccess(response.body ?? undefined);
-                  this.userService.login(this.usernameRegister, this.passwordRegister).subscribe({
+                  this.userService.login({login:this.usernameRegister, password:this.passwordRegister}).subscribe({
                     next:(response) => {
                       if(response.body)
                         this.authService.logIn(response.body.token,response.body.authorities);

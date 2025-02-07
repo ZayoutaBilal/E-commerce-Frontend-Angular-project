@@ -23,8 +23,8 @@ export class UserService{
     });
   }
 
-  login(login: string, password: string): Observable<HttpResponse<UserDetailsModule>> {
-    const body = { login, password };
+  login(body : any): Observable<HttpResponse<UserDetailsModule>> {
+    console.log(body);
     return this.http.post<UserDetailsModule>(`${this.apiURL}/user/login`, body, {
       headers: this.headers,
       observe: 'response'

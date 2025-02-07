@@ -1,12 +1,11 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ProductService} from "../../../services/product.service";
 import {SharedService} from "../../../services/shared.service";
 import {DiscountService} from "../../../services/discount.service";
 import {NotificationService} from "../../../services/notification.service";
-import {Image, Variation} from "../../../models/product-management/product-management.module";
-
-
+import {Image, Variation} from "../../../models/product-management/get-product.module";
+import {UpdatedVariation} from "../../../models/product-management/update-product.module";
 
 
 @Component({
@@ -27,8 +26,10 @@ export class NewProductComponent implements OnInit ,OnDestroy{
 
   existingImages: Image[] = [];
   deletedImageIds: number[] = [];
+  deletedVariationIds: number[] = [];
   showImageModal: boolean = false;
   modalImageUrls: Image[] = [];
+  updatedVariations: UpdatedVariation[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -99,33 +100,64 @@ export class NewProductComponent implements OnInit ,OnDestroy{
   }
 
 
-  addVariation(variations?: Variation[]) {
+  addVariation(variations?: Variation[], isNew: boolean = false) {
     if (!variations || variations.length === 0) {
-      this.variations.push(this.createVariationGroup());
+      this.variations.push(this.createVariationGroup(undefined, true)); // true = new variation
     } else {
       variations.forEach((variation) => {
-        this.variations.push(this.createVariationGroup(variation));
+        this.variations.push(this.createVariationGroup(variation, isNew)); // isNew = false for existing variations
       });
     }
   }
 
-  createVariationGroup(variation?: Variation): FormGroup {
-    return this.fb.group({
-      size: [variation?.size || '', Validators.required],
-      color: [variation?.color || '', Validators.required],
-      quantity: [variation?.quantity || 1, [Validators.required, Validators.min(1)]],
+  createVariationGroup(variation?: Variation, isNew: boolean = false): FormGroup {
+    const group = this.fb.group({
+      variationId: [variation?.productVariationId || null],
+      size: [
+        { value: variation?.size || '', disabled: !isNew },
+        Validators.required
+      ],
+      color: [
+        { value: variation?.color || '', disabled: !isNew },
+        Validators.required
+      ],
+      quantity: [
+        variation?.quantity || 1,
+        [Validators.required, Validators.min(1)]
+      ],
     });
+    if (!isNew && variation?.productVariationId) {
+      group.get('quantity')?.valueChanges.subscribe((newQuantity) => {
+        this.updateVariationQuantity(variation.productVariationId, newQuantity || 1);
+      });
+    }
+
+    return group;
+  }
+
+  updateVariationQuantity(variationId: number, newQuantity: number): void {
+    const existingVariation = this.updatedVariations.find(
+      (v) => v.productVariationId === variationId
+    );
+    if (existingVariation) {
+      existingVariation.quantity = newQuantity;
+    } else {
+      this.updatedVariations.push({ productVariationId:variationId, quantity: newQuantity });
+    }
+    console.log('Updated Variations:', this.updatedVariations);
   }
 
 
 
   removeVariation(index: number) {
+    if(!this.isAdding)
+      this.deletedVariationIds.unshift(this.variations.at(index).get("variationId")?.value);
     this.variations.removeAt(index);
   }
 
 
   onSubmit() {
-    if (!this.productForm.valid) {
+    if (!this.productForm.valid ) {
       this.notificationService.showWarning('Please fill in all required fields.');
       return;
     }
@@ -133,23 +165,23 @@ export class NewProductComponent implements OnInit ,OnDestroy{
       this.notificationService.showWarning('Please upload at least one image.');
       return;
     }
-    if (!this.variations.valid) {
+    if (!this.variations.valid || this.variations.length == 0) {
       this.notificationService.showWarning('Please fill the variations modal.');
       return;
     }
 
-    const productData = {
-      price: this.productForm.get('price')?.value as number,
-      name: this.productForm.get('name')?.value,
-      description: this.productForm.get('description')?.value,
-      information: this.productForm.get('information')?.value,
-      category: this.productForm.get('category')?.value as number,
-      discount: this.productForm.get('discount')?.value as number,
-      variations: this.productForm.get('variations')?.value,
-    };
-
+    // const productData = {
+    //   price: this.productForm.get('price')?.value as number,
+    //   name: this.productForm.get('name')?.value,
+    //   description: this.productForm.get('description')?.value,
+    //   information: this.productForm.get('information')?.value,
+    //   category: this.productForm.get('category')?.value as number,
+    //   discount: this.productForm.get('discount')?.value as number,
+    //   variations: this.productForm.get('variations')?.value,
+    // };
+    console.log(this.productForm.value);
     if(this.isAdding)
-      this.productService.addProduct(productData, this.files).subscribe({
+      this.productService.addProduct(this.productForm.value, this.files).subscribe({
         next: (response) => {
           this.notificationService.showSuccess(response.body ?? undefined);
           this.clearForm();
@@ -157,8 +189,10 @@ export class NewProductComponent implements OnInit ,OnDestroy{
         error: (error) =>   this.notificationService.handleSaveError(error)
       });
     else
-      if(this.productId)
-        this.productService.updateProduct(this.productId,productData, this.files,this.deletedImageIds).subscribe({
+      if(this.productId){
+        const oldVariations =
+        this.productService.updateProduct({productId:this.productId,deletedVariations:this.deletedVariationIds,deletedImages:this.deletedImageIds,
+          updatedVariations:this.updatedVariations,...this.productForm.value},this.files).subscribe({
           next: (response) => {
             this.notificationService.showSuccess(response.body ?? undefined);
             this.clearForm();
@@ -167,6 +201,7 @@ export class NewProductComponent implements OnInit ,OnDestroy{
           },
           error: (error) =>   this.notificationService.handleSaveError(error)
         });
+      }
   }
 
 
@@ -199,6 +234,7 @@ export class NewProductComponent implements OnInit ,OnDestroy{
     this.files = [];
     this.imageUrls = [];
     this.deletedImageIds = [];
+    this.deletedVariationIds = [];
   }
 
   openImageModal() {
@@ -231,7 +267,8 @@ export class NewProductComponent implements OnInit ,OnDestroy{
   }
 
   ngOnDestroy(): void {
-    this.sharedService.updateProductIdEditing(0);
+    if(this.productId !== 0)
+      this.sharedService.updateProductIdEditing(0);
   }
 
 

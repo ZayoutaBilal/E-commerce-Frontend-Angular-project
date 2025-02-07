@@ -1,4 +1,5 @@
-export interface ProductManagement {
+
+export interface GetProductModule {
   productId: number;
   name: string;
   price: number;
@@ -12,6 +13,7 @@ export interface ProductManagement {
 }
 
 export interface Variation {
+  productVariationId: number;
   size: string;
   color: string;
   quantity: number;

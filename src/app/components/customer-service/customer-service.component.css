@@ -1,3 +1,4 @@
+/* General Styles */
 .top-bar {
   width: 100%;
   position: sticky;
@@ -6,7 +7,6 @@
   padding: 0.75rem 0;
   border-bottom: 1px solid #e0e0e0;
   background-color: #ffffff;
-
 }
 
 .top-bar .container {
@@ -21,20 +21,17 @@
   color: #333;
   display: flex;
   align-items: center;
-
 }
 
 .brand-logo a i {
   margin-right: 0.5rem;
 }
 
-
 .top-bar-item {
   padding: 0.25rem;
   transition: background-color 0.2s;
   cursor: pointer;
 }
-
 
 .top-bar-item.bg-primary {
   background-color: #28a745 !important;
@@ -46,7 +43,6 @@
   display: flex;
   align-items: center;
   transition: color 0.2s;
-
 }
 
 .top-bar-item.bg-primary .top-bar-link {
@@ -71,35 +67,79 @@
   padding: 20px;
 }
 
-@media (max-width: 768px) {
+/* Media Queries for Responsiveness */
+
+/* For tablets and small desktops */
+@media (max-width: 1024px) {
   .top-bar .container {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
+    padding: 0 15px;
+  }
+
+  .brand-logo a {
+    font-size: 1.2rem;
+  }
+
+  .top-bar-item a span {
+    font-size: 0.8rem;
   }
 
   .content-area {
-    margin-top: 100px;
-  }
-
-  .top-bar .top-bar-item a span {
-    display: block !important;
-  }
-
-  .top-bar-item{
-    padding: 5px 0;
-    margin: 0 5px
+    margin-top: 40px;
+    padding: 15px;
   }
 }
 
+/* For phones */
+@media (max-width: 768px) {
+  .top-bar {
+    padding: 0.5rem 0;
+  }
 
-@media (max-width: 576px) {
   .top-bar .container {
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
+    padding: 0 10px;
   }
+
+  .brand-logo a {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .top-bar-item {
+    padding: 0.2rem;
+  }
+
+  .top-bar-item a span {
+    font-size: 0.75rem;
+  }
+
   .content-area {
-    margin-top: 120px;
+    margin-top: 30px;
+    padding: 10px;
+  }
+}
+
+/* For small phones */
+@media (max-width: 480px) {
+  .top-bar {
+    padding: 0.4rem 0;
+  }
+
+  .brand-logo a {
+    font-size: 0.9rem;
+  }
+
+  .top-bar-item a span {
+    display: none;
+  }
+
+  .top-bar-link i {
+    margin-right: 0;
+  }
+
+  .content-area {
+    margin-top: 20px;
+    padding: 5px;
   }
 }

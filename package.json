@@ -10,7 +10,8 @@
     "build:ssr": "ng build && ng run click-and-buy:server",
     "serve:ssr": "node dist/click-and-buy/server/main.js",
     "dev:ssr": "ng run click-and-buy:serve-ssr",
-    "prerender": "ng run click-and-buy:prerender"
+    "prerender": "ng run click-and-buy:prerender",
+    "dev:ssr:public": "ng run click-and-buy:serve-ssr --host=0.0.0.0"
   },
   "private": true,
   "dependencies": {

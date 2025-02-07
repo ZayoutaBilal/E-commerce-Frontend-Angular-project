@@ -36,7 +36,7 @@
 
       <ng-container *ngIf="!isSignUp">
         <!-- Sign-In Form -->
-        <form class="form sign-in-form" action="" (ngSubmit)="logIn()">
+        <form class="form sign-in-form" [formGroup]="loginForm" (ngSubmit)="logIn()">
           <h2>Sign In</h2>
           <div class="social-container">
             <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
@@ -44,8 +44,8 @@
             <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
           </div>
           <span>or use your account</span>
-          <input type="text" placeholder="Email/Username" id="loginLogin" name="login" [(ngModel)]="loginLogin" />
-          <input type="password" placeholder="Password" id="passwordLogin" name="password" [(ngModel)]="passwordLogin" />
+          <input type="text" placeholder="Email/Username" formControlName="login"  />
+          <input type="password" placeholder="Password" formControlName="password"  />
           <a (click)="forgetPassword()" id="forgetpassword">Forgot your password?</a>
           <button type="submit">Sign In</button>
         </form>
