@@ -27,7 +27,6 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {OverviewComponent} from "./components/overview/overview.component";
 import {NewProductComponent} from "./components/products-routes/new-product/new-product.component";
 import {ProductsComponent} from "./components/products-routes/products/products.component";
-import {ProductDetailComponent} from "./components/products-routes/product-detail/product-detail.component";
 import {NgOptimizedImage} from "@angular/common";
 import {AdminComponent} from "./components/admin/admin.component";
 import {DiscountsComponent, TruncatePipe} from "./components/customer-service/discounts/discounts.component";
@@ -51,7 +50,6 @@ import {DiscountsComponent, TruncatePipe} from "./components/customer-service/di
     CategoriesComponent,
     NewProductComponent,
     ProductsComponent,
-    ProductDetailComponent,
     DiscountsComponent,
     AdminComponent,
 

@@ -1,6 +1,5 @@
-import {Component, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {ProductService} from "../../../services/product.service";
-import { ActivatedRoute, Router } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -56,7 +55,7 @@ export class ProductsComponent implements OnInit {
 
   }
 
-  Filterchange(event: Event) {
+  FilterChanged(event: Event) {
 
     const value = (event.target as HTMLInputElement).value;
     this.dataSource.filter = value.trim().toLowerCase();
@@ -90,7 +89,6 @@ export class ProductsComponent implements OnInit {
 
 
   ngOnInit(): void {
-    //this.updateTotalPages();
     this.getProducts();
   }
 
@@ -109,20 +107,6 @@ export class ProductsComponent implements OnInit {
     this.sharedService.updateSelectedItem('new-product');
   }
 
-  // ngOnChanges(changes: SimpleChanges): void {
-  //   if(changes['dataSource']){
-  //     this.updateTotalPages();
-  //   }
-  //
-  // }
-
-
-
-
-  // updateTotalPages() {
-  //   this.totalPages = Math.ceil(this.dataSource.data.length / this.pageSize);
-  // }
-
 
   previousPage() {
     if (this.currentPage > 0){
@@ -139,7 +123,6 @@ export class ProductsComponent implements OnInit {
   }
 
   deleteProduct(productId:number){
-    this.notificationService.showInfo(productId+'');
     this.confirmDialogComponent.openDialog({
       title: "Products",
       content: "Are you sure that you want to delete this product ?"
@@ -148,13 +131,19 @@ export class ProductsComponent implements OnInit {
         this.productService.deleteProduct(productId).subscribe({
           next: (response) => {
             this.notificationService.showSuccess(response.body ?? undefined);
-            this.dataSource.data.filter(product => product.id !== productId);
-            //this.products=this.products.filter(product => product.productId !== productId);
+            this.removeProductFromList(productId);
           },
           error: (error) => this.notificationService.handleSaveError(error)
         });
       }
     });
+  }
+
+  removeProductFromList(productId: number) {
+    const index = this.products.findIndex(product => product.productId === productId);
+    if (index !== -1) {
+      this.products.splice(index, 1);
+    }
   }
 
   editProduct(id:number){

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute,Router } from '@angular/router';
 import { ProductService } from 'src/app/services/product.service';
 import { ProductDetailsModule } from 'src/app/models/product-details/product-details.module';
@@ -47,13 +47,11 @@ export class ProductDetailsComponent implements OnInit{
     this.activatedRoute.paramMap.subscribe(params => {
       const id=params.get('productId');
       if(id)  this.productId = Number.parseInt(id);
-      console.log('Product ID:', this.productId);
     });
 
     if(this.productId){
       this.productService.getProductDetails(this.productId).subscribe( data =>{
         this.productDetails=data;
-        console.log(this.productDetails);
       });
     }
 
@@ -152,8 +150,6 @@ export class ProductDetailsComponent implements OnInit{
       ratingValue: this.rating === 0 ? null : this.rating,
       comment: this.com
     };
-
-    console.log(feedbackData);
 
     this.productService.submitFeedback(feedbackData).subscribe({
       next : (response) => {

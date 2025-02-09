@@ -91,7 +91,7 @@ export class NewProductComponent implements OnInit ,OnDestroy{
       next : (response) => {
         this.discounts = response.body.discounts;
         this.categories = response.body.categories;
-      },error : (error) => console.log(error)
+      },error : (error) => this.notificationService.handleSaveError(error)
     })
   }
 
@@ -112,7 +112,7 @@ export class NewProductComponent implements OnInit ,OnDestroy{
 
   createVariationGroup(variation?: Variation, isNew: boolean = false): FormGroup {
     const group = this.fb.group({
-      variationId: [variation?.productVariationId || null],
+      productVariationId: [variation?.productVariationId || null],
       size: [
         { value: variation?.size || '', disabled: !isNew },
         Validators.required
@@ -141,17 +141,20 @@ export class NewProductComponent implements OnInit ,OnDestroy{
     );
     if (existingVariation) {
       existingVariation.quantity = newQuantity;
-    } else {
+     } else {
       this.updatedVariations.push({ productVariationId:variationId, quantity: newQuantity });
     }
-    console.log('Updated Variations:', this.updatedVariations);
   }
 
 
 
   removeVariation(index: number) {
-    if(!this.isAdding)
-      this.deletedVariationIds.unshift(this.variations.at(index).get("variationId")?.value);
+    if(!this.isAdding){
+      const productVariationId = this.variations.at(index).get("productVariationId")?.value;
+      if (productVariationId) {
+        this.deletedVariationIds.push(productVariationId);
+      }
+    }
     this.variations.removeAt(index);
   }
 
@@ -161,7 +164,7 @@ export class NewProductComponent implements OnInit ,OnDestroy{
       this.notificationService.showWarning('Please fill in all required fields.');
       return;
     }
-    if (this.files.length === 0) {
+    if (this.files.length === 0 && this.isAdding) {
       this.notificationService.showWarning('Please upload at least one image.');
       return;
     }
@@ -170,16 +173,6 @@ export class NewProductComponent implements OnInit ,OnDestroy{
       return;
     }
 
-    // const productData = {
-    //   price: this.productForm.get('price')?.value as number,
-    //   name: this.productForm.get('name')?.value,
-    //   description: this.productForm.get('description')?.value,
-    //   information: this.productForm.get('information')?.value,
-    //   category: this.productForm.get('category')?.value as number,
-    //   discount: this.productForm.get('discount')?.value as number,
-    //   variations: this.productForm.get('variations')?.value,
-    // };
-    console.log(this.productForm.value);
     if(this.isAdding)
       this.productService.addProduct(this.productForm.value, this.files).subscribe({
         next: (response) => {
@@ -190,9 +183,9 @@ export class NewProductComponent implements OnInit ,OnDestroy{
       });
     else
       if(this.productId){
-        const oldVariations =
+        const newVariations = this.productForm.get('variations')?.value.filter((variation: Variation) => variation.productVariationId == null);
         this.productService.updateProduct({productId:this.productId,deletedVariations:this.deletedVariationIds,deletedImages:this.deletedImageIds,
-          updatedVariations:this.updatedVariations,...this.productForm.value},this.files).subscribe({
+          updatedVariations:this.updatedVariations,...({ ...this.productForm.value, variations: newVariations })},this.files).subscribe({
           next: (response) => {
             this.notificationService.showSuccess(response.body ?? undefined);
             this.clearForm();
@@ -244,7 +237,6 @@ export class NewProductComponent implements OnInit ,OnDestroy{
 
   closeImageModal() {
     this.showImageModal = false;
-    this.deletedImageIds = [];
   }
 
   removeImageFromModal(index: number) {

@@ -1,4 +1,4 @@
-import {CreateProductModule, Variation} from "./create-product.module";
+import {CreateProductModule} from "./create-product.module";
 
 export interface UpdateProductModule extends CreateProductModule {
   productId: number;
