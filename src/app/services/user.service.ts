@@ -128,6 +128,22 @@ export class UserService{
     return this.http.post<string>(`${this.apiURL}/user/message/send-message`,body, {  headers : this.headers, observe: 'response', responseType: 'text' as 'json' });
   }
 
+  reportUser(userId : number):Observable<HttpResponse<string>> {
+    return this.http.put<string>(`${this.apiURL}/customer-service/customers/${userId}/report`, null, {
+    headers: this.headers,
+    observe: 'response',
+    responseType: 'text' as 'json'
+    });
+  }
+
+  UnReportUser(userId : number):Observable<HttpResponse<string>> {
+    return this.http.put<string>(`${this.apiURL}/customer-service/customers/${userId}/unReport`, null, {
+      headers: this.headers,
+      observe: 'response',
+      responseType: 'text' as 'json'
+    });
+  }
+
 
 
 

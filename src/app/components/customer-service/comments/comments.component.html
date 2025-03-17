@@ -1,1 +1,68 @@
-<p>comments works!</p>
+
+<div class="header-container">
+  <h2>Comments Management</h2>
+  <div class="filter-container">
+    <label for="filter" class="filter-label">Filter:</label>
+    <select
+      id="filter"
+      class="filter-select"
+      (change)="loadComments()"
+      [(ngModel)]="isApproved"
+    >
+      <option [value]="true">Is Approved</option>
+      <option [value]="false">Not Approved</option>
+    </select>
+  </div>
+
+  <div class="input-group custom-input-group">
+    <input type="number"
+           placeholder="Enter Product ID"
+           [(ngModel)]="productId"
+           (keyup.enter)="loadComments()"
+           class="form-control">
+    <button class="btn btn-primary px-4" (click)="loadComments()">🔍 Load</button>
+  </div>
+
+
+</div>
+
+<div class="discounts-container" *ngIf="comments.length > 0">
+  <div class="discount-card" *ngFor="let comment of comments" [ngClass]="{'bg-soft-error text-soft-error': comment.isReported}">
+    <div class="card-header">
+      <h3 [title]="comment.userRatingId">{{ comment.userRatingId }}</h3>
+      <div class="actions">
+        <button class="edit-btn" *ngIf="!comment.isApproved" (click)="approveComment(comment.userRatingId)">
+          <i class="fas fa-check-circle" title="Approve"></i>
+        </button>
+        <button class="delete-btn" (click)="deleteComment(comment.userRatingId)">
+          <i class="fas fa-trash" title="Delete"></i>
+        </button>
+        <button class="report-btn" *ngIf="comment.isReported" (click)="UnReportUser(comment.userId)">
+          <i class="far fa-flag text-success-emphasis" title="UnReport"></i>
+        </button>
+        <button class="report-btn" *ngIf="!comment.isReported" (click)="reportUser(comment.userId)">
+          <i class="fas fa-flag text-success-emphasis" title="Report"></i>
+        </button>
+      </div>
+    </div>
+    <div class="card-content">
+      <p><strong>Username:</strong> {{ comment.userName }}</p>
+      <p><strong>UserId:</strong> {{ comment.userId }}</p>
+      <p><strong>Comments:</strong> {{ comment.comment}}</p>
+      <p><strong>stars:</strong> {{ comment.stars }} / 5</p>
+      <p><strong>Created at:</strong> {{ comment.createdAt| date:'MMM d, y HH:mm'  }}</p>
+      <p>
+        <strong>Updated At:</strong>
+        <span *ngIf="comment.updatedAt; else noDate">{{ comment.updatedAt | date:'MMM d, y HH:mm'  }}</span>
+        <ng-template #noDate>N/A</ng-template>
+      </p>
+    </div>
+
+  </div>
+</div>
+
+
+<div class="no-discounts" *ngIf="comments.length === 0 ">
+  No comments found.
+</div>
+

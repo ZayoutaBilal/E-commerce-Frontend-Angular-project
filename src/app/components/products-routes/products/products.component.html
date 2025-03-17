@@ -8,63 +8,56 @@
   </div>
   <input type="text" (keyup)="FilterChanged($event)" placeholder="Search products by name" class="form-control products-search-input" />
   <div class="table-responsive products-table-container">
-    <table class="products-table">
-      <thead>
-      <tr>
-        <th *ngFor="let column of displayedColumns">{{ column }}</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let element of dataSource.data" (click)="navigateToProduct(element._id)" class="products-table-row">
-        <ng-container *ngIf="dataSource.data.length > 0; else noProducts">
-          <td *ngFor="let column of displayedColumns">
-            <ng-container *ngIf="column === 'Image'">
+    <table mat-table [dataSource]="dataSource" matSort class="products-table">
+      <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ column }}
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <ng-container [ngSwitch]="column">
+            <ng-container *ngSwitchCase="'ID'">
+              {{ element.productId }}
+            </ng-container>
+            <ng-container *ngSwitchCase="'Image'">
               <div class="products-table-image-container">
-                <img [src]="'data:image/jpeg;base64,'+element.image" [alt]="element.name" class="products-table-image" />
+                <img [src]="'data:image/jpeg;base64,' + element.image" [alt]="element.name" class="products-table-image" />
               </div>
             </ng-container>
-            <ng-container *ngIf="column === 'ID';">
-              {{element.productId}}
+            <ng-container *ngSwitchCase="'Name'">
+              <span class="products-table-name" [routerLink]="['/product-details', element.productId]">{{ element.name }}</span>
             </ng-container>
-            <ng-container *ngIf="column === 'Name'">
-              <span class="products-table-name" [routerLink]="['/product-details',element.productId]">{{ element.name }}</span>
-            </ng-container>
-            <ng-container *ngIf="column === 'Quantity'">
-              <p class="products-table-quantity">{{ 100 }}</p>
-            </ng-container>
-            <ng-container *ngIf="column === 'Price'">
+            <ng-container *ngSwitchCase="'Price'">
               <p class="products-table-price">{{ formatPrice(element.price) }}</p>
             </ng-container>
-            <ng-container *ngIf="column === 'Old price';">
+            <ng-container *ngSwitchCase="'Old price'">
               <p class="products-table-price">{{ formatPrice(element.oldPrice) }}</p>
             </ng-container>
-            <ng-container *ngIf="column === 'Discount'">
-              <p class="products-table-discount">{{ (element.discountPercent) + '%' }}</p>
+            <ng-container *ngSwitchCase="'Quantity'">
+              <p class="products-table-quantity">{{ element.quantity }}</p>
             </ng-container>
-            <ng-container *ngIf="column === 'Category'">{{ element.categoryName }}</ng-container>
-            <ng-container *ngIf="column === 'Created at'">
+            <ng-container *ngSwitchCase="'Discount'">
+              <p class="products-table-discount">{{ element.discountPercent + '%' }}</p>
+            </ng-container>
+            <ng-container *ngSwitchCase="'Category'">
+              {{ element.categoryName }}
+            </ng-container>
+            <ng-container *ngSwitchCase="'Created at'">
               {{ formatReadableDate(element.createdAt) }}
             </ng-container>
-            <ng-container *ngIf="column === 'Updated at'">
+            <ng-container *ngSwitchCase="'Updated at'">
               {{ formatReadableDate(element.updatedAt) }}
             </ng-container>
-            <ng-container *ngIf="column === 'Edit'">
-                <i class="fas fa-edit" (click)="editProduct(element.productId)"></i>
+            <ng-container *ngSwitchCase="'Edit'">
+              <i class="fas fa-edit" (click)="editProduct(element.productId)"></i>
             </ng-container>
-            <ng-container *ngIf="column === 'Delete'">
-                <i class="fas fa-trash-alt" (click)="deleteProduct(element.productId)"></i>
+            <ng-container *ngSwitchCase="'Delete'">
+              <i class="fas fa-trash-alt" (click)="deleteProduct(element.productId)"></i>
             </ng-container>
-          </td>
-        </ng-container>
-      </tr>
-      <ng-template #noProducts>
-        <tr>
-          <td [attr.colspan]="displayedColumns.length" class="no-products">
-            No products found.
-          </td>
-        </tr>
-      </ng-template>
-      </tbody>
+          </ng-container>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="navigateToProduct(row._id)" class="products-table-row"></tr>
     </table>
   </div>
   <nav aria-label="Page navigation" class="products-pagination">
@@ -73,9 +66,9 @@
         <button class="page-link" (click)="previousPage()">Previous</button>
       </li>
       <li class="page-item">
-        <span class="page-link current-page-label">{{ currentPage+1 }}/{{ totalPages }}</span>
+        <span class="page-link current-page-label">{{ currentPage + 1 }}/{{ totalPages }}</span>
       </li>
-      <li class="page-item" [class.disabled]="currentPage === totalPages-1">
+      <li class="page-item" [class.disabled]="currentPage === totalPages - 1">
         <button class="page-link" (click)="nextPage()">Next</button>
       </li>
     </ul>

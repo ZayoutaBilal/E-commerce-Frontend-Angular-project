@@ -100,7 +100,7 @@ export class DiscountsComponent implements OnInit {
   deleteDiscount(id: number) {
     this.confirmDialogComponent.openDialog({
       title: "Discounts",
-      content: "All products related to this discount will lose it, are you sure that you want to delete this discount ?"
+      content: "All products related to this discount will lose this discount, are you sure that you want to delete it ?"
     }).subscribe(result => {
       if (result) {
         this.discountService.deleteDiscount(id).subscribe({
@@ -129,6 +129,7 @@ export class DiscountsComponent implements OnInit {
     }
   }
 
+  protected readonly Date = Date;
 }
 
 

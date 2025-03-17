@@ -30,6 +30,9 @@ import {ProductsComponent} from "./components/products-routes/products/products.
 import {NgOptimizedImage} from "@angular/common";
 import {AdminComponent} from "./components/admin/admin.component";
 import {DiscountsComponent, TruncatePipe} from "./components/customer-service/discounts/discounts.component";
+import {MatSortModule} from "@angular/material/sort";
+import {MatTableModule} from "@angular/material/table";
+import { CommentsComponent} from "./components/customer-service/comments/comments.component";
 
 @NgModule({
   declarations: [
@@ -51,7 +54,9 @@ import {DiscountsComponent, TruncatePipe} from "./components/customer-service/di
     NewProductComponent,
     ProductsComponent,
     DiscountsComponent,
+    CommentsComponent,
     AdminComponent,
+    CommentsComponent,
 
 
   ],
@@ -67,7 +72,7 @@ import {DiscountsComponent, TruncatePipe} from "./components/customer-service/di
     HttpClientModule,
     ToastrModule.forRoot({
       timeOut: 4000,
-      positionClass: 'toast-top-center',
+      positionClass: 'toast-top-right',
       preventDuplicates: false,
       maxOpened: 5,
       autoDismiss: false,
@@ -79,6 +84,8 @@ import {DiscountsComponent, TruncatePipe} from "./components/customer-service/di
     ReactiveFormsModule,
     NgOptimizedImage,
     TruncatePipe,
+    MatSortModule,
+    MatTableModule,
 
 
   ],

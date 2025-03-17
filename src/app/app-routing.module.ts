@@ -14,10 +14,10 @@ import { CustomerServiceComponent } from './components/customer-service/customer
 import { CategoriesComponent } from './components/customer-service/categories/categories.component';
 import {NewProductComponent} from "./components/products-routes/new-product/new-product.component";
 import {ProductsComponent} from "./components/products-routes/products/products.component";
-import {ProductDetailComponent} from "./components/products-routes/product-detail/product-detail.component";
 import {AdminComponent} from "./components/admin/admin.component";
 import {authoritiesGuard} from "./guards/authorities.guard";
 import {DiscountsComponent} from "./components/customer-service/discounts/discounts.component";
+import {CommentsComponent} from "./components/customer-service/comments/comments.component";
 
 
 const routes: Routes = [
@@ -36,8 +36,9 @@ const routes: Routes = [
   { path: 'customer-service/categories', component: CategoriesComponent,canActivate: [authoritiesGuard], data: { authority: ['ROLE_CUSTOMER_SERVICE'] } },
   { path: 'customer-service/products', component: ProductsComponent,canActivate: [authoritiesGuard], data: { authority: ['ROLE_CUSTOMER_SERVICE'] } },
   { path: 'customer-service/products/new', component: NewProductComponent,canActivate: [authoritiesGuard] , data: { authority: ['ROLE_CUSTOMER_SERVICE'] }},
-  { path: 'customer-service/products/product', component: ProductDetailComponent ,canActivate: [authoritiesGuard], data: { authority: ['ROLE_CUSTOMER_SERVICE'] }},
   { path: 'customer-service/discounts', component: DiscountsComponent ,canActivate: [authoritiesGuard], data: { authority: ['ROLE_CUSTOMER_SERVICE'] }},
+  { path: 'customer-service/comments', component: CommentsComponent ,canActivate: [authoritiesGuard], data: { authority: ['ROLE_CUSTOMER_SERVICE'] }},
+
   { path: "admin", component: AdminComponent, canActivate: [authoritiesGuard], data: { authority: ['ROLE_ADMIN'] } },
 
   { path: '**', redirectTo: 'home', pathMatch: 'full' }

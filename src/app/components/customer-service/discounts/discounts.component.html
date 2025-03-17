@@ -41,7 +41,7 @@
         <span *ngIf="discount.endDate; else noEndDate">{{ discount.endDate | date }}</span>
         <ng-template #noEndDate>N/A</ng-template>
       </p>
-      <p><strong>Created At:</strong> {{ discount.createdAt | date }}</p>
+      <p><strong>Created At:</strong> {{ discount.createdAt | date:'MMM d, y HH:mm' }}</p>
     </div>
 
   </div>

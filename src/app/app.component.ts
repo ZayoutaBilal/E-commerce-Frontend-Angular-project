@@ -15,7 +15,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
 
-    setTimeout(() => {
+    // setTimeout(() => {
       this.authService.isLoggedIn().subscribe({
         next: (loggedIn) => {
           this.isLoading = false;
@@ -25,7 +25,7 @@ export class AppComponent implements OnInit {
           this.isLoading = false;
         }
       });
-   }, 2000);
+   // }, 2000);
   }
   @HostListener('window:scroll', [])
   onScroll() {
