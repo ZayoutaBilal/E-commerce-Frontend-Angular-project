@@ -24,7 +24,7 @@
               </div>
             </ng-container>
             <ng-container *ngSwitchCase="'Name'">
-              <span class="products-table-name" [routerLink]="['/product-details', element.productId]">{{ element.name }}</span>
+              <span class="products-table-name" [routerLink]="['/product-details', element.productId]">{{ element.name + " => "+element.countOfComments}}</span>
             </ng-container>
             <ng-container *ngSwitchCase="'Price'">
               <p class="products-table-price">{{ formatPrice(element.price) }}</p>

@@ -33,6 +33,8 @@ import {DiscountsComponent, TruncatePipe} from "./components/customer-service/di
 import {MatSortModule} from "@angular/material/sort";
 import {MatTableModule} from "@angular/material/table";
 import { CommentsComponent} from "./components/customer-service/comments/comments.component";
+import { MessagesComponent } from "./components/admin/messages/messages.component";
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @NgModule({
   declarations: [
@@ -57,10 +59,10 @@ import { CommentsComponent} from "./components/customer-service/comments/comment
     CommentsComponent,
     AdminComponent,
     CommentsComponent,
-
-
+    MessagesComponent
   ],
   imports: [
+    NgxPaginationModule,
     BrowserModule,
     AppRoutingModule,
     NgbModule,
@@ -71,29 +73,24 @@ import { CommentsComponent} from "./components/customer-service/comments/comment
     FormsModule,
     HttpClientModule,
     ToastrModule.forRoot({
-      timeOut: 4000,
-      positionClass: 'toast-top-right',
-      preventDuplicates: false,
-      maxOpened: 5,
-      autoDismiss: false,
-      closeButton: true,
-      progressBar: true,
-      tapToDismiss: true,
-      extendedTimeOut: 2000,
+        timeOut: 4000,
+        positionClass: 'toast-top-right',
+        preventDuplicates: false,
+        maxOpened: 5,
+        autoDismiss: false,
+        closeButton: true,
+        progressBar: true,
+        tapToDismiss: true,
+        extendedTimeOut: 2000,
     }),
     ReactiveFormsModule,
     NgOptimizedImage,
     TruncatePipe,
     MatSortModule,
-    MatTableModule,
-
-
+    MatTableModule
   ],
-
-
   providers: [
     ConfirmDialogComponent,
-
   ],
   bootstrap: [AppComponent]
 })
