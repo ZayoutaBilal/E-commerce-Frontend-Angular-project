@@ -15,7 +15,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let message of messages | paginate: { itemsPerPage: pageSize, currentPage: currentPage }">
+                  <tr *ngFor="let message of messages | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalItems }">
                     <td>{{message.name || 'Anonymous'}}</td>
                     <td>{{message.email}}</td>
                     <td>{{message.message | truncate: 20}}</td>
@@ -58,8 +58,7 @@
                 nextLabel="Next"
                 [responsive]="true"
                 [autoHide]="true"
-                [maxSize]="4"
-                (pageChange)="currentPage = $event;"
+                (pageChange)="currentPage = $event;loadMessages()"
                 class="my-pagination">
               </pagination-controls>
             </div>

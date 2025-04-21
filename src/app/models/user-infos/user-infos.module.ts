@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 export class UserInfosModule {
+  userId: number = 0 ;
   username: string;
   email: string;
   firstName: string;
@@ -12,6 +13,8 @@ export class UserInfosModule {
   phone: string;
   birthday: Date;
   picture?: string;
+  active: boolean = true;
+  createdAt: Date = new Date();
 
   constructor(
     username: string = '',
@@ -23,9 +26,10 @@ export class UserInfosModule {
     address: string = '',
     phone: string = '',
     birthday: Date = new Date(),
-    picture?: string
+    picture?: string,
+  
   ) {
-   
+
     this.username = username;
     this.email = email;
     this.firstName = firstName;
@@ -36,5 +40,6 @@ export class UserInfosModule {
     this.phone = phone;
     this.birthday = birthday;
     this.picture = picture;
+    
   }
 }

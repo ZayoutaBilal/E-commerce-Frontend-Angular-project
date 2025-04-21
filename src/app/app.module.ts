@@ -35,6 +35,7 @@ import {MatTableModule} from "@angular/material/table";
 import { CommentsComponent} from "./components/customer-service/comments/comments.component";
 import { MessagesComponent } from "./components/admin/messages/messages.component";
 import { NgxPaginationModule } from 'ngx-pagination';
+import { CustomerServiceManagementComponent } from "./components/admin/customer-service-management/customer-service-management.component";
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
     CommentsComponent,
     AdminComponent,
     CommentsComponent,
-    MessagesComponent
+    MessagesComponent,
+    CustomerServiceManagementComponent
   ],
   imports: [
     NgxPaginationModule,
@@ -87,8 +89,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
     NgOptimizedImage,
     TruncatePipe,
     MatSortModule,
-    MatTableModule
-  ],
+    MatTableModule,
+],
   providers: [
     ConfirmDialogComponent,
   ],

@@ -1,0 +1,171 @@
+<div class="container mt-4">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <!-- Search Bar -->
+            <div class="mb-4">
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="input-group w-75">
+                  <input type="text" class="form-control" placeholder="Search by name, email or phone..." 
+                         [(ngModel)]="searchTerm" (keyup)="onSearch()">
+                  <button class="btn btn-outline-secondary" type="button" (click)="resetSearch()">
+                    <i class="fas fa-times"></i> Clear
+                  </button>
+                </div>
+                <div>
+                  <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#addCustomerServiceModal">
+                    <i class="fas fa-plus"></i> Add Customer Service
+                  </button>
+                </div>
+              </div>
+            </div>
+  
+            <!-- Customer Service Table -->
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>Profile</th>
+                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Status</th>
+                    <th>Created At</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let cs of CustomerServiceList | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalItems }">
+                    <td>
+                      <img [src]="'data:image/jpeg;base64,'+cs.picture" 
+                           class="rounded-circle" width="40" height="40" alt="Profile">
+                    </td>
+                    <td>{{cs.firstName}} {{cs.lastName}}</td>
+                    <td>{{cs.username}}</td>
+                    <td>{{cs.email}}</td>
+                    <td>{{cs.phone || 'N/A'}}</td>
+                    <td>
+                        <span class="badge" [ngClass]="cs.active ? 'bg-success' : 'bg-danger'">
+                        {{cs.active ? 'Active' : 'Inactive'}}
+                      </span>
+                    </td>
+                    <td>{{cs.createdAt | date:'dd/MM/yyyy HH:mm'}}</td>
+                    <td>
+                      <div class="btn-group" role="group">
+                        <button class="btn btn-sm btn-warning me-2" (click)="resetPassword(cs.userId)">
+                          <i class="fas fa-key"></i> Reset
+                        </button>
+                        <button class="btn btn-sm btn-primary me-2" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#editCustomerServiceModal"
+                                (click)="openEditModal(cs)">
+                          <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="btn btn-sm btn-danger" (click)="deleteCustomerService(cs.userId)">
+                          <i class="fas fa-trash"></i> Delete
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+  
+            <!-- Pagination -->
+            <div class="d-flex justify-content-between align-items-center mt-3">
+              <div class="form-group">
+                <select class="form-select form-select-sm" style="width: 80px;" 
+                        [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange()">
+                  <option value="5">5</option>
+                  <option value="10">10</option>
+                  <option value="20">20</option>
+                  <option value="50">50</option>
+                </select>
+              </div>
+              
+              <pagination-controls 
+                previousLabel="Prev"
+                nextLabel="Next"
+                [responsive]="true"
+                [autoHide]="true"
+                (pageChange)="onPageChange($event)"
+                class="my-pagination">
+              </pagination-controls>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Add Customer Service Modal -->
+  <div class="modal fade" id="addCustomerServiceModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add New Customer Service</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form #addForm="ngForm" (ngSubmit)="addCustomerService()">
+            <div class="mb-3">
+              <label class="form-label">Name</label>
+              <input type="text" class="form-control" [(ngModel)]="newCustomerService.name" name="name" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" [(ngModel)]="newCustomerService.email" name="email" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Phone</label>
+              <input type="tel" class="form-control" [(ngModel)]="newCustomerService.phone" name="phone">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-primary" [disabled]="addForm.invalid">Add</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Edit Customer Service Modal -->
+  <div class="modal fade" id="editCustomerServiceModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Customer Service</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form #editForm="ngForm" (ngSubmit)="updateCustomerService()">
+            <div class="mb-3">
+              <label class="form-label">Name</label>
+              <input type="text" class="form-control" [(ngModel)]="editingCustomerService.name" name="name" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" [(ngModel)]="editingCustomerService.email" name="email" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Phone</label>
+              <input type="tel" class="form-control" [(ngModel)]="editingCustomerService.phone" name="phone">
+            </div>
+            <div class="mb-3">
+              <div class="form-check">
+                <input type="checkbox" class="form-check-input" [(ngModel)]="editingCustomerService.active" name="active">
+                <label class="form-check-label">Active</label>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-primary" [disabled]="editForm.invalid">Save Changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>

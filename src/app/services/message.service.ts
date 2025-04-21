@@ -1,4 +1,4 @@
-import { HttpHeaders, HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpHeaders, HttpClient, HttpResponse, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -24,17 +24,11 @@ export class MessageService {
     return this.http.get<Page<any>>(`${this.apiURL}/admin/messages?page=${page}&size=${pageSize}`, { headers: this.headers , observe: 'response'});
   }
 
-  markAsRead(messageId: number): Observable<HttpResponse<any>> {
-    return this.http.put<any>(`${this.apiURL}/admin/messages/mark-as-read/${messageId}`, {}, { headers: this.headers , observe: 'response',responseType: 'text' as 'json' });
+  markAsReadAndDelete(idsToDelete: number[], idsToMarkAsRead: number[]): Observable<HttpResponse<any>> {
+    return this.http.put<any>(`${this.apiURL}/admin/messages`, { idsToMarkAsRead, idsToDelete }, { headers: this.headers , observe: 'response',responseType: 'text' as 'json' });
   }
 
-  sendReply(reply: any): Observable<HttpResponse<any>> {
-    return this.http.post<any>(`${this.apiURL}/admin/messages/send-reply`, reply , { headers: this.headers , observe: 'response',responseType: 'text' as 'json' });
+  sendReply(reply: any, messageId: number): Observable<HttpResponse<any>> {
+    return this.http.post<any>(`${this.apiURL}/admin/messages/${messageId}/send-reply`, reply , { headers: this.headers , observe: 'response',responseType: 'text' as 'json' });
   }
-
-  deleteMessage(messageId: number): Observable<HttpResponse<any>> {
-    return this.http.delete<any>(`${this.apiURL}/admin/messages/delete/${messageId}`, { headers: this.headers , observe: 'response',responseType: 'text' as 'json' });
-  }
-
-
 }

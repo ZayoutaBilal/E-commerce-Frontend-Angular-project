@@ -6,6 +6,7 @@ import { UserInfosModule } from '../models/user-infos/user-infos.module';
 import { HttpParams } from '@angular/common/http';
 import { StorageService } from './storage.service';
 import {environment} from "../../environments/environment";
+import { Page } from '../models/page/page.module';
 
 @Injectable({
   providedIn: 'root'
@@ -144,7 +145,31 @@ export class UserService{
     });
   }
 
+  getCustomers(page: number, size: number): Observable<HttpResponse<Page<UserInfosModule>>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+    return this.http.get<Page<UserInfosModule>>(`${this.apiURL}/admin/customers`, { headers: this.headers, params: params,observe: 'response' });
+  }
 
+  getCustomersServices(page: number, size: number): Observable<HttpResponse<Page<UserInfosModule>>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+    return this.http.get<Page<UserInfosModule>>(`${this.apiURL}/admin/customers-services`, { headers: this.headers, params: params,observe: 'response' });
+  }
+
+  addUser(user: any): Observable<HttpResponse<string>> {
+    return this.http.post<string>(`${this.apiURL}/admin/add-user`, user, { headers: this.headers, observe: 'response', responseType: 'text' as 'json' });
+  }
+
+  updateUser(userId : number,user: any): Observable<HttpResponse<string>> {
+    return this.http.post<string>(`${this.apiURL}/admin/${userId}/update-user`, user, { headers: this.headers, observe: 'response', responseType: 'text' as 'json' });
+  }
+
+  resetPassword(userId : number): Observable<HttpResponse<string>> {
+    return this.http.put<string>(`${this.apiURL}/admin/customers/${userId}/reset-user-password`, null, { headers: this.headers, observe: 'response', responseType: 'text' as 'json' });
+  }
 
 
 }

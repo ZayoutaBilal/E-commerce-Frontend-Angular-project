@@ -26,7 +26,7 @@
   
   <div class="content-area flex-fill min-vh-100">
     <ng-container [ngSwitch]="selectedItem">
-      <app-categories *ngSwitchCase="'customer-services'"></app-categories>
+      <app-customer-service-management *ngSwitchCase="'customer-services'"></app-customer-service-management>
       <app-overview *ngSwitchCase="'customers'"></app-overview>
       <app-messages *ngSwitchCase="'messages'"></app-messages>
     </ng-container>

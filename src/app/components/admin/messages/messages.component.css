@@ -63,11 +63,12 @@
   }
   
 .ngx-pagination .current {
-background: #28a745 !important;
-border-radius: 4px;
+  color: #28a745 !important;
+  background: #126f28 !important;
+  border-radius: 4px;
 }
 
 .my-pagination {
-display: flex;
-justify-content: center;
+  display: flex;
+  justify-content: center;
 }
