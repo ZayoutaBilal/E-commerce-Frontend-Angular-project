@@ -15,6 +15,7 @@ export class UserInfosModule {
   picture?: string;
   active: boolean = true;
   createdAt: Date = new Date();
+  roles: string = '';
 
   constructor(
     username: string = '',

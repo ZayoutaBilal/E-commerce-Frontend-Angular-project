@@ -25,7 +25,6 @@ export class UserService{
   }
 
   login(body : any): Observable<HttpResponse<UserDetailsModule>> {
-    console.log(body);
     return this.http.post<UserDetailsModule>(`${this.apiURL}/user/login`, body, {
       headers: this.headers,
       observe: 'response'
@@ -160,16 +159,27 @@ export class UserService{
   }
 
   addUser(user: any): Observable<HttpResponse<string>> {
-    return this.http.post<string>(`${this.apiURL}/admin/add-user`, user, { headers: this.headers, observe: 'response', responseType: 'text' as 'json' });
+    return this.http.post<string>(`${this.apiURL}/admin/users/add`, user, { headers: this.headers, observe: 'response', responseType: 'text' as 'json' });
   }
 
   updateUser(userId : number,user: any): Observable<HttpResponse<string>> {
-    return this.http.post<string>(`${this.apiURL}/admin/${userId}/update-user`, user, { headers: this.headers, observe: 'response', responseType: 'text' as 'json' });
+    return this.http.post<string>(`${this.apiURL}/admin/users/${userId}/update`, user, { headers: this.headers, observe: 'response', responseType: 'text' as 'json' });
   }
 
   resetPassword(userId : number): Observable<HttpResponse<string>> {
-    return this.http.put<string>(`${this.apiURL}/admin/customers/${userId}/reset-user-password`, null, { headers: this.headers, observe: 'response', responseType: 'text' as 'json' });
+    return this.http.put<string>(`${this.apiURL}/admin/users/${userId}/reset-password`, null, { headers: this.headers, observe: 'response', responseType: 'text' as 'json' });
   }
 
+  deleteUser(userId : number): Observable<HttpResponse<string>> {
+    return this.http.delete<string>(`${this.apiURL}/admin/users/${userId}`, { headers: this.headers, observe: 'response', responseType: 'text' as 'json' });
+  }
+
+  searchUsers(searchTerm: string, page: number, size: number): Observable<HttpResponse<Page<UserInfosModule>>> {
+    const params = new HttpParams()
+      .set('searchTerm', searchTerm)
+      .set('page', page.toString())
+      .set('size', size.toString());
+    return this.http.get<Page<UserInfosModule>>(`${this.apiURL}/admin/users/search`, { headers: this.headers, params: params,observe: 'response' });
+  }
 
 }

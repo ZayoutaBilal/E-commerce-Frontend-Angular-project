@@ -13,74 +13,113 @@ import { NotificationService } from 'src/app/services/notification.service';
   styleUrls: ['./customer-service-management.component.css'],
 })
 export class CustomerServiceManagementComponent implements OnInit {
+  selectedRole: string = 'CUSTOMER';
   searchTerm: string = '';
   pageSize: number = 10;
   currentPage: number = 1;
   totalItems: number = 0;
-  CustomerServiceList: UserInfosModule[] = [];
-  newCustomerService: any = {};
-  editingCustomerService: any = {};
+  users: UserInfosModule[] = [];
+  newUser: UserInfosModule = new UserInfosModule();
+  editingUser: UserInfosModule = new UserInfosModule();
 
   constructor(private userService: UserService,
     private notificationService: NotificationService
   ) {}
 
   ngOnInit() {
-    this.loadCustomerServices(); 
+    this.loadUsers(); 
   }
 
-  loadCustomerServices() {
-    this.userService.getCustomersServices(this.currentPage - 1, this.pageSize).subscribe((response) => {
-      this.CustomerServiceList = response.body?.content || [];
-      this.totalItems = response.body?.totalElements || 0;
-    });
+  loadUsers() {
+    if (this.selectedRole === 'CUSTOMER') {
+      this.userService.getCustomers(this.currentPage - 1, this.pageSize).subscribe((response) => {
+        this.users = response.body?.content || [];
+        this.totalItems = response.body?.totalElements || 0;
+      });
+    } else {
+      this.userService.getCustomersServices(this.currentPage - 1, this.pageSize).subscribe((response) => {
+        this.users = response.body?.content || [];
+        this.totalItems = response.body?.totalElements || 0;
+      });
+    }
+  }
+
+  onFilterChange() {
+    this.currentPage = 1;
+    this.loadUsers();
   }
 
   onSearch() {
-    // TODO: Implement search logic
+    if (this.searchTerm.trim() !== '') {
+    this.userService.searchUsers(this.searchTerm.trim(), this.currentPage - 1, this.pageSize).subscribe((response) => {
+      this.users = response.body?.content || [];
+        this.totalItems = response.body?.totalElements || 0;
+      });
+    }
   }
 
   resetSearch() {
     this.searchTerm = '';
-    this.loadCustomerServices();
+    this.loadUsers();
   }
 
   onPageSizeChange() {
     this.currentPage = 1;
-    this.CustomerServiceList = this.CustomerServiceList.slice(0, this.pageSize);
+    this.users = this.users.slice(0, this.pageSize);
   }
 
   onPageChange(page: number) {
     this.currentPage = page;
-    this.loadCustomerServices();
+    this.loadUsers();
   }
 
   resetPassword(id: number) {
-    // TODO: Implement password reset logicn
+    this.userService.resetPassword(id).subscribe({
+      next: (response) => {
+        console.log(`Password reset successfully ==${response.body}==`);
+        this.notificationService.showSuccess('Password reset successfully');
+      },
+      error: (error) => this.notificationService.handleSaveError(error)
+    });
   }
 
-  openEditModal(CustomerService: any) {
-    this.editingCustomerService = { ...CustomerService };
+  openEditModal(user: any) {
+    this.editingUser = { ...user };
   }
 
-  deleteCustomerService(id: number) {
-    this.notificationService.showInfo('Customer service deleted successfully with id: ' + id);
+  deleteUser(id: number) {
+    this.userService.deleteUser(id).subscribe({
+      next: () => {
+        this.notificationService.showSuccess('User deleted successfully');
+      },
+      error: (error) => this.notificationService.handleSaveError(error)
+    });
   }
 
-  addCustomerService() {
-    // TODO: Implement add CustomerService logic
+  addUser() {
+    this.userService.addUser({...this.newUser, active: true}).subscribe({
+      next: () => {
+        this.notificationService.showSuccess('User added successfully');
+      },
+      error: (error) => this.notificationService.handleSaveError(error)
+    });
   }
 
-  updateCustomerService() {
-    // TODO: Implement update CustomerService logic
+  updateUser() {
+    this.userService.updateUser(this.editingUser.userId, this.editingUser).subscribe({
+      next: () => {
+        this.notificationService.showSuccess('User updated successfully');
+      },
+      error: (error) => this.notificationService.handleSaveError(error)
+    });
   }
 
-  onFileSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      this.newCustomerService.profilePicture = file;
-    }
-  }
+  // onFileSelected(event: Event) {
+  //   const input = event.target as HTMLInputElement;
+  //   if (input.files && input.files.length > 0) {
+  //     const file = input.files[0];
+  //     this.newUser.picture = file;
+  //   }
+  // }
 
 }

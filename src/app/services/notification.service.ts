@@ -29,8 +29,10 @@ export class NotificationService {
 
   public handleSaveError(error: any) {
     switch (error.status) {
-      case 400:
       case 404:
+      case 401:
+      case 404:
+      case 403:
         this.showWarning(error.error);
         break;
       case 0:

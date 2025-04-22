@@ -3,15 +3,23 @@
       <div class="col-12">
         <div class="card">
           <div class="card-body">
-            <!-- Search Bar -->
+            <!-- Role Filter and Search Bar -->
             <div class="mb-4">
               <div class="d-flex justify-content-between align-items-center">
-                <div class="input-group w-75">
-                  <input type="text" class="form-control" placeholder="Search by name, email or phone..." 
-                         [(ngModel)]="searchTerm" (keyup)="onSearch()">
-                  <button class="btn btn-outline-secondary" type="button" (click)="resetSearch()">
-                    <i class="fas fa-times"></i> Clear
-                  </button>
+                <div class="d-flex align-items-center w-75">
+                  <div class="me-3">
+                    <select class="form-select" [(ngModel)]="selectedRole" (change)="onFilterChange()">
+                      <option value="CUSTOMER">Customers</option>
+                      <option value="CUSTOMER_SERVICE">Customer Service</option>
+                    </select>
+                  </div>
+                  <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search by username, email or phone..." 
+                           [(ngModel)]="searchTerm" (keyup)="onSearch()">
+                    <button class="btn btn-outline-secondary" type="button" (click)="resetSearch()">
+                      <i class="fas fa-times"></i> Clear
+                    </button>
+                  </div>
                 </div>
                 <div>
                   <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#addCustomerServiceModal">
@@ -37,33 +45,33 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let cs of CustomerServiceList | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalItems }">
+                    <tr *ngFor="let user of users | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalItems }">
                     <td>
-                      <img [src]="'data:image/jpeg;base64,'+cs.picture" 
+                      <img [src]="'data:image/jpeg;base64,'+user.picture" 
                            class="rounded-circle" width="40" height="40" alt="Profile">
                     </td>
-                    <td>{{cs.firstName}} {{cs.lastName}}</td>
-                    <td>{{cs.username}}</td>
-                    <td>{{cs.email}}</td>
-                    <td>{{cs.phone || 'N/A'}}</td>
+                    <td>{{user.firstName}} {{user.lastName}}</td>
+                    <td>{{user.username}}</td>
+                    <td>{{user.email}}</td>
+                    <td>{{user.phone || 'N/A'}}</td>
                     <td>
-                        <span class="badge" [ngClass]="cs.active ? 'bg-success' : 'bg-danger'">
-                        {{cs.active ? 'Active' : 'Inactive'}}
+                        <span class="badge" [ngClass]="user.active ? 'bg-success' : 'bg-danger'">
+                        {{user.active ? 'Active' : 'Inactive'}}
                       </span>
                     </td>
-                    <td>{{cs.createdAt | date:'dd/MM/yyyy HH:mm'}}</td>
+                    <td>{{user.createdAt | date:'dd/MM/yyyy HH:mm'}}</td>
                     <td>
                       <div class="btn-group" role="group">
-                        <button class="btn btn-sm btn-warning me-2" (click)="resetPassword(cs.userId)">
+                        <button class="btn btn-sm btn-warning me-2" (click)="resetPassword(user.userId)">
                           <i class="fas fa-key"></i> Reset
                         </button>
                         <button class="btn btn-sm btn-primary me-2" 
                                 data-bs-toggle="modal" 
                                 data-bs-target="#editCustomerServiceModal"
-                                (click)="openEditModal(cs)">
+                                (click)="openEditModal(user)">
                           <i class="fas fa-edit"></i> Edit
                         </button>
-                        <button class="btn btn-sm btn-danger" (click)="deleteCustomerService(cs.userId)">
+                        <button class="btn btn-sm btn-danger" (click)="deleteUser(user.userId)">
                           <i class="fas fa-trash"></i> Delete
                         </button>
                       </div>
@@ -109,18 +117,26 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
-          <form #addForm="ngForm" (ngSubmit)="addCustomerService()">
+          <form #addForm="ngForm" (ngSubmit)="addUser()">
             <div class="mb-3">
-              <label class="form-label">Name</label>
-              <input type="text" class="form-control" [(ngModel)]="newCustomerService.name" name="name" required>
+              <label class="form-label">Username</label>
+              <input type="text" class="form-control" [(ngModel)]="newUser.username" name="username" required>
             </div>
             <div class="mb-3">
               <label class="form-label">Email</label>
-              <input type="email" class="form-control" [(ngModel)]="newCustomerService.email" name="email" required>
+              <input type="email" class="form-control" [(ngModel)]="newUser.email" name="email" required>
             </div>
             <div class="mb-3">
               <label class="form-label">Phone</label>
-              <input type="tel" class="form-control" [(ngModel)]="newCustomerService.phone" name="phone">
+              <input type="tel" class="form-control" [(ngModel)]="newUser.phone" name="phone">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Role</label>
+              <select class="form-select" [(ngModel)]="newUser.roles" name="roles" required>
+                <option value="" disabled selected>Select a role</option>
+                <option value="CUSTOMER">Customer</option>
+                <option value="CUSTOMER_SERVICE">Customer Service</option>
+              </select>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -141,24 +157,32 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
-          <form #editForm="ngForm" (ngSubmit)="updateCustomerService()">
+          <form #editForm="ngForm" (ngSubmit)="updateUser()">
             <div class="mb-3">
-              <label class="form-label">Name</label>
-              <input type="text" class="form-control" [(ngModel)]="editingCustomerService.name" name="name" required>
+              <label class="form-label">Username</label>
+              <input type="text" class="form-control" [(ngModel)]="editingUser.username" name="username" required>
             </div>
             <div class="mb-3">
               <label class="form-label">Email</label>
-              <input type="email" class="form-control" [(ngModel)]="editingCustomerService.email" name="email" required>
+              <input type="email" class="form-control" [(ngModel)]="editingUser.email" name="email" required>
             </div>
             <div class="mb-3">
               <label class="form-label">Phone</label>
-              <input type="tel" class="form-control" [(ngModel)]="editingCustomerService.phone" name="phone">
+              <input type="tel" class="form-control" [(ngModel)]="editingUser.phone" name="phone">
             </div>
             <div class="mb-3">
               <div class="form-check">
-                <input type="checkbox" class="form-check-input" [(ngModel)]="editingCustomerService.active" name="active">
+                <input type="checkbox" class="form-check-input" [(ngModel)]="editingUser.active" name="active">
                 <label class="form-check-label">Active</label>
               </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Role</label>
+              <select class="form-select" defaultSelected="CUSTOMER" [(ngModel)]="editingUser.roles" name="roles" required>
+                <option value="" disabled selected>Select a role</option>
+                <option value="CUSTOMER">Customer</option>
+                <option value="CUSTOMER_SERVICE">Customer Service</option>
+              </select>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
